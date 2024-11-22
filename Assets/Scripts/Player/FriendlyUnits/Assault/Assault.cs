@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Assault : MonoBehaviour
+public class Assault : Friendly
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()

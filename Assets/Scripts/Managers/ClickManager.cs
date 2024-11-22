@@ -1,34 +1,70 @@
 using UnityEngine;
 
-public class ClickManager : MonoBehaviour
-{
+public class ClickManager : MonoBehaviour {
 
-    // Update is called once per frame
-    void Update()
-    {
+    private float lastClickTime = 0f;
+    private const float doubleClickThreshold = 0.3f;
+
+    void Update() {
         if (Input.GetMouseButtonDown(0)) {
-            DetectClick();
+            float timeSinceLastClick = Time.time - lastClickTime;
+            if (timeSinceLastClick <= doubleClickThreshold) {
+                DetectDoubleClick();
+            } else {
+                DetectClick();
+            }
+            lastClickTime = Time.time;
         }
     }
 
+    // Click on a unit to select it
     void DetectClick() {
+        if (!BattleManager.Instance.currentTurn.Equals(BattleManager.GameState.PlayerTurn)) {
+            return;
+        }
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit)) {
-            Debug.Log($"Hit object: {hit.collider.gameObject.name}");
             GameObject clickedObject = hit.collider.gameObject;
 
             if (clickedObject.GetComponent<Enemy>() != null) {
                 Debug.Log("Enemy Unit clicked");
                 //BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Enemy>().health.GetHealth(), clickedObject.GetComponent<Enemy>().damage);
-                BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Health>().GetHealth(), clickedObject.GetComponent<Enemy>().damage, clickedObject.GetComponent<MeleeEnemy>().actionPoints);
+                //BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Health>().GetHealth(), clickedObject.GetComponent<Enemy>().damage, clickedObject.GetComponent<MeleeEnemy>().actionPoints);
+                BattleManager.Instance.UnitClicked(false);
             } else if (clickedObject.GetComponent<Friendly>() != null) {
                 Debug.Log("Friendly Unit clicked");
                 //BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Friendly>().health.GetHealth(), clickedObject.GetComponent<Friendly>().damage);
-                BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Health>().GetHealth(), clickedObject.GetComponent<Friendly>().damage, clickedObject.GetComponent<Friendly>().actionPoints);
+                //BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Health>().GetHealth(), clickedObject.GetComponent<Friendly>().damage, clickedObject.GetComponent<Friendly>().actionPoints);
+                BattleManager.Instance.UnitClicked(true);
             } else {
                 Debug.Log("Non-unit object clicked");
+                //BattleManager.Instance.HideUnitStats();
+                BattleManager.Instance.UnitClicked(false);
+            }
+        }
+    }
+
+    // Double click on any unit to show stats
+    void DetectDoubleClick() {
+        if (!BattleManager.Instance.currentTurn.Equals(BattleManager.GameState.PlayerTurn)) {
+            return;
+        }
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+
+        if (Physics.Raycast(ray, out hit)) {
+            GameObject clickedObject = hit.collider.gameObject;
+
+            if (clickedObject.GetComponent<Enemy>() != null) {
+                Debug.Log("Enemy Unit double-clicked");
+                BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Health>().GetHealth(), clickedObject.GetComponent<Enemy>().damage, clickedObject.GetComponent<MeleeEnemy>().actionPoints);
+            } else if (clickedObject.GetComponent<Friendly>() != null) {
+                Debug.Log("Friendly Unit double-clicked");
+                BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Health>().GetHealth(), clickedObject.GetComponent<Friendly>().damage, clickedObject.GetComponent<Friendly>().actionPoints);
+            } else {
+                Debug.Log("Non-unit object double-clicked");
                 BattleManager.Instance.HideUnitStats();
             }
         }

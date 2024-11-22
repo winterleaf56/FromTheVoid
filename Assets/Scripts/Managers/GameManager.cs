@@ -25,5 +25,5 @@ public class GameManager : MonoBehaviour
         
     }
 
-    
+    // Add Start Mission which adds the units the player selects to the array in BattleManager
 }
