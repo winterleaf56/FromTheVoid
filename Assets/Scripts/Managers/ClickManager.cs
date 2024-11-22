@@ -22,7 +22,7 @@ public class ClickManager : MonoBehaviour
             if (clickedObject.GetComponent<Enemy>() != null) {
                 Debug.Log("Enemy Unit clicked");
                 //BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Enemy>().health.GetHealth(), clickedObject.GetComponent<Enemy>().damage);
-                BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Health>().GetHealth(), clickedObject.GetComponent<Enemy>().damage, clickedObject.GetComponent<Enemy>().actionPoints);
+                BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Health>().GetHealth(), clickedObject.GetComponent<Enemy>().damage, clickedObject.GetComponent<MeleeEnemy>().actionPoints);
             } else if (clickedObject.GetComponent<Friendly>() != null) {
                 Debug.Log("Friendly Unit clicked");
                 //BattleManager.Instance.ShowUnitStats(clickedObject.GetComponent<Friendly>().health.GetHealth(), clickedObject.GetComponent<Friendly>().damage);

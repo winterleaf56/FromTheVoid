@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Friendly : Lifeforms {
-    public new float actionPoints { get; private set; }
+    public float actionPoints { get; private set; }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {

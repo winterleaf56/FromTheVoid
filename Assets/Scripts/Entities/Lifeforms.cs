@@ -5,7 +5,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     public float damage;
 
-    public float actionPoints;
+    private float actionPoints;
 
     public abstract void Attack();
 
