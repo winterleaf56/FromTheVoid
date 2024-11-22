@@ -1,20 +1,29 @@
 using UnityEngine;
 
-public class Enemy : MonoBehaviour, IDamageable
-{
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
+public class Enemy : Lifeforms {
+
+    public override void Attack() {
+        throw new System.NotImplementedException();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+    public override void Die() {
+        throw new System.NotImplementedException();
     }
 
-    public void GetDamage(float value) {
-        Debug.Log("Enemy got " + value + " damage!");
+    public override void Damage(float value) {
+        throw new System.NotImplementedException();
     }
+
+    /*public override void OnMouseDown() {
+        Debug.Log("This is an enemy unit!");
+
+        // If current state is the enemy's turn, display the enemy's stats
+        if (BattleManager.Instance.currentTurn == BattleManager.GameState.EnemyTurn) {
+            Debug.Log("Displaying Enemy Stats");
+        } else if (BattleManager.Instance.currentTurn == BattleManager.GameState.PlayerTurn) {
+            // If the current state is the player's turn, invoke an action on the enemy (check if an action is selected)
+            Debug.Log("Player invoking action on enemy");
+        }
+    }*/
+
 }
