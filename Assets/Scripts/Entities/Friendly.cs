@@ -34,16 +34,4 @@ public class Friendly : Lifeforms {
     public override void Damage(float value) {
         throw new System.NotImplementedException();
     }
-
-    public void PerformMove(BasicMove move) {
-        move.Execute(this);
-    }
-
-    public void PerformMove(SpecialMove move) {
-        move.Execute(this);
-    }
-
-    public void PerformMove(UltimateMove move) {
-        move.Execute(this);
-    }
 }

@@ -6,7 +6,7 @@ public class RecoverAction : ActionBase {
     // Can only be used if player has not made a move, they can reposition a short distance though.
     [SerializeField] private float recoveryAmount = 50;
 
-    public override void Execute(Friendly unit) {
+    public override void Execute(Lifeforms unit) {
         BattleManager.Instance.PlayerRecovering(recoveryAmount);
     }
 }

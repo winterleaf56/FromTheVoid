@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4244a4296ee6b4d4cba421df8ae5921a, type: 3}
   m_Name: AssaaultUltimate
   m_EditorClassIdentifier: 
-  moveName: 
-  baseDamage: 0
+  moveName: Air Strike
   actionPoints: 0
+  baseDamage: 0
   cooldown: 0
   ultimatePoints: 0

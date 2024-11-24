@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6462912437173013266}
   - component: {fileID: 3076246919193380655}
   m_Layer: 0
-  m_Name: Friendly
+  m_Name: AssaultUnit
   m_TagString: Friendly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -66,7 +66,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  - {fileID: 2100000, guid: 145576cd55379cb4580ce8ea9b2fb3ff, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -121,5 +121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 40f6defcf4a7d4b4fb94c7f57c5d1428, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  basicMove: {fileID: 11400000, guid: 5ee47552f6859ca45a764647e039f4b9, type: 2}
+  specialMove: {fileID: 0}
+  ultimateMove: {fileID: 11400000, guid: e7c23ccae87f1cd4b836ed63cdfdb626, type: 2}
   health: {fileID: 0}
   damage: 0

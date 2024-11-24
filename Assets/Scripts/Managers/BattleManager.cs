@@ -1,15 +1,20 @@
 using System;
+using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class BattleManager : MonoBehaviour
-{
+public class BattleManager : MonoBehaviour {
+    [Header("Display Selected Unit Stats")]
     [SerializeField] private GameObject unitStatsPanel;
     [SerializeField] private TMP_Text healthValTxt;
     [SerializeField] private TMP_Text damageValTxt;
     [SerializeField] private TMP_Text actionPointsValTxt;
 
+    [Header("UI Elements")]
     [SerializeField] private GameObject battleActionsUI;
+    [SerializeField] private GameObject unitStatUI;
+
 
     [SerializeField] private GameObject friendlyPrefab;
     [SerializeField] private GameObject enemyPrefab;
@@ -30,7 +35,8 @@ public class BattleManager : MonoBehaviour
     public enum GameState {
         Intro,
         PlayerTurn,
-        EnemyTurn
+        EnemyTurn,
+        BattleOver
     }
 
     public enum BattleState {
@@ -40,7 +46,24 @@ public class BattleManager : MonoBehaviour
         PlayerItem
     }
 
-    public GameState currentTurn { get; private set; }
+    //public GameState currentTurn { get; private set; }
+
+    private GameState _currentTurn;
+    public GameState currentTurn {
+        get => _currentTurn;
+        private set { 
+            _currentTurn = value;
+            if (_currentTurn == GameState.PlayerTurn) {
+                StartPlayerTurn();
+                battleActionsUI.SetActive(true);
+                print("Player turn started");
+            } else {
+                battleActionsUI.SetActive(false);
+                print("Enemy turn started");
+            }
+        }
+    }
+
     public BattleState currentBattleState { get; private set; }
 
     void Awake() {
@@ -68,16 +91,28 @@ public class BattleManager : MonoBehaviour
         currentTurn = GameState.PlayerTurn;
     }
 
-    private void startPlayerTurn() {
+    void Start() {
+        StartCoroutine(StartBattle());
+    }
+
+    private void StartPlayerTurn() {
         // Increases the global action points by the value of increaseGAPBy which can be changed in other scripts to increase the value
         // Reset this value to 50 after every turn
         globalActionPoints += increaseGAPBy;
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
+    private IEnumerator StartBattle() {
+        while (!currentTurn.Equals(GameState.BattleOver)) {
+            Debug.Log("Battle Manager: Starting Player Turn");
+            yield return StartCoroutine(GetComponent<PlayerTurn>().StartPlayerTurn());
+            Debug.Log("Battle Manager: Ending Player Turn");
+            //SwitchTurns();
+            Debug.Log("Battle Manager: Starting Enemy Turn");
+
+            Debug.Log("Battle Manager: Ending Enemy Turn");
+            //SwitchTurns();
+            yield return new WaitForSeconds(1);
+        }
     }
 
     // Update is called once per frame
@@ -103,6 +138,9 @@ public class BattleManager : MonoBehaviour
     }
 
     public void UnitClicked(bool friendly) {
+        if (currentBattleState == BattleState.PlayerAttack) {
+
+        }
         if (friendly && currentTurn == GameState.PlayerTurn) {
             battleActionsUI.SetActive(true);
         } else {
@@ -128,5 +166,11 @@ public class BattleManager : MonoBehaviour
 
     public void PlayerRecovering(float value) {
         increaseGAPBy = value;
+    }
+
+    public void PlayerAttacking() {
+        //currentTurn = (currentTurn == GameState.PlayerTurn) ? GameState.EnemyTurn : GameState.PlayerTurn;
+        currentBattleState = (currentBattleState == BattleState.PlayerAttack) ? BattleState.PlayerIdle : BattleState.PlayerAttack;
+        Debug.Log($"Changing state to: {currentBattleState}");
     }
 }

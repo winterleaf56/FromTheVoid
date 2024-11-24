@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5822e18c4423f784b905bae39d4538a0, type: 3}
   m_Name: RecoverAction
   m_EditorClassIdentifier: 
-  moveName: 
+  moveName: Recover
   actionPoints: 50
   recoveryAmount: 50
