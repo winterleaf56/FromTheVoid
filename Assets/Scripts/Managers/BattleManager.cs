@@ -15,7 +15,11 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] private GameObject battleActionsUI;
     [SerializeField] private GameObject unitStatUI;
 
+    [Header("Lighting")]
+    [SerializeField] private GameObject selectingEnemyLight;
+    [SerializeField] private GameObject worldLight;
 
+    [Header("Unit References")]
     [SerializeField] private GameObject friendlyPrefab;
     [SerializeField] private GameObject enemyPrefab;
 
@@ -64,7 +68,14 @@ public class BattleManager : MonoBehaviour {
         }
     }
 
-    public BattleState currentBattleState { get; private set; }
+    private BattleState _currentBattleState;
+    public BattleState currentBattleState { 
+        get => _currentBattleState; 
+        private set {
+            _currentBattleState = value;
+            ToggleWorldLight();
+        } 
+    }
 
     void Awake() {
         if (Instance != null && Instance != this) {
@@ -116,11 +127,15 @@ public class BattleManager : MonoBehaviour {
     }
 
     // Update is called once per frame
-    void Update()
-    {
-        
+    void Update() {
+        /*if (_currentBattleState == BattleState.PlayerAttack) {
+            if (Input.GetKeyDown(KeyCode.Escape)) {
+                _currentBattleState = BattleState.PlayerIdle;
+            }
+        }*/
     }
 
+    // Possibly Not Needed / Replaced by StartBattle IEnumerator
     public void EndTurn() {
         SwitchTurns();
     }
@@ -168,9 +183,28 @@ public class BattleManager : MonoBehaviour {
         increaseGAPBy = value;
     }
 
-    public void PlayerAttacking() {
+    // Should make a ResetBattleUI method to reset UI to deafult state on PlayerTurn end
+    //
+    //
+
+    public void AttackingToggle() {
         //currentTurn = (currentTurn == GameState.PlayerTurn) ? GameState.EnemyTurn : GameState.PlayerTurn;
         currentBattleState = (currentBattleState == BattleState.PlayerAttack) ? BattleState.PlayerIdle : BattleState.PlayerAttack;
         Debug.Log($"Changing state to: {currentBattleState}");
+
+        foreach (GameObject enemy in enemyUnits) {
+            Light displayLight = enemy.GetComponent<Light>();
+            displayLight.color = Color.green;
+            displayLight.enabled = !displayLight.enabled;
+        }
+
+        // Change Lighting
+        //ToggleWorldLight();
+    }
+
+    private void ToggleWorldLight() {
+        selectingEnemyLight.SetActive(!selectingEnemyLight.activeSelf);
+        worldLight.SetActive(!worldLight.activeSelf);
+        Debug.Log($"Toggling world light to: {currentBattleState == BattleState.PlayerIdle}");
     }
 }

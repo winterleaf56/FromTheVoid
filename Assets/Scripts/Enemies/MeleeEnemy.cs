@@ -8,7 +8,7 @@ public class MeleeEnemy : Enemy
     void Start()  {
         Health health = gameObject.AddComponent<Health>();
         health.InitializeHealth(100, 100);
-        damage = 10;
+        //damage = 10;
         actionPoints = 100;
     }
 

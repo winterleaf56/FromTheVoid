@@ -1,3 +1,5 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "RecoverAction", menuName = "Actions/Recover Action")]
@@ -6,7 +8,8 @@ public class RecoverAction : ActionBase {
     // Can only be used if player has not made a move, they can reposition a short distance though.
     [SerializeField] private float recoveryAmount = 50;
 
-    public override void Execute(Lifeforms unit) {
+    public override IEnumerator Execute(Lifeforms unit) {
         BattleManager.Instance.PlayerRecovering(recoveryAmount);
+        return base.Execute(unit);
     }
 }

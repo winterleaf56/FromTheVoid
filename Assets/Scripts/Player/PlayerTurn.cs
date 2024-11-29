@@ -28,12 +28,36 @@ public class PlayerTurn : MonoBehaviour {
         BattleUI.enabled = false;
     }
 
+    private void CancelAttack() {
+        Debug.Log("Attack cancelled");
+        BattleManager.Instance.AttackingToggle();
+    }
+
+    /*public void ConfirmAttack() {
+        Debug.Log("Attack confirmed");
+        BattleManager.Instance.AttackingToggle();
+        BasicMove();
+    }*/
+
     public void EndTurn() {
         endTurn = true;
     }
 
     public void BasicMove() {
         Debug.Log("Executing basic move");
-        selectedUnit.GetComponent<Lifeforms>().PerformBasicMove();
+        BattleManager.Instance.AttackingToggle();
+        selectedUnit.GetComponent<Lifeforms>().PerformMove("Basic");
+    }
+
+    public void SpecialMove() {
+        Debug.Log("Executing special move");
+        BattleManager.Instance.AttackingToggle();
+        selectedUnit.GetComponent<Lifeforms>().PerformMove("Special");
+    }
+
+    public void UltimateMove() {
+        Debug.Log("Executing ultimate move");
+        BattleManager.Instance.AttackingToggle();
+        selectedUnit.GetComponent<Lifeforms>().PerformMove("Ultimate");
     }
 }

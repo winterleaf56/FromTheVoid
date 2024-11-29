@@ -1,14 +1,22 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Experimental.GlobalIllumination;
 
 public class ActionBase : ScriptableObject {
     public string moveName;
-    [SerializeField] private float actionPoints;
+    [SerializeField] protected float actionPoints;
+    [SerializeField] protected float range;
+    [SerializeField] protected float damage;
 
-    public virtual void Execute(Lifeforms unit) {
+    protected bool isAOE;
+
+    public virtual IEnumerator Execute(Lifeforms unit) {
         Debug.Log("Performing move: " + moveName);
+        yield return null;
     }
 
-    public virtual void Execute() {
+    /*public virtual void Execute() {
         Debug.Log("Performing move: " + moveName);
-    }
+    }*/
 }

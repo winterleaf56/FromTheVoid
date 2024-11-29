@@ -4,14 +4,17 @@ using UnityEngine.EventSystems;
 public class Friendly : Lifeforms {
     public float actionPoints { get; private set; }
 
+
+    //[SerializeField] private bool turnFinished = false;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start() {
+    /*void Start() {
         //Health health = new Health(100, 100);
         Health health = gameObject.AddComponent<Health>();
         health.InitializeHealth(100, 100);
-        damage = 25;
+        //damage = 25;
         actionPoints = 100;
-    }
+    }*/
 
     // Update is called once per frame
     void Update()
