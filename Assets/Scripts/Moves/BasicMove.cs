@@ -10,8 +10,13 @@ public class BasicMove : ActionBase {
     }
 
     // Make a coroutine that runs while the player is selecting an enemy to attack, then when the attack occurs, the coroutine ends
-    public override IEnumerator Execute(Lifeforms unit) {
-        Debug.Log("Performing move: " + moveName);
+    public override IEnumerator Execute(Lifeforms unit, Lifeforms target) {
+        Debug.Log("DAMAGE: " + damage);
+        //Debug.Log("Performing move: " + moveName);
+        Debug.Log($"Performing move: {moveName}, against: {target}");
+
+        target.GetComponentInParent<Health>().TakeDamage(CalculateDamage());
+        Debug.Log($"Damaging {target} for {CalculateDamage()} damage.");
 
         int i = 0;
 

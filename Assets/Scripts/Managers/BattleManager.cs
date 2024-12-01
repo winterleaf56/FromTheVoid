@@ -12,7 +12,9 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] private TMP_Text actionPointsValTxt;
 
     [Header("UI Elements")]
+    [SerializeField] private GameObject battleUI;
     [SerializeField] private GameObject battleActionsUI;
+    [SerializeField] private GameObject battleAttackActionsUI;
     [SerializeField] private GameObject unitStatUI;
 
     [Header("Lighting")]
@@ -52,6 +54,8 @@ public class BattleManager : MonoBehaviour {
 
     //public GameState currentTurn { get; private set; }
 
+
+    // Need to decide: Reset UI here, or in PlayerTurn script
     private GameState _currentTurn;
     public GameState currentTurn {
         get => _currentTurn;
@@ -59,10 +63,10 @@ public class BattleManager : MonoBehaviour {
             _currentTurn = value;
             if (_currentTurn == GameState.PlayerTurn) {
                 StartPlayerTurn();
-                battleActionsUI.SetActive(true);
+                //battleActionsUI.SetActive(true);
                 print("Player turn started");
             } else {
-                battleActionsUI.SetActive(false);
+                //battleActionsUI.SetActive(false);
                 print("Enemy turn started");
             }
         }
@@ -176,7 +180,7 @@ public class BattleManager : MonoBehaviour {
     }
 
     public void ShowPlayerAttacks() {
-        battleActionsUI.SetActive(true);
+        //battleActionsUI.SetActive(true);
     }
 
     public void PlayerRecovering(float value) {
@@ -206,5 +210,25 @@ public class BattleManager : MonoBehaviour {
         selectingEnemyLight.SetActive(!selectingEnemyLight.activeSelf);
         worldLight.SetActive(!worldLight.activeSelf);
         Debug.Log($"Toggling world light to: {currentBattleState == BattleState.PlayerIdle}");
+    }
+
+    public void ClearPlayerTurn() {
+        // Disable the lights on every player unit
+        foreach (GameObject playerUnit in playerUnits) {
+            playerUnit.GetComponent<Light>().enabled = false;
+        }
+
+        // Disable the lights on every enemy unit
+        foreach (GameObject enemyUnit in enemyUnits) {
+            enemyUnit.GetComponent<Light>().enabled = false;
+        }
+
+        //battleUI.SetActive(false);
+        battleActionsUI.SetActive(false);
+        foreach (Transform child in battleAttackActionsUI.transform) {
+            if (child.name != "BackBtn") {
+                child.gameObject.SetActive(false);
+            }
+        }
     }
 }

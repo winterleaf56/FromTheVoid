@@ -38,29 +38,31 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
         Debug.Log($"Unit Name: {stats.Name}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
     }
 
-    public void PerformMove(string moveType) {
-        StartCoroutine(PerformMoveType(moveType));
+    public void PerformMove(string moveType, Lifeforms target) {
+        StartCoroutine(PerformMoveType(moveType, target));
     }
 
-    public IEnumerator PerformMoveType(string moveType) {
+    public IEnumerator PerformMoveType(string moveType, Lifeforms target) {
+        Debug.Log($"{target.stats.Name} is the target");
         switch (moveType) {
             case "Basic":
-                yield return StartCoroutine(basicMove.Execute(this));
+                yield return StartCoroutine(basicMove.Execute(this, target));
                 break;
             case "Special":
-                yield return StartCoroutine(specialMove.Execute(this));
+                yield return StartCoroutine(specialMove.Execute(this, target));
                 break;
             case "Ultimate":
-                yield return StartCoroutine(ultimateMove.Execute(this));
+                yield return StartCoroutine(ultimateMove.Execute(this, target));
                 break;
             default:
                 Debug.Log("Misspelled Move Type or Invalid Type");
                 break;
         }
 
+
         //basicMove.Execute(this);
-        StartCoroutine(basicMove.Execute(this));
-        Debug.Log($"Performing basic move: {basicMove.name}");
+        //StartCoroutine(basicMove.Execute(this));
+        Debug.Log($"Move: {basicMove.moveName} completed");
     }
 
     /*public void PerformMove() {
@@ -72,6 +74,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     }
 }
 
+// Serialization probably not needed
 [System.Serializable]
 public class Stats {
     [SerializeField] string name;

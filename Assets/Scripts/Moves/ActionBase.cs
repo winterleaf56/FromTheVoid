@@ -11,6 +11,11 @@ public class ActionBase : ScriptableObject {
 
     protected bool isAOE;
 
+    public virtual IEnumerator Execute(Lifeforms unit, Lifeforms target) {
+        Debug.Log("Performing move: " + moveName + ", against: " + target);
+        yield return null;
+    }
+
     public virtual IEnumerator Execute(Lifeforms unit) {
         Debug.Log("Performing move: " + moveName);
         yield return null;

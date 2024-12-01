@@ -223,7 +223,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &34762529
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1293,7 +1293,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &499796336
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3691,7 +3691,9 @@ MonoBehaviour:
   healthValTxt: {fileID: 977659156}
   damageValTxt: {fileID: 1779005585}
   actionPointsValTxt: {fileID: 893119389}
+  battleUI: {fileID: 34762528}
   battleActionsUI: {fileID: 1354114643}
+  battleAttackActionsUI: {fileID: 472704905}
   unitStatUI: {fileID: 2090146665}
   selectingEnemyLight: {fileID: 499796335}
   worldLight: {fileID: 641571662}
@@ -3740,7 +3742,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f81618d0a333e5a4b8b521d655550a66, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  BattleUI: {fileID: 34762531}
+  BattleUI: {fileID: 34762528}
+  actionsUI: {fileID: 1354114643}
 --- !u!1 &1128370424
 GameObject:
   m_ObjectHideFlags: 0
@@ -4119,7 +4122,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1354114644
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4680,7 +4683,7 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
-        m_CallState: 2
+        m_CallState: 0
 --- !u!114 &1497460335
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2128c532f32f8fb43bfdc7c7c27f2b88, type: 3}
   m_Name: AssaultBasic
   m_EditorClassIdentifier: 
-  moveName: SingleShot
+  moveName: Machine Gun Fire
   actionPoints: 25
-  baseDamage: 25
+  range: 40
+  damage: 25
