@@ -12,7 +12,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     public Stats stats;
 
-    private float actionPoints;
+    private int actionPoints;
 
     public abstract void Attack();
 
@@ -47,12 +47,15 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
         switch (moveType) {
             case "Basic":
                 yield return StartCoroutine(basicMove.Execute(this, target));
+                actionPoints -= basicMove.GetAPRequirement();
                 break;
             case "Special":
                 yield return StartCoroutine(specialMove.Execute(this, target));
+                actionPoints -= specialMove.GetAPRequirement();
                 break;
             case "Ultimate":
                 yield return StartCoroutine(ultimateMove.Execute(this, target));
+                actionPoints -= ultimateMove.GetAPRequirement();
                 break;
             default:
                 Debug.Log("Misspelled Move Type or Invalid Type");
@@ -72,14 +75,31 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     public void PerformUltimateMove() {
         ultimateMove.Execute(this);
     }
+
+    public int GetMoveAPRequirement(string moveType) {
+        switch (moveType) {
+            case "Basic":
+                return basicMove.GetAPRequirement();
+            case "Special":
+                return specialMove.GetAPRequirement();
+            case "Ultimate":
+                return ultimateMove.GetAPRequirement();
+            default:
+                return 0;
+        }
+    }
+
+    public int getActionPoints() {
+        return actionPoints;
+    }
 }
 
-// Serialization probably not needed
+
 [System.Serializable]
 public class Stats {
     [SerializeField] string name;
+    [SerializeField] private int actionPoints;
     [SerializeField] private float maxHealth;
-    [SerializeField] private float actionPoints;
     [SerializeField] private float moveSpeed;
     [SerializeField] private float defence;
 
@@ -88,14 +108,14 @@ public class Stats {
         set { name = value; }
     }
 
+    public int ActionPoints {
+        get { return actionPoints; }
+        set { actionPoints = value; }
+    }
+
     public float MaxHealth {
         get { return maxHealth; }
         set { maxHealth = value; }
-    }
-
-    public float ActionPoints {
-        get { return actionPoints; }
-        set { actionPoints = value; }
     }
 
     public float MoveSpeed {

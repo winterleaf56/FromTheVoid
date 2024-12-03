@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 public class Friendly : Lifeforms {
     public float actionPoints { get; private set; }
 
+    [SerializeField] private int friendlyUnitID;
 
     //[SerializeField] private bool turnFinished = false;
 

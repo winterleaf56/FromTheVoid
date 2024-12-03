@@ -5,7 +5,7 @@ using UnityEngine.Experimental.GlobalIllumination;
 
 public class ActionBase : ScriptableObject {
     public string moveName;
-    [SerializeField] protected float actionPoints;
+    [SerializeField] protected int actionPoints;
     [SerializeField] protected float range;
     [SerializeField] protected float damage;
 
@@ -19,6 +19,10 @@ public class ActionBase : ScriptableObject {
     public virtual IEnumerator Execute(Lifeforms unit) {
         Debug.Log("Performing move: " + moveName);
         yield return null;
+    }
+
+    public int GetAPRequirement() {
+        return actionPoints;
     }
 
     /*public virtual void Execute() {

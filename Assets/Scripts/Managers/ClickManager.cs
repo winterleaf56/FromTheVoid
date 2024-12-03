@@ -34,6 +34,8 @@ public class ClickManager : MonoBehaviour {
         }
     }
 
+    // Add a way to turn off the unit lights by clicking anywhere other than another unit
+
     // Click on a unit to select it
     // Currently configured to work exclusively with PlayerTurn
     // Can add a bool parameter doubleClicked with if statements in each block so the other method is not needed.
