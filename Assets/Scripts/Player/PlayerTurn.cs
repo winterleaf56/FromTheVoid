@@ -33,7 +33,7 @@ public class PlayerTurn : MonoBehaviour {
                 ToggleStats(true);
                 selectedUnitName.SetText(selectedFriendly.stats.Name);
                 selectedUnitHealthTxt.SetText($"Health: {selectedFriendly.stats.MaxHealth.ToString()}");
-                selectedUnitAPTxt.SetText($"Action Points: {selectedFriendly.stats.ActionPoints.ToString()}/{selectedFriendly.maxActionPoints}");
+                selectedUnitAPTxt.SetText($"Action Points: {selectedFriendly.stats.ActionPoints.ToString()}/100"); // Change 100 to the max action points for the selected friendly unit
             } else if (!BattleManager.Instance.currentBattleState.Equals(BattleState.PlayerAttack)) {
                 print("Enemy unit selected, deactivating actionsUI");
                 actionsUI.SetActive(false);
@@ -99,9 +99,15 @@ public class PlayerTurn : MonoBehaviour {
         endTurn = true;
     }
 
+    void ToggleStats(bool enable) {
+        selectedUnitName.gameObject.SetActive(enable);
+        selectedUnitHealthTxt.gameObject.SetActive(enable);
+        selectedUnitAPTxt.gameObject.SetActive(enable);
+    }
+
     // If player has enough AP, button clickable, Not enough AP, unclickable, greyed out
 
-    public bool DeductAP(string move) {
+    public bool CheckAP(string move) {
         int apRequirement = selectedFriendly.GetMoveAPRequirement(move);
         if (selectedFriendly.getActionPoints() >= apRequirement) {
             return true;
@@ -111,7 +117,7 @@ public class PlayerTurn : MonoBehaviour {
     }
 
     public void BasicMove() {
-        if (!DeductAP("Basic")) {
+        if (!CheckAP("Basic")) {
             Debug.Log("Not enough AP to perform basic move");
             return;
         }
@@ -121,26 +127,6 @@ public class PlayerTurn : MonoBehaviour {
         Debug.Log($"Selected unit using basic move: {selectedUnit.GetComponent<Lifeforms>().stats.Name}");
         Debug.Log($"Selected enemy recieving basic move: {selectedEnemy.stats.Name}");
         //BattleManager.Instance.ClearPlayerTurn();
-    }
-
-    void ToggleStats(bool enable) {
-        /*suName.SetText(selectedFriendly.stats.Name);
-        suHealthTxt.SetText(selectedFriendly.stats.MaxHealth.ToString());
-        suAPTxt.SetText(selectedFriendly.stats.ActionPoints.ToString());*/
-
-        selectedUnitName.gameObject.SetActive(enable);
-        selectedUnitHealthTxt.gameObject.SetActive(enable);
-        selectedUnitAPTxt.gameObject.SetActive(enable);
-
-        /*if (enable) {
-            suName.enabled = true;
-            suHealthTxt.enabled = true;
-            suAPTxt.enabled = true;
-        } else {
-            suName.enabled = false;
-            suHealthTxt.enabled = false;
-            suAPTxt.enabled = false;
-        }*/
     }
 
     public void SpecialMove() {
