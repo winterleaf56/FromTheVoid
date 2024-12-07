@@ -1,15 +1,16 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using static BattleManager;
 
 public class PlayerTurn : MonoBehaviour {
     [SerializeField] private GameObject BattleUI;
     [SerializeField] private GameObject actionsUI;
 
-    [SerializeField] private TMP_Text selectedUnitName;
+    /*[SerializeField] private TMP_Text selectedUnitName;
     [SerializeField] private TMP_Text selectedUnitHealthTxt;
-    [SerializeField] private TMP_Text selectedUnitAPTxt;
+    [SerializeField] private TMP_Text selectedUnitAPTxt;*/
 
     private bool endTurn = false;
 
@@ -19,30 +20,37 @@ public class PlayerTurn : MonoBehaviour {
     // Reselecting an enemy will not disable the UI so need to fix this
     // I am not sure what I meant by this as everything seems to work
     // Update: I meant ActionsUI will not disable on clicking an enemy (This goes in hand with change in PlayerTurn [If Friendly selected, click anywhere to unselect and turn off light])
+    // FIXED
 
     private GameObject _selectedUnit;
     public GameObject selectedUnit {
         get => _selectedUnit;
         private set {
             _selectedUnit = value;
+            print($"Selected unit: {_selectedUnit}");
 
             if (_selectedUnit.CompareTag("Friendly")) {
                 print("Friendly unit selected, activating actionsUI");
                 actionsUI.SetActive(true);
                 selectedFriendly = _selectedUnit.GetComponent<Lifeforms>();
-                ToggleStats(true);
-                selectedUnitName.SetText(selectedFriendly.stats.Name);
+                //LoadMoveButtons();
+                UIManager.Instance.LoadButtons(selectedFriendly);
+                UIManager.Instance.ToggleStats(true);
+                UIManager.Instance.UpdateStatBar(selectedFriendly.stats.Name, selectedFriendly.stats.MaxHealth, selectedFriendly.stats.ActionPoints);
+                /*selectedUnitName.SetText(selectedFriendly.stats.Name);
                 selectedUnitHealthTxt.SetText($"Health: {selectedFriendly.stats.MaxHealth.ToString()}");
-                selectedUnitAPTxt.SetText($"Action Points: {selectedFriendly.stats.ActionPoints.ToString()}/100"); // Change 100 to the max action points for the selected friendly unit
+                selectedUnitAPTxt.SetText($"Action Points: {selectedFriendly.stats.ActionPoints.ToString()}/{selectedFriendly.maxActionPoints}");*/ // Change 100 to the max action points for the selected friendly unit
             } else if (!BattleManager.Instance.currentBattleState.Equals(BattleState.PlayerAttack)) {
                 print("Enemy unit selected, deactivating actionsUI");
                 actionsUI.SetActive(false);
+                selectedFriendly.GetComponent<Light>().enabled = false;
+                UIManager.Instance.ToggleStats(false);
             } else if (_selectedUnit.CompareTag("UI")) {
                 return;
             } else {
                 selectedFriendly = null;
                 selectedEnemy = null;
-                ToggleStats(false);
+                //ToggleStats(false);
             }
 
             Debug.Log("SELECTED UNIT CHANGED");
@@ -50,6 +58,9 @@ public class PlayerTurn : MonoBehaviour {
             if (BattleManager.Instance.currentBattleState.Equals(BattleState.PlayerAttack) && _selectedUnit.CompareTag("Enemy")) {
                 //Debug.Log($"Enemy unit recieved and being set to selectedEnemy (TAG): {selectedUnit.tag}");
                 selectedEnemy = _selectedUnit.GetComponent<Lifeforms>();
+                /*selectedUnitName.SetText(selectedEnemy.stats.Name);
+                selectedUnitHealthTxt.SetText($"Health: {selectedEnemy.stats.MaxHealth.ToString()}");
+                selectedUnitAPTxt.SetText("");*/
             }
             //_selectedUnit = value;
 
@@ -60,10 +71,33 @@ public class PlayerTurn : MonoBehaviour {
         }
     }
 
+    public static PlayerTurn Instance { get; private set; }
+
+    private void Awake() {
+        if (Instance != null && Instance != this) {
+            Destroy(gameObject);
+            return;
+        }
+
+        Instance = this;
+    }
+
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
+            if (EventSystem.current.IsPointerOverGameObject()) {
+                return;
+            }
+
             Debug.Log($"Selected Unit through Update PlayerTurn: {_selectedUnit}");
-            selectedUnit = ClickManager.Instance.DetectClick();
+            GameObject temp = ClickManager.Instance.DetectClick();
+            if (temp != null) {
+                if (temp.CompareTag("UI")) {
+                    print("CLICKING UI");
+                    return;
+                } else {
+                    selectedUnit = temp;
+                }
+            }
             //Debug.Log($"Selected Unit through Update PlayerTurn: {_selectedUnit}");
             Debug.Log($"Currently selected Friendly unit: {selectedFriendly}");
             Debug.Log($"Currently selected enemy: {selectedEnemy}");
@@ -75,6 +109,8 @@ public class PlayerTurn : MonoBehaviour {
         BattleUI.SetActive(true);
         endTurn = false;
         Debug.Log("Player turn started");
+
+
 
         while (!endTurn) {
             yield return null;
@@ -100,10 +136,20 @@ public class PlayerTurn : MonoBehaviour {
     }
 
     void ToggleStats(bool enable) {
-        selectedUnitName.gameObject.SetActive(enable);
+        /*selectedUnitName.gameObject.SetActive(enable);
         selectedUnitHealthTxt.gameObject.SetActive(enable);
-        selectedUnitAPTxt.gameObject.SetActive(enable);
+        selectedUnitAPTxt.gameObject.SetActive(enable);*/
     }
+
+    void LoadMoveButtons() {
+        Debug.Log($"Getting moves from selected unit: {selectedFriendly.stats.Name}");
+
+        ActionBase[] actions = selectedFriendly.GetComponents<ActionBase>();
+        foreach (ActionBase action in actions) {
+            Debug.Log($"Action: {action.name}");
+        }
+    }
+
 
     // If player has enough AP, button clickable, Not enough AP, unclickable, greyed out
 
@@ -141,5 +187,17 @@ public class PlayerTurn : MonoBehaviour {
         BattleManager.Instance.AttackingToggle();
         selectedFriendly.PerformMove("Ultimate", selectedEnemy);
         //BattleManager.Instance.ClearPlayerTurn();
+    }
+
+    public void RecoverAction() {
+        Debug.Log("Executing recover action");
+        //BattleManager.Instance.AttackingToggle();
+        selectedFriendly.PerformAction("Recover", selectedFriendly);
+        //BattleManager.Instance.ClearPlayerTurn();
+    }
+
+    public void StaminaStimAction() {
+        Debug.Log("Executing Stamina Stim Action");
+        selectedFriendly.GetComponentInParent<Assault>().PerformAction("Stamina", selectedFriendly);
     }
 }

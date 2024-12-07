@@ -3,6 +3,7 @@ using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour {
     [Header("Display Selected Unit Stats")]
@@ -14,6 +15,7 @@ public class BattleManager : MonoBehaviour {
     [Header("UI Elements")]
     [SerializeField] private GameObject battleUI;
     [SerializeField] private GameObject battleActionsUI;
+    [SerializeField] private GameObject unitActionUI;
     [SerializeField] private GameObject battleAttackActionsUI;
     [SerializeField] private GameObject unitStatUI;
 
@@ -30,6 +32,9 @@ public class BattleManager : MonoBehaviour {
 
     public GameObject[] playerUnits;
     public GameObject[] enemyUnits;
+
+    public int turnNumber { get; private set; }
+    public int waveNumber { get; private set; } // Waves not implemented, add at later time
 
     public float globalActionPoints { get; private set; }
     public float increaseGAPBy { get; private set; } = 50;
@@ -72,6 +77,7 @@ public class BattleManager : MonoBehaviour {
         }
     }
 
+    // Updated during PlayerTurn to differentiate between different actions for clicks, lighting changes, etc
     private BattleState _currentBattleState;
     public BattleState currentBattleState { 
         get => _currentBattleState; 
@@ -106,6 +112,8 @@ public class BattleManager : MonoBehaviour {
         currentTurn = GameState.PlayerTurn;
     }
 
+    [SerializeField] Canvas randomButtonCanvas;
+
     void Start() {
         StartCoroutine(StartBattle());
     }
@@ -114,10 +122,15 @@ public class BattleManager : MonoBehaviour {
         // Increases the global action points by the value of increaseGAPBy which can be changed in other scripts to increase the value
         // Reset this value to 50 after every turn
         globalActionPoints += increaseGAPBy;
+
+        /*foreach (GameObject unit in playerUnits) {
+            unit..GetComponent<Friendly>().firstAction = true;
+        }*/
     }
 
     private IEnumerator StartBattle() {
         while (!currentTurn.Equals(GameState.BattleOver)) {
+            turnNumber++;
             Debug.Log("Battle Manager: Starting Player Turn");
             yield return StartCoroutine(GetComponent<PlayerTurn>().StartPlayerTurn());
             Debug.Log("Battle Manager: Ending Player Turn");
@@ -179,6 +192,17 @@ public class BattleManager : MonoBehaviour {
         unitStatsPanel.SetActive(false);
     }
 
+    public void ToggleButton(string btnToDisable, bool toggle) {
+        switch (btnToDisable) {
+            case "Stamina":
+                // Probably better to have this in the action itself
+                unitActionUI.transform.Find("StaminaStim").gameObject.GetComponent<Button>().interactable = toggle;
+                break;
+            default:
+                break;
+        }
+    }
+
     public void ShowPlayerAttacks() {
         //battleActionsUI.SetActive(true);
     }
@@ -209,7 +233,6 @@ public class BattleManager : MonoBehaviour {
     private void ToggleWorldLight() {
         selectingEnemyLight.SetActive(!selectingEnemyLight.activeSelf);
         worldLight.SetActive(!worldLight.activeSelf);
-        Debug.Log($"Toggling world light to: {currentBattleState == BattleState.PlayerIdle}");
     }
 
     public void ClearPlayerTurn() {

@@ -9,15 +9,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4244a4296ee6b4d4cba421df8ae5921a, type: 3}
-  m_Name: AssaaultUltimate
+  m_Script: {fileID: 11500000, guid: 036c988cfb9a65244ade443c6bddc3c5, type: 3}
+  m_Name: StaminaStimAction
   m_EditorClassIdentifier: 
-  moveName: Air Strike
-  actionPoints: 0
+  moveName: Stamina Stim
+  actionPoints: 50
   range: 0
   damage: 0
   confirmPage: {fileID: 0}
   confirmBtn: {fileID: 0}
-  buttonPrefab: {fileID: 4103223455821037479, guid: 63d04aca977d17e4183099482bba98cc, type: 3}
-  cooldown: 0
-  ultimatePoints: 0
+  buttonPrefab: {fileID: 1800276199394693438, guid: 029f47f83aa613d4197b9f1479b83987, type: 3}
+  moveMultiplier: 1.2
+  recoverActionPoints: 25
+  turnsActive: 2

@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class ClickManager : MonoBehaviour {
 
@@ -24,6 +25,10 @@ public class ClickManager : MonoBehaviour {
 
     void Update() {
         if (Input.GetMouseButtonDown(0)) {
+            if (EventSystem.current.IsPointerOverGameObject()) {
+                return;
+            }
+
             float timeSinceLastClick = Time.time - lastClickTime;
             if (timeSinceLastClick <= doubleClickThreshold) {
                 DetectDoubleClick();
@@ -54,6 +59,7 @@ public class ClickManager : MonoBehaviour {
                 if (clickedObject.CompareTag("Enemy")) {
                     Debug.Log("Enemy Unit clicked");
                     BattleManager.Instance.UnitClicked(false);
+                    unitToSend = clickedObject;
                     return unitToSend;
                 } else if (clickedObject.CompareTag("Friendly")) {
                     Debug.Log("Friendly Unit clicked");
@@ -70,7 +76,7 @@ public class ClickManager : MonoBehaviour {
                     return unitToSend;
                 } else if (clickedObject.CompareTag("UI")) {
                     Debug.Log("UI Clicked");
-                    return unitToSend;
+                    
                 } else {
                     Debug.Log("Non-unit object clicked");
                     //BattleManager.Instance.HideUnitStats();

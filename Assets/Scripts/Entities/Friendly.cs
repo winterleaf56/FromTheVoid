@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class Friendly : Lifeforms {
-    public float actionPoints { get; private set; }
+    //public float actionPoints { get; private set; }
 
     [SerializeField] private int friendlyUnitID;
 

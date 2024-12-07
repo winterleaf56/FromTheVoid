@@ -10,6 +10,6 @@ public class RecoverAction : ActionBase {
 
     public override IEnumerator Execute(Lifeforms unit) {
         BattleManager.Instance.PlayerRecovering(recoveryAmount);
-        return base.Execute(unit);
+        return null;
     }
 }

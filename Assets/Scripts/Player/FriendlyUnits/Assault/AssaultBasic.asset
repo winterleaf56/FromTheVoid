@@ -16,3 +16,6 @@ MonoBehaviour:
   actionPoints: 25
   range: 40
   damage: 25
+  confirmPage: {fileID: 0}
+  confirmBtn: {fileID: 0}
+  buttonPrefab: {fileID: 5276875881035326380, guid: 4001925ea516e794386800f793cb0693, type: 3}

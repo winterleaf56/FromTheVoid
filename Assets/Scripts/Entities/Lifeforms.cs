@@ -2,9 +2,16 @@ using System.Collections;
 using UnityEngine;
 
 public abstract class Lifeforms : MonoBehaviour, IDamageable {
+    [Header("Moves")]
     [SerializeField] protected BasicMove basicMove;
     [SerializeField] protected SpecialMove specialMove;
     [SerializeField] protected UltimateMove ultimateMove;
+
+    [Header("Actions")]
+    [SerializeField] protected RecoverAction recoverAction;
+
+    [SerializeField] protected ActionBase[] moves;
+    [SerializeField] protected ActionBase[] actions;
 
     public Health health;
 
@@ -12,7 +19,10 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     public Stats stats;
 
-    private int actionPoints;
+    public bool firstAction { get; private set; }
+
+    public int currentActionPoints { get; private set; }
+    public int maxActionPoints { get; private set; }
 
     public abstract void Attack();
 
@@ -31,11 +41,30 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     //public abstract void OnMouseDown();
 
     private void Start() {
+        maxActionPoints = stats.ActionPoints;
         health = gameObject.AddComponent<Health>();
         health.InitializeHealth(stats.MaxHealth, stats.MaxHealth);
-        actionPoints = stats.ActionPoints;
+        currentActionPoints = stats.ActionPoints;
 
         Debug.Log($"Unit Name: {stats.Name}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
+    }
+
+    public ActionBase[] GetMoves() {
+        return moves;
+    }
+
+    public ActionBase[] GetActions() {
+        return actions;
+    }
+
+    protected virtual void SetMoves() {
+        // Moves
+        basicMove = moves[0] as BasicMove;
+        specialMove = moves[1] as SpecialMove;
+        ultimateMove = moves[2] as UltimateMove;
+
+        // Actions
+        recoverAction = actions[0] as RecoverAction;
     }
 
     public void PerformMove(string moveType, Lifeforms target) {
@@ -47,25 +76,37 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
         switch (moveType) {
             case "Basic":
                 yield return StartCoroutine(basicMove.Execute(this, target));
-                actionPoints -= basicMove.GetAPRequirement();
+                currentActionPoints -= basicMove.GetAPRequirement();
                 break;
             case "Special":
                 yield return StartCoroutine(specialMove.Execute(this, target));
-                actionPoints -= specialMove.GetAPRequirement();
+                currentActionPoints -= specialMove.GetAPRequirement();
                 break;
             case "Ultimate":
                 yield return StartCoroutine(ultimateMove.Execute(this, target));
-                actionPoints -= ultimateMove.GetAPRequirement();
+                currentActionPoints -= ultimateMove.GetAPRequirement();
                 break;
             default:
                 Debug.Log("Misspelled Move Type or Invalid Type");
                 break;
         }
-
-
         //basicMove.Execute(this);
         //StartCoroutine(basicMove.Execute(this));
         Debug.Log($"Move: {basicMove.moveName} completed");
+        yield break;
+    }
+
+    public void PerformAction(string moveType, Lifeforms target) {
+        StartCoroutine(PerformActionType(moveType, target));
+    }
+
+    public virtual IEnumerator PerformActionType(string actionType, Lifeforms target) {
+        switch (actionType) {
+            case "Recover":
+                yield return StartCoroutine(recoverAction.Execute(this));
+                currentActionPoints -= recoverAction.GetAPRequirement();
+                break;
+        }
     }
 
     /*public void PerformMove() {
@@ -89,8 +130,9 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
         }
     }
 
+    // Probably dont need this if I make actionPoints into a property
     public int getActionPoints() {
-        return actionPoints;
+        return currentActionPoints;
     }
 }
 
@@ -99,8 +141,9 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 public class Stats {
     [SerializeField] string name;
     [SerializeField] private int actionPoints;
+    [SerializeField] private int actionPointRecovery;
     [SerializeField] private float maxHealth;
-    [SerializeField] private float moveSpeed;
+    [SerializeField] private float maxMoveDistance;
     [SerializeField] private float defence;
 
     public string Name {
@@ -113,14 +156,19 @@ public class Stats {
         set { actionPoints = value; }
     }
 
+    public int ActionPointRecovery {
+        get { return actionPointRecovery; }
+        set { actionPointRecovery = value; }
+    }
+
     public float MaxHealth {
         get { return maxHealth; }
         set { maxHealth = value; }
     }
 
-    public float MoveSpeed {
-        get { return moveSpeed; }
-        set { moveSpeed = value; }
+    public float MaxMoveDistance {
+        get { return maxMoveDistance; }
+        set { maxMoveDistance = value; }
     }
 
     public float Defence {
