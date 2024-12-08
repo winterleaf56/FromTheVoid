@@ -3,12 +3,12 @@ using UnityEngine;
 
 public abstract class Lifeforms : MonoBehaviour, IDamageable {
     [Header("Moves")]
-    [SerializeField] protected BasicMove basicMove;
-    [SerializeField] protected SpecialMove specialMove;
-    [SerializeField] protected UltimateMove ultimateMove;
+    protected BasicMove basicMove;
+    protected SpecialMove specialMove;
+    protected UltimateMove ultimateMove;
 
     [Header("Actions")]
-    [SerializeField] protected RecoverAction recoverAction;
+    protected RecoverAction recoverAction;
 
     [SerializeField] protected ActionBase[] moves;
     [SerializeField] protected ActionBase[] actions;
@@ -30,15 +30,6 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     public abstract void Damage(float value);
 
-    /*public float Damage() {
-        return stats.Damage;
-    }*/
-
-    void Awake() {
-        //health = gameObject.AddComponent<Health>();
-    }
-
-    //public abstract void OnMouseDown();
 
     private void Start() {
         maxActionPoints = stats.ActionPoints;

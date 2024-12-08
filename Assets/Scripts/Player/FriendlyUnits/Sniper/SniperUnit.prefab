@@ -119,7 +119,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2988888026099170687}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 40f6defcf4a7d4b4fb94c7f57c5d1428, type: 3}
   m_Name: 
@@ -128,8 +128,12 @@ MonoBehaviour:
   specialMove: {fileID: 11400000, guid: 5cb5e8fc9bf7b3847a6d6d36a01e5310, type: 2}
   ultimateMove: {fileID: 11400000, guid: 90a39a2f0a9d4fe4a9772d64c6667ffc, type: 2}
   recoverAction: {fileID: 0}
-  moves: []
-  actions: []
+  moves:
+  - {fileID: 11400000, guid: 40464e0edf2e5e64eaf3bb27eefbf8fd, type: 2}
+  - {fileID: 11400000, guid: 5cb5e8fc9bf7b3847a6d6d36a01e5310, type: 2}
+  - {fileID: 11400000, guid: 90a39a2f0a9d4fe4a9772d64c6667ffc, type: 2}
+  actions:
+  - {fileID: 11400000, guid: 9108616438fb73b4abd15521a6df821c, type: 2}
   health: {fileID: 0}
   stats:
     name: Sniper
@@ -234,8 +238,27 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2988888026099170687}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a3c31ee645a79904391cf33a1a4b29a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  basicMove: {fileID: 0}
+  specialMove: {fileID: 0}
+  ultimateMove: {fileID: 0}
+  recoverAction: {fileID: 0}
+  moves:
+  - {fileID: 11400000, guid: 40464e0edf2e5e64eaf3bb27eefbf8fd, type: 2}
+  - {fileID: 11400000, guid: 5cb5e8fc9bf7b3847a6d6d36a01e5310, type: 2}
+  - {fileID: 11400000, guid: 90a39a2f0a9d4fe4a9772d64c6667ffc, type: 2}
+  actions:
+  - {fileID: 11400000, guid: 9108616438fb73b4abd15521a6df821c, type: 2}
+  health: {fileID: 0}
+  stats:
+    name: 
+    actionPoints: 0
+    actionPointRecovery: 0
+    maxHealth: 0
+    maxMoveDistance: 0
+    defence: 0
+  friendlyUnitID: 0
