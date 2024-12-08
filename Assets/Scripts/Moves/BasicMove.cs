@@ -13,17 +13,27 @@ public class BasicMove : ActionBase {
         return damage;
     }
 
-    public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn) {
-        base.SetupButton(button, unit, confirmPage, confirmBtn);
-        button.onClick.AddListener(() => BattleManager.Instance.AttackingToggle());
-        button.onClick.AddListener(() => confirmPage.SetActive(true));
-        button.onClick.AddListener(() => confirmBtn.SetActive(true));
-        //confirmPage.SetActive(true);
-        //confirmBtn.SetActive(true);
-        confirmBtn.gameObject.GetComponent<Button>().onClick.AddListener(() => PlayerTurn.Instance.BasicMove());
-        confirmBtn.gameObject.GetComponent<Button>().onClick.AddListener(() => confirmPage.SetActive(false));
-        confirmBtn.gameObject.GetComponent<Button>().onClick.AddListener(() => confirmBtn.SetActive(false));
-        //button.onClick.AddListener(() => PlayerTurn.Instance.BasicMove());
+    public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        ConfigureButton(button, confirmPage, confirmBtn, cancelBtn);
+        button.onClick.AddListener(() => {
+            BattleManager.Instance.AttackingToggle();
+            OnClickedBasic(confirmPage, confirmBtn, cancelBtn);
+            Debug.Log("Executing basic move by setting up button");
+        });
+
+    }
+
+    protected override void ConfigureButton(Button button, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        base.ConfigureButton(button, confirmPage, confirmBtn, cancelBtn);
+    }
+
+    // OnClickedBasic is OnClicked but toggles BattleState to PlayerAttack so children can override OnClicked and not have to worry about toggling BattleState to PlayerAttack
+    protected virtual void OnClickedBasic(GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        base.OnClicked(confirmPage, confirmBtn, cancelBtn);
+
+        cancelBtn.onClick.AddListener(() => {
+            BattleManager.Instance.AttackingToggle();
+        });
     }
 
     // Make a coroutine that runs while the player is selecting an enemy to attack, then when the attack occurs, the coroutine ends

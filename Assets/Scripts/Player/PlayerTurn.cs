@@ -8,19 +8,10 @@ public class PlayerTurn : MonoBehaviour {
     [SerializeField] private GameObject BattleUI;
     [SerializeField] private GameObject actionsUI;
 
-    /*[SerializeField] private TMP_Text selectedUnitName;
-    [SerializeField] private TMP_Text selectedUnitHealthTxt;
-    [SerializeField] private TMP_Text selectedUnitAPTxt;*/
-
     private bool endTurn = false;
 
     private Lifeforms selectedEnemy;
     private Lifeforms selectedFriendly;
-
-    // Reselecting an enemy will not disable the UI so need to fix this
-    // I am not sure what I meant by this as everything seems to work
-    // Update: I meant ActionsUI will not disable on clicking an enemy (This goes in hand with change in PlayerTurn [If Friendly selected, click anywhere to unselect and turn off light])
-    // FIXED
 
     private GameObject _selectedUnit;
     public GameObject selectedUnit {
@@ -37,9 +28,6 @@ public class PlayerTurn : MonoBehaviour {
                 UIManager.Instance.LoadButtons(selectedFriendly);
                 UIManager.Instance.ToggleStats(true);
                 UIManager.Instance.UpdateStatBar(selectedFriendly.stats.Name, selectedFriendly.stats.MaxHealth, selectedFriendly.stats.ActionPoints);
-                /*selectedUnitName.SetText(selectedFriendly.stats.Name);
-                selectedUnitHealthTxt.SetText($"Health: {selectedFriendly.stats.MaxHealth.ToString()}");
-                selectedUnitAPTxt.SetText($"Action Points: {selectedFriendly.stats.ActionPoints.ToString()}/{selectedFriendly.maxActionPoints}");*/ // Change 100 to the max action points for the selected friendly unit
             } else if (!BattleManager.Instance.currentBattleState.Equals(BattleState.PlayerAttack)) {
                 print("Enemy unit selected, deactivating actionsUI");
                 actionsUI.SetActive(false);
@@ -98,10 +86,8 @@ public class PlayerTurn : MonoBehaviour {
                     selectedUnit = temp;
                 }
             }
-            //Debug.Log($"Selected Unit through Update PlayerTurn: {_selectedUnit}");
             Debug.Log($"Currently selected Friendly unit: {selectedFriendly}");
             Debug.Log($"Currently selected enemy: {selectedEnemy}");
-            //Debug.Log("Selected unit: " + selectedUnit.GetComponent<Lifeforms>().stats.Name);
         }
     }
 
@@ -133,12 +119,6 @@ public class PlayerTurn : MonoBehaviour {
 
     public void EndTurn() {
         endTurn = true;
-    }
-
-    void ToggleStats(bool enable) {
-        /*selectedUnitName.gameObject.SetActive(enable);
-        selectedUnitHealthTxt.gameObject.SetActive(enable);
-        selectedUnitAPTxt.gameObject.SetActive(enable);*/
     }
 
     void LoadMoveButtons() {

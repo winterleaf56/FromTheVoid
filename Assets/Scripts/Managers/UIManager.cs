@@ -19,6 +19,7 @@ public class UIManager : MonoBehaviour {
     [Header("Confirmation UI")]
     [SerializeField] private GameObject confirmPage; // Confirmation page UI element
     [SerializeField] private GameObject confirmBtn;
+    [SerializeField] private GameObject cancelBtn;
 
 
     [SerializeField] private float buttonSpacing = 100;
@@ -68,50 +69,58 @@ public class UIManager : MonoBehaviour {
             Destroy(child.gameObject);
         }
 
-        /*GameObject button = Instantiate(testButton, actionButtonsParent.transform);
-        button.GetComponent<Button>().onClick.AddListener(TestingForThis);*/
-
         float buttonSpacing = 10f; // Adjust as needed
 
         // Action buttons
-        ActionBase[] actions = unit.GetActions();
-        float currentXPosition = 0; // Start from the rightmost side (local space)
-
-        for (int i = actions.Length - 1; i >= 0; i--) { // Reverse loop for leftward positioning
-            ActionBase action = actions[i];
-            if (action.buttonPrefab != null) {
-                GameObject button = Instantiate(action.buttonPrefab, actionButtonsParent);
-                //button.gameObject.GetComponent<Button>().onClick.AddListener(TestingForThis);
-                
-                //button.GetComponent<Button>().onClick.SetPersistentListenerState(0, UnityEventCallState.EditorAndRuntime);
-                button.GetComponent<Button>().onClick.AddListener(TestingForThis);
-                Debug.Log("Button Setup");
-                RectTransform buttonRect = button.GetComponent<RectTransform>();
-                float buttonWidth = buttonRect.rect.width;
-
-                // Calculate position: Start from 0 and move leftward
-                buttonRect.anchoredPosition = new Vector2(currentXPosition, 0);
-                currentXPosition -= (buttonWidth + buttonSpacing); // Move left
-            }
-        }
+        SetButtons(unit.GetActions(), unit, actionButtonsParent, buttonSpacing, actionBackButton);
 
         // Move buttons
-        ActionBase[] moves = unit.GetMoves();
-        currentXPosition = 0; // Reset for move buttons
-
-        for (int i = moves.Length - 1; i >= 0; i--) { // Reverse loop for leftward positioning
-            ActionBase move = moves[i];
-            if (move.buttonPrefab != null) {
-                GameObject button = Instantiate(move.buttonPrefab, moveButtonsParent);
-                RectTransform buttonRect = button.GetComponent<RectTransform>();
-                float buttonWidth = buttonRect.rect.width;
-
-                // Calculate position: Start from 0 and move leftward
-                buttonRect.anchoredPosition = new Vector2(currentXPosition, 0);
-                currentXPosition -= (buttonWidth + buttonSpacing); // Move left
-            }
-        }
+        SetButtons(unit.GetMoves(), unit, moveButtonsParent, buttonSpacing, moveBackButton);
     }
+
+    private void SetButtons(ActionBase[] actions, Lifeforms unit, Transform parent, float buttonSpacing, GameObject backButton) {
+        RectTransform parentRect = parent.GetComponent<RectTransform>();
+        RectTransform buttonRect;
+        GameObject newButton;
+        float buttonWidth;
+
+        // Start from the rightmost edge of the parent
+        float currentXPosition = parentRect.rect.width / 2f - 10; // Start at the right edge relative to the parent's center
+
+        foreach (var action in actions) {
+            // Instantiate the button as a child of the parent
+            newButton = Instantiate(action.buttonPrefab, parent);
+
+            // Get the button's RectTransform
+            buttonRect = newButton.GetComponent<RectTransform>();
+
+            // Get button width
+            buttonWidth = buttonRect.rect.width;
+
+            // Calculate and apply the position
+            currentXPosition -= (buttonWidth / 2f); // Move left by half the button width
+            buttonRect.anchoredPosition = new Vector2(currentXPosition, 0);
+
+            // Adjust for the next button's position
+            currentXPosition -= (buttonWidth / 2f + buttonSpacing);
+
+            action.SetupButton(newButton.GetComponent<Button>(), unit, confirmPage, confirmBtn, cancelBtn.GetComponent<Button>());
+
+            //newButton.GetComponent<Lifeforms>().SetupButton(newButton.GetComponent<Button>(), newButton.GetComponent<Lifeforms>(), confirmPage, confirmBtn);
+        }
+
+        newButton = Instantiate(backButton, parent);
+        buttonRect = newButton.GetComponent<RectTransform>();
+        buttonWidth = buttonRect.rect.width;
+        currentXPosition -= (buttonWidth / 2f);
+        buttonRect.anchoredPosition = new Vector2(currentXPosition, 0);
+        currentXPosition -= (buttonWidth / 2f + buttonSpacing);
+
+        newButton.GetComponent<Button>().onClick.AddListener(() => parent.gameObject.SetActive(false));
+
+    }
+
+
 
 
 

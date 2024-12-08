@@ -15,11 +15,34 @@ public abstract class ActionBase : ScriptableObject {
 
     [SerializeField] public GameObject buttonPrefab;
 
+
     protected bool isAOE;
 
-    public virtual void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn) {
-        button.onClick.AddListener(() => confirmPage.gameObject.SetActive(true));
-        button.onClick.AddListener(() => confirmBtn.SetActive(true));
+    public virtual void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        ConfigureButton(button, confirmPage, confirmBtn, cancelBtn);
+    }
+
+    protected virtual void ConfigureButton(Button button, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        button.onClick.RemoveAllListeners();
+        confirmBtn.GetComponent<Button>().onClick.RemoveAllListeners();
+        cancelBtn.onClick.RemoveAllListeners();
+
+        button.onClick.AddListener(() => {
+            confirmPage.gameObject.SetActive(true);
+        });
+
+        cancelBtn.GetComponent<Button>().onClick.AddListener(() => {
+            confirmPage.gameObject.SetActive(false);
+        });
+    }
+
+    protected virtual void OnClicked(GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        Button confBtn = confirmBtn.gameObject.GetComponent<Button>();
+        confBtn.onClick.AddListener(() => {
+            confirmPage.SetActive(false);
+            confirmBtn.SetActive(false);
+            PlayerTurn.Instance.BasicMove();
+        });
     }
 
     public virtual IEnumerator Execute(Lifeforms unit, Lifeforms target) {

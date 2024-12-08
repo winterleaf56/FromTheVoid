@@ -21,13 +21,17 @@ public class StaminaStimAction : ActionBase {
         currentTurn = BattleManager.Instance.turnNumber;
     }
 
-    public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn) {
-        base.SetupButton(button, unit, confirmPage, confirmBtn);
+    public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        base.SetupButton(button, unit, confirmPage, confirmBtn, cancelBtn);
         //button.onClick.AddListener(() => BattleManager.Instance.AttackingToggle());
-        confirmPage.SetActive(true);
+        /*confirmPage.SetActive(true);
         confirmBtn.SetActive(true);
-        confirmBtn.gameObject.GetComponent<Button>().onClick.AddListener(() => PlayerTurn.Instance.StaminaStimAction());
+        confirmBtn.gameObject.GetComponent<Button>().onClick.AddListener(() => PlayerTurn.Instance.StaminaStimAction());*/
         //button.onClick.AddListener(() => PlayerTurn.Instance.BasicMove());
+    }
+
+    protected override void ConfigureButton(Button button, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        base.ConfigureButton(button, confirmPage, confirmBtn, cancelBtn);
     }
 
     public override IEnumerator Execute(Lifeforms unit) {
