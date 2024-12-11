@@ -9,10 +9,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2128c532f32f8fb43bfdc7c7c27f2b88, type: 3}
-  m_Name: SniperBasic
+  m_Script: {fileID: 11500000, guid: fbc55520fcfddee48bcc25f9a199eef4, type: 3}
+  m_Name: Special_SniperMove
   m_EditorClassIdentifier: 
-  moveName: Sniper Shot
-  actionPoints: 75
-  range: 100
-  damage: 75
+  moveName: 
+  actionPoints: 0
+  baseDamage: 0
+  cooldown: 0

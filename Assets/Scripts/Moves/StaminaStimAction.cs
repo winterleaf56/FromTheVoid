@@ -28,18 +28,19 @@ public class StaminaStimAction : ActionBase {
         confirmBtn.SetActive(true);
         confirmBtn.gameObject.GetComponent<Button>().onClick.AddListener(() => PlayerTurn.Instance.StaminaStimAction());*/
         //button.onClick.AddListener(() => PlayerTurn.Instance.BasicMove());
+        button.GetComponentInChildren<TMP_Text>().SetText("Stamina Stim");
     }
 
-    protected override void ConfigureButton(Button button, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
-        base.ConfigureButton(button, confirmPage, confirmBtn, cancelBtn);
+    protected override void ConfigureButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        base.ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
     }
 
     public override IEnumerator Execute(Lifeforms unit) {
         actionActive = true;
         disableOnTurn = currentTurn + turnsActive;
 
-        unit.stats.ActionPointRecovery += recoverActionPoints;
-        unit.stats.MaxMoveDistance *= moveMultiplier;
+        unit.stats.SetActionPointRecovery(unit.stats.ActionPointRecovery + recoverActionPoints) ;
+        unit.stats.SetMaxMoveDistance(unit.stats.MaxMoveDistance * moveMultiplier);
 
         BattleManager.Instance.ToggleButton("Stamina", false);
 
@@ -55,8 +56,8 @@ public class StaminaStimAction : ActionBase {
             yield return null;
         }
 
-        unit.stats.ActionPointRecovery -= recoverActionPoints;
-        unit.stats.MaxMoveDistance /= moveMultiplier;
+        unit.stats.SetActionPointRecovery(unit.stats.ActionPointRecovery - recoverActionPoints);
+        unit.stats.SetMaxMoveDistance(unit.stats.MaxMoveDistance / moveMultiplier);
 
         BattleManager.Instance.ToggleButton("Stamina", true);
 

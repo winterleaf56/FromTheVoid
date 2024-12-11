@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: 7647353009685456885}
   - component: {fileID: 7331266546026974626}
   - component: {fileID: 6462912437173013266}
-  - component: {fileID: 3076246919193380655}
   - component: {fileID: 3943833056246487254}
   - component: {fileID: -8251278617271875159}
   - component: {fileID: -2812296884578319538}
@@ -112,38 +111,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &3076246919193380655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2988888026099170687}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 40f6defcf4a7d4b4fb94c7f57c5d1428, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  basicMove: {fileID: 0}
-  specialMove: {fileID: 0}
-  ultimateMove: {fileID: 0}
-  recoverAction: {fileID: 0}
-  moves:
-  - {fileID: 11400000, guid: 5ee47552f6859ca45a764647e039f4b9, type: 2}
-  - {fileID: 11400000, guid: af92dec0700f7464a820ef1f2b5d32f0, type: 2}
-  - {fileID: 11400000, guid: e7c23ccae87f1cd4b836ed63cdfdb626, type: 2}
-  actions:
-  - {fileID: 11400000, guid: dd240c48d55231b43946bc165b2bf269, type: 2}
-  - {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}
-  health: {fileID: 0}
-  stats:
-    name: Assault
-    actionPoints: 100
-    actionPointRecovery: 0
-    maxHealth: 150
-    maxMoveDistance: 0
-    defence: 0
-  friendlyUnitID: 0
 --- !u!108 &3943833056246487254
 Light:
   m_ObjectHideFlags: 0
@@ -244,10 +211,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b35625d2e3aa5324eb96a984598246cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  basicMove: {fileID: 11400000, guid: 5ee47552f6859ca45a764647e039f4b9, type: 2}
-  specialMove: {fileID: 11400000, guid: af92dec0700f7464a820ef1f2b5d32f0, type: 2}
-  ultimateMove: {fileID: 11400000, guid: e7c23ccae87f1cd4b836ed63cdfdb626, type: 2}
-  recoverAction: {fileID: 11400000, guid: dd240c48d55231b43946bc165b2bf269, type: 2}
+  unitName: Assault
+  actionPoints: 100
+  actionPointRecovery: 75
+  maxHealth: 150
+  maxMoveDistance: 0
+  defence: 0
   moves:
   - {fileID: 11400000, guid: 5ee47552f6859ca45a764647e039f4b9, type: 2}
   - {fileID: 11400000, guid: af92dec0700f7464a820ef1f2b5d32f0, type: 2}
@@ -256,12 +225,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dd240c48d55231b43946bc165b2bf269, type: 2}
   - {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}
   health: {fileID: 0}
-  stats:
-    name: 
-    actionPoints: 0
-    actionPointRecovery: 0
-    maxHealth: 0
-    maxMoveDistance: 0
-    defence: 0
   friendlyUnitID: 0
   staminaStimAction: {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}

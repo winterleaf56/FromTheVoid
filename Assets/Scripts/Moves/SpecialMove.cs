@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using System;
+using TMPro;
 
 [CreateAssetMenu(fileName = "Move", menuName = "Moves/Special Attack")]
 public class SpecialMove : BasicMove {
@@ -14,7 +15,8 @@ public class SpecialMove : BasicMove {
     }*/
 
     public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
-        ConfigureButton(button, confirmPage, confirmBtn, cancelBtn);
+        ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
+        button.GetComponentInChildren<TMP_Text>().SetText("Special Attack");
         button.onClick.AddListener(() => {
             //BattleManager.Instance.AttackingToggle();
             OnClickedBasic(confirmPage, confirmBtn, cancelBtn);
@@ -23,8 +25,8 @@ public class SpecialMove : BasicMove {
 
     }
 
-    protected override void ConfigureButton(Button button, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
-        base.ConfigureButton(button, confirmPage, confirmBtn, cancelBtn);
+    protected override void ConfigureButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        base.ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
     }
 
 

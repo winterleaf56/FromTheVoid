@@ -21,6 +21,8 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private GameObject confirmBtn;
     [SerializeField] private GameObject cancelBtn;
 
+    [SerializeField] private GameObject buttonPrefab;
+
 
     [SerializeField] private float buttonSpacing = 100;
 
@@ -89,10 +91,10 @@ public class UIManager : MonoBehaviour {
 
         foreach (var action in actions) {
             // Instantiate the button as a child of the parent
-            newButton = Instantiate(action.buttonPrefab, parent);
+            newButton = Instantiate(buttonPrefab, parent);
 
             // Get the button's RectTransform
-            buttonRect = newButton.GetComponent<RectTransform>();
+            /*buttonRect = newButton.GetComponent<RectTransform>();
 
             // Get button width
             buttonWidth = buttonRect.rect.width;
@@ -102,7 +104,7 @@ public class UIManager : MonoBehaviour {
             buttonRect.anchoredPosition = new Vector2(currentXPosition, 0);
 
             // Adjust for the next button's position
-            currentXPosition -= (buttonWidth / 2f + buttonSpacing);
+            currentXPosition -= (buttonWidth / 2f + buttonSpacing);*/
 
             action.SetupButton(newButton.GetComponent<Button>(), unit, confirmPage, confirmBtn, cancelBtn.GetComponent<Button>());
 
@@ -110,13 +112,13 @@ public class UIManager : MonoBehaviour {
         }
 
         newButton = Instantiate(backButton, parent);
-        buttonRect = newButton.GetComponent<RectTransform>();
+        /*buttonRect = newButton.GetComponent<RectTransform>();
         buttonWidth = buttonRect.rect.width;
         currentXPosition -= (buttonWidth / 2f);
         buttonRect.anchoredPosition = new Vector2(currentXPosition, 0);
-        currentXPosition -= (buttonWidth / 2f + buttonSpacing);
+        currentXPosition -= (buttonWidth / 2f + buttonSpacing);*/
 
-        newButton.GetComponent<Button>().onClick.AddListener(() => parent.gameObject.SetActive(false));
+        newButton.GetComponent<Button>().onClick.AddListener(() => parent.parent.gameObject.SetActive(false));
 
     }
 

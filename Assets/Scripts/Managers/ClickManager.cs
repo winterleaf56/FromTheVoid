@@ -94,6 +94,9 @@ public class ClickManager : MonoBehaviour {
                     clickedObject.GetComponent<Light>().color = Color.red;
                     lastEnemyClicked = clickedObject;
                     return lastEnemyClicked;
+                } else {
+                    print("Non-Enemy Unit Clicked. Sent through PlayerAttack BattleState");
+                    return lastEnemyClicked;
                 }
             }
         }

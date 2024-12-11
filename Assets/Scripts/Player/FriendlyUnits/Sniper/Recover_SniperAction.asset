@@ -9,16 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 036c988cfb9a65244ade443c6bddc3c5, type: 3}
-  m_Name: StaminaStimAction
+  m_Script: {fileID: 11500000, guid: 5822e18c4423f784b905bae39d4538a0, type: 3}
+  m_Name: Recover_SniperAction
   m_EditorClassIdentifier: 
-  moveName: Stamina Stim
-  actionPoints: 50
+  moveName: Recover
+  actionPoints: 0
   range: 0
   damage: 0
   confirmPage: {fileID: 0}
   confirmBtn: {fileID: 0}
-  buttonPrefab: {fileID: 1800276199394693438, guid: 029f47f83aa613d4197b9f1479b83987, type: 3}
-  moveMultiplier: 1.2
-  recoverActionPoints: 25
-  turnsActive: 2
+  buttonPrefab: {fileID: 0}
+  recoveryAmount: 50

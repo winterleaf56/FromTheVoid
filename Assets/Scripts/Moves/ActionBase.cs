@@ -3,26 +3,37 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Experimental.GlobalIllumination;
+using Unity.VisualScripting.FullSerializer;
 
 public abstract class ActionBase : ScriptableObject {
     public string moveName;
-    [SerializeField] protected int actionPoints;
+    [SerializeField] protected int actionPointCost;
     [SerializeField] protected float range;
     [SerializeField] protected float damage;
 
     [SerializeField] private Transform confirmPage;
     [SerializeField] private GameObject confirmBtn;
 
+
+    // Makes more sense to remove this replace it with an image maybe.
     [SerializeField] public GameObject buttonPrefab;
 
 
     protected bool isAOE;
 
     public virtual void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
-        ConfigureButton(button, confirmPage, confirmBtn, cancelBtn);
+        ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
     }
 
-    protected virtual void ConfigureButton(Button button, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+    protected virtual void ConfigureButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        ColorBlock colors = button.colors;
+        colors.normalColor = Color.white;
+
+        if (unit.stats.ActionPoints < GetAPRequirement()) {
+            button.interactable = false;
+            colors.normalColor = new Color(0.5f, 0.5f, 0.5f);
+        }
+
         button.onClick.RemoveAllListeners();
         confirmBtn.GetComponent<Button>().onClick.RemoveAllListeners();
         cancelBtn.onClick.RemoveAllListeners();
@@ -56,7 +67,8 @@ public abstract class ActionBase : ScriptableObject {
     }
 
     public int GetAPRequirement() {
-        return actionPoints;
+        Debug.Log("INSIDE GET AP REQUIREMENT");
+        return actionPointCost;
     }
 
     /*public virtual void Execute() {

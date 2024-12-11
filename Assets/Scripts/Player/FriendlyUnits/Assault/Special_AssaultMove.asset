@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fbc55520fcfddee48bcc25f9a199eef4, type: 3}
+  m_Name: Special_AssaultMove
+  m_EditorClassIdentifier: Assembly-CSharp::SpecialMove
+  moveName: Grenade
+  actionPoints: 75
+  range: 0
+  damage: 0
+  confirmPage: {fileID: 0}
+  confirmBtn: {fileID: 0}
+  buttonPrefab: {fileID: 1351382863839996675, guid: da744bd60c1d47344b2d095504fb725c, type: 3}
+  cooldown: 4

@@ -29,7 +29,8 @@ public class Assault : Friendly {
         switch (actionType) {
             case "Stamina":
                 yield return StartCoroutine(staminaStimAction.Execute(this));
-                target.stats.ActionPoints -= recoverAction.GetAPRequirement();
+                target.stats.SubtractActionPoints(staminaStimAction.GetAPRequirement());
+                //target.stats.ActionPoints -= recoverAction.GetAPRequirement();
                 break;
         }
 

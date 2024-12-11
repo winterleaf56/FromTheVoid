@@ -3,26 +3,36 @@ using UnityEngine;
 
 public abstract class Lifeforms : MonoBehaviour, IDamageable {
     [Header("Moves")]
-    protected BasicMove basicMove;
-    protected SpecialMove specialMove;
-    protected UltimateMove ultimateMove;
+    private BasicMove basicMove;
+    private SpecialMove specialMove;
+    private UltimateMove ultimateMove;
 
     [Header("Actions")]
     protected RecoverAction recoverAction;
+
+    [Header("Stats")]
+    [SerializeField] private string unitName;
+    [SerializeField] private int actionPoints;
+    [SerializeField] private int actionPointRecovery;
+    [SerializeField] private float maxHealth;
+    [SerializeField] private float maxMoveDistance;
+    [SerializeField] private float defence;
 
     [SerializeField] protected ActionBase[] moves;
     [SerializeField] protected ActionBase[] actions;
 
     public Health health;
 
+    //public static Stats stats;
+
     //public float damage;
 
-    public Stats stats;
+    public Stats stats = new Stats();
 
     public bool firstAction { get; private set; }
 
-    public int currentActionPoints { get; private set; }
-    public int maxActionPoints { get; private set; }
+    public int CurrentActionPoints { get; private set; }
+    public int MaxActionPoints { get; private set; }
 
     public abstract void Attack();
 
@@ -30,14 +40,24 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     public abstract void Damage(float value);
 
+    private void Awake() {
+        stats.InitializeStats(unitName, actionPoints, actionPointRecovery, maxHealth, maxMoveDistance, defence);
+        Debug.Log($"Unit Name: {stats.UnitName}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
+        SetMoves();
 
-    private void Start() {
-        maxActionPoints = stats.ActionPoints;
         health = gameObject.AddComponent<Health>();
         health.InitializeHealth(stats.MaxHealth, stats.MaxHealth);
-        currentActionPoints = stats.ActionPoints;
+    }
 
-        Debug.Log($"Unit Name: {stats.Name}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
+    private void Start() {
+        /*health = gameObject.AddComponent<Health>();
+        health.InitializeHealth(stats.MaxHealth, stats.MaxHealth);*/
+        MaxActionPoints = stats.ActionPoints;
+
+        CurrentActionPoints = stats.ActionPoints;
+        Debug.Log($"Current Action Points: {CurrentActionPoints}");
+
+        //Debug.Log($"Unit Name: {stats.Name}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
     }
 
     public ActionBase[] GetMoves() {
@@ -63,19 +83,22 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     }
 
     public IEnumerator PerformMoveType(string moveType, Lifeforms target) {
-        Debug.Log($"{target.stats.Name} is the target");
+        Debug.Log($"{target.stats.UnitName} is the target");
         switch (moveType) {
             case "Basic":
                 yield return StartCoroutine(basicMove.Execute(this, target));
-                currentActionPoints -= basicMove.GetAPRequirement();
+                stats.SubtractActionPoints(basicMove.GetAPRequirement());
+                //CurrentActionPoints -= basicMove.GetAPRequirement();
                 break;
             case "Special":
                 yield return StartCoroutine(specialMove.Execute(this, target));
-                currentActionPoints -= specialMove.GetAPRequirement();
+                stats.SubtractActionPoints(specialMove.GetAPRequirement());
+                //CurrentActionPoints -= specialMove.GetAPRequirement();
                 break;
             case "Ultimate":
                 yield return StartCoroutine(ultimateMove.Execute(this, target));
-                currentActionPoints -= ultimateMove.GetAPRequirement();
+                stats.SubtractActionPoints(ultimateMove.GetAPRequirement());
+                //CurrentActionPoints -= ultimateMove.GetAPRequirement();
                 break;
             default:
                 Debug.Log("Misspelled Move Type or Invalid Type");
@@ -95,7 +118,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
         switch (actionType) {
             case "Recover":
                 yield return StartCoroutine(recoverAction.Execute(this));
-                currentActionPoints -= recoverAction.GetAPRequirement();
+                CurrentActionPoints -= recoverAction.GetAPRequirement();
                 break;
         }
     }
@@ -111,6 +134,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     public int GetMoveAPRequirement(string moveType) {
         switch (moveType) {
             case "Basic":
+                Debug.Log(basicMove);
                 return basicMove.GetAPRequirement();
             case "Special":
                 return specialMove.GetAPRequirement();
@@ -122,49 +146,84 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     }
 
     // Probably dont need this if I make actionPoints into a property
-    public int getActionPoints() {
-        return currentActionPoints;
+    public int GetActionPoints() {
+        Debug.Log($"Current Action Points GETAP: {CurrentActionPoints}");
+        return CurrentActionPoints;
     }
 }
 
 
 [System.Serializable]
+//[SerializeField]
 public class Stats {
-    [SerializeField] string name;
-    [SerializeField] private int actionPoints;
-    [SerializeField] private int actionPointRecovery;
-    [SerializeField] private float maxHealth;
-    [SerializeField] private float maxMoveDistance;
-    [SerializeField] private float defence;
+    private string unitName;
+    private int actionPoints;
+    private int actionPointRecovery;
+    private float maxHealth;
+    private float maxMoveDistance;
+    private float defence;
 
-    public string Name {
-        get { return name; }
-        set { name = value; }
+    public void InitializeStats(string unitName, int actionPoints, int actionPointRecovery, float maxHealth, float maxMoveDistance, float defence) {
+        UnitName = unitName;
+        ActionPoints = actionPoints;
+        ActionPointRecovery = actionPointRecovery;
+        MaxHealth = maxHealth;
+        MaxMoveDistance = maxMoveDistance;
+        Defence = defence;
     }
 
-    public int ActionPoints {
-        get { return actionPoints; }
-        set { actionPoints = value; }
-    }
-
-    public int ActionPointRecovery {
-        get { return actionPointRecovery; }
-        set { actionPointRecovery = value; }
+    public string UnitName {
+        get { return unitName; }
+        private set { unitName = value; }
     }
 
     public float MaxHealth {
         get { return maxHealth; }
-        set { maxHealth = value; }
+        private set { maxHealth = value; }
+    }
+
+    public int ActionPoints {
+        get { return actionPoints; }
+        private set { actionPoints = value; }
+    }
+
+    public int ActionPointRecovery {
+        get { return actionPointRecovery; }
+        private set { actionPointRecovery = value; }
     }
 
     public float MaxMoveDistance {
         get { return maxMoveDistance; }
-        set { maxMoveDistance = value; }
+        private set { maxMoveDistance = value; }
     }
 
     public float Defence {
         get { return defence; }
-        set { defence = value; }
+        private set { defence = value; }
+    }
+
+    public void SetActionPoints(int value) {
+        ActionPoints = value;
+    }
+
+    public void SetActionPointRecovery(int value) {
+        ActionPointRecovery = value;
+    }
+
+    public void AddActionPoints(int value) {
+        ActionPoints += value;
+    }
+
+    public void SubtractActionPoints(int value) {
+        ActionPoints -= value;
+    }
+
+    public void SetMaxMoveDistance(float value) {
+        MaxMoveDistance = value;
+    }
+
+    public void SetDefence(float value) {
+        Defence = value;
     }
 
 }

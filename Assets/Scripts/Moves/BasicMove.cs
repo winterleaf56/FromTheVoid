@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +15,8 @@ public class BasicMove : ActionBase {
     }
 
     public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
-        ConfigureButton(button, confirmPage, confirmBtn, cancelBtn);
+        ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
+        button.GetComponentInChildren<TMP_Text>().SetText("Basic Attack");
         button.onClick.AddListener(() => {
             BattleManager.Instance.AttackingToggle();
             OnClickedBasic(confirmPage, confirmBtn, cancelBtn);
@@ -23,8 +25,8 @@ public class BasicMove : ActionBase {
 
     }
 
-    protected override void ConfigureButton(Button button, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
-        base.ConfigureButton(button, confirmPage, confirmBtn, cancelBtn);
+    protected override void ConfigureButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        base.ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
     }
 
     // OnClickedBasic is OnClicked but toggles BattleState to PlayerAttack so children can override OnClicked and not have to worry about toggling BattleState to PlayerAttack
@@ -47,7 +49,7 @@ public class BasicMove : ActionBase {
         Debug.Log($"Damaging {target} for {CalculateDamage()} damage.");
 
         // Subtract action points for executing move
-        unit.stats.ActionPoints -= actionPoints;
+        unit.stats.SubtractActionPoints(actionPointCost);
 
         int i = 0;
         while (i < 3) {
