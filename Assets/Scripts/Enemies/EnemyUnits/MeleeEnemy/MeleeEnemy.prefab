@@ -126,6 +126,8 @@ MonoBehaviour:
   unitName: Slash
   actionPoints: 150
   actionPointRecovery: 50
+  ultimatePoints: 0
+  maxUltimatePoints: 0
   maxHealth: 100
   maxMoveDistance: 0
   defence: 0
@@ -135,6 +137,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 5fdf589fbf6b08741ac3f0b38d9c1190, type: 2}
   actions:
   - {fileID: 11400000, guid: ff79bb81a3a94124ba52a93b9cc39655, type: 2}
+  - {fileID: 11400000, guid: c48a9b3ff77055a4eb34bcf4eb4bac3e, type: 2}
   health: {fileID: 0}
 --- !u!108 &3590778828521743429
 Light:

@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fbc55520fcfddee48bcc25f9a199eef4, type: 3}
-  m_Name: Special_SniperMove
+  m_Script: {fileID: 11500000, guid: b53d3cbb109dd13449056d301e693769, type: 3}
+  m_Name: Reposition_AssaultAction
   m_EditorClassIdentifier: 
-  moveName: Headshot
-  actionPointCost: 100
-  range: 100
-  damage: 500
-  confirmPage: {fileID: 0}
-  confirmBtn: {fileID: 0}
+  moveName: Reposition
+  actionPointCost: 1
+  range: 0
+  damage: 0
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
   buttonPrefab: {fileID: 0}
-  cooldown: 2

@@ -13,6 +13,10 @@ MonoBehaviour:
   m_Name: Basic_SniperMove
   m_EditorClassIdentifier: 
   moveName: Sniper Shot
-  actionPoints: 75
-  range: 100
+  actionPointCost: 75
+  range: 39
   damage: 75
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  buttonPrefab: {fileID: 0}

@@ -17,15 +17,17 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private GameObject actionBackButton;
 
     [Header("Confirmation UI")]
-    [SerializeField] private GameObject confirmPage; // Confirmation page UI element
+    [SerializeField] private GameObject confirmPage;
     [SerializeField] private GameObject confirmBtn;
     [SerializeField] private GameObject cancelBtn;
 
     [SerializeField] private GameObject buttonPrefab;
+    [SerializeField] private TMP_Text costTxt;
 
 
     [SerializeField] private float buttonSpacing = 100;
 
+    public UnityEvent MoveComplete;
 
     public static UIManager Instance;
 
@@ -81,44 +83,20 @@ public class UIManager : MonoBehaviour {
     }
 
     private void SetButtons(ActionBase[] actions, Lifeforms unit, Transform parent, float buttonSpacing, GameObject backButton) {
-        RectTransform parentRect = parent.GetComponent<RectTransform>();
-        RectTransform buttonRect;
         GameObject newButton;
-        float buttonWidth;
-
-        // Start from the rightmost edge of the parent
-        float currentXPosition = parentRect.rect.width / 2f - 10; // Start at the right edge relative to the parent's center
 
         foreach (var action in actions) {
-            // Instantiate the button as a child of the parent
             newButton = Instantiate(buttonPrefab, parent);
-
-            // Get the button's RectTransform
-            /*buttonRect = newButton.GetComponent<RectTransform>();
-
-            // Get button width
-            buttonWidth = buttonRect.rect.width;
-
-            // Calculate and apply the position
-            currentXPosition -= (buttonWidth / 2f); // Move left by half the button width
-            buttonRect.anchoredPosition = new Vector2(currentXPosition, 0);
-
-            // Adjust for the next button's position
-            currentXPosition -= (buttonWidth / 2f + buttonSpacing);*/
-
+            confirmBtn.GetComponent<Button>().interactable = false;
             action.SetupButton(newButton.GetComponent<Button>(), unit, confirmPage, confirmBtn, cancelBtn.GetComponent<Button>());
-
-            //newButton.GetComponent<Lifeforms>().SetupButton(newButton.GetComponent<Button>(), newButton.GetComponent<Lifeforms>(), confirmPage, confirmBtn);
         }
 
         newButton = Instantiate(backButton, parent);
-        /*buttonRect = newButton.GetComponent<RectTransform>();
-        buttonWidth = buttonRect.rect.width;
-        currentXPosition -= (buttonWidth / 2f);
-        buttonRect.anchoredPosition = new Vector2(currentXPosition, 0);
-        currentXPosition -= (buttonWidth / 2f + buttonSpacing);*/
-
         newButton.GetComponent<Button>().onClick.AddListener(() => parent.parent.gameObject.SetActive(false));
+
+    }
+
+    private void ResetUI() {
 
     }
 
@@ -127,11 +105,8 @@ public class UIManager : MonoBehaviour {
 
 
 
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
+    void Start() {
         
     }
 

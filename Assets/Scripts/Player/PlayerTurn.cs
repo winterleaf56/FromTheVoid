@@ -1,19 +1,27 @@
+using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using static BattleManager;
+using UnityEngine.UI;
 
 public class PlayerTurn : MonoBehaviour {
     [SerializeField] private GameObject BattleUI;
     [SerializeField] private GameObject actionsUI;
 
+    [SerializeField] private Button confirmBtn;
+
     private UIManager UIManager => UIManager.Instance;
 
     private bool endTurn = false;
 
+    public List<Enemy> AttackableEnemies { get; private set; }
+
     private Lifeforms selectedEnemy;
     private Lifeforms selectedFriendly;
+    private Lifeforms lastSelectedEnemy;
+    private Lifeforms lastSelectedFriendly;
 
     private GameObject _selectedUnit;
     public GameObject selectedUnit {
@@ -26,15 +34,15 @@ public class PlayerTurn : MonoBehaviour {
                 print("Friendly unit selected, activating actionsUI");
                 actionsUI.SetActive(true);
                 selectedFriendly = _selectedUnit.GetComponent<Lifeforms>();
-                
+                selectedFriendly.GetComponent<Light>().enabled = true;
                 UIManager.LoadButtons(selectedFriendly);
                 UIManager.ToggleStats(true);
                 UIManager.UpdateStatBar(selectedFriendly.stats.UnitName, selectedFriendly.stats.MaxHealth, selectedFriendly.stats.ActionPoints);
-            } else if (!BattleManager.Instance.currentBattleState.Equals(BattleState.PlayerAttack)) {
+            } else if (!BattleManager.Instance.currentBattleState.Equals(BattleManager.BattleState.PlayerAttack)) {
                 print("Enemy unit selected, deactivating actionsUI");
                 actionsUI.SetActive(false);
                 selectedFriendly.GetComponent<Light>().enabled = false;
-                UIManager.Instance.ToggleStats(false);
+                UIManager.ToggleStats(false);
             } else if (_selectedUnit.CompareTag("UI")) {
                 return;
             } else {
@@ -48,12 +56,9 @@ public class PlayerTurn : MonoBehaviour {
 
             Debug.Log("SELECTED UNIT CHANGED");
 
-            if (BattleManager.Instance.currentBattleState.Equals(BattleState.PlayerAttack) && _selectedUnit.CompareTag("Enemy")) {
-                //Debug.Log($"Enemy unit recieved and being set to selectedEnemy (TAG): {selectedUnit.tag}");
+            if (BattleManager.Instance.currentBattleState.Equals(BattleManager.BattleState.PlayerAttack) && _selectedUnit.CompareTag("Enemy") && AttackableEnemies.Contains(_selectedUnit.GetComponent<Enemy>())) {
                 selectedEnemy = _selectedUnit.GetComponent<Lifeforms>();
-                /*selectedUnitName.SetText(selectedEnemy.stats.Name);
-                selectedUnitHealthTxt.SetText($"Health: {selectedEnemy.stats.MaxHealth.ToString()}");
-                selectedUnitAPTxt.SetText("");*/
+                confirmBtn.interactable = true;
             }
             //_selectedUnit = value;
 
@@ -75,24 +80,20 @@ public class PlayerTurn : MonoBehaviour {
         Instance = this;
     }
 
+    /*private void ManageLights() {
+        selectedFriend
+    }*/
+
     private void Update() {
         if (Input.GetMouseButtonDown(0)) {
             if (EventSystem.current.IsPointerOverGameObject()) {
                 return;
             }
 
-            Debug.Log($"Selected Unit through Update PlayerTurn: {_selectedUnit}");
             GameObject temp = ClickManager.Instance.DetectClick();
             if (temp != null) {
-                if (temp.CompareTag("UI")) {
-                    print("CLICKING UI");
-                    return;
-                } else {
-                    selectedUnit = temp;
-                }
+                selectedUnit = temp;
             }
-            Debug.Log($"Currently selected Friendly unit: {selectedFriendly}");
-            Debug.Log($"Currently selected enemy: {selectedEnemy}");
         }
     }
 
@@ -111,11 +112,6 @@ public class PlayerTurn : MonoBehaviour {
         BattleUI.SetActive(false);
     }
 
-    private void CancelAttack() {
-        Debug.Log("Attack cancelled");
-        BattleManager.Instance.AttackingToggle();
-    }
-
     private void ResetSelectedUnits() {
         selectedFriendly = null;
         selectedEnemy = null;
@@ -131,6 +127,10 @@ public class PlayerTurn : MonoBehaviour {
         endTurn = true;
     }
 
+    public void CancelMove() {
+        selectedEnemy = null;
+    }
+
     void LoadMoveButtons() {
         Debug.Log($"Getting moves from selected unit: {selectedFriendly.stats.UnitName}");
 
@@ -140,10 +140,15 @@ public class PlayerTurn : MonoBehaviour {
         }
     }
 
+    public void SetAttackableEnemies(List<Enemy> enemyList) {
+        AttackableEnemies = enemyList;
+    }
+
 
     // If player has enough AP, button clickable, Not enough AP, unclickable, greyed out
 
     public bool CheckAP(string move) {
+        Debug.Log($"Checking AP for {move} move");
         int apRequirement = selectedFriendly.GetMoveAPRequirement(move);
         Debug.Log($"AP Requirement for {move} move: {apRequirement}");
         Debug.Log($"Current AP: {selectedFriendly.stats.ActionPoints}");
@@ -154,6 +159,16 @@ public class PlayerTurn : MonoBehaviour {
         }
     }
 
+    public void StartDirectAttack(ActionBase move) {
+        Debug.Log($"Starting direct attack from StartDirectAttack: {move.name}");
+        selectedFriendly.PerformDirectAttack(move, selectedEnemy);
+    }
+
+    public void StartAction(ActionBase action) {
+        Debug.Log($"Starting action from StartAction: {action.name}");
+        selectedFriendly.PerformAction(action);
+    }
+
     public void BasicMove() {
         if (!CheckAP("Basic")) {
             Debug.Log("Not enough AP to perform basic move");
@@ -162,7 +177,8 @@ public class PlayerTurn : MonoBehaviour {
             Debug.Log("TEST THJINGSAD");
         }
         Debug.Log("Executing basic move");
-        BattleManager.Instance.AttackingToggle();
+        //BattleManager.Instance.AttackingToggle();
+       // BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
         selectedFriendly.PerformMove("Basic", selectedEnemy);
         Debug.Log($"Selected unit using basic move: {selectedUnit.GetComponent<Lifeforms>().stats.UnitName}");
         Debug.Log($"Selected enemy recieving basic move: {selectedEnemy.stats.UnitName}");
@@ -172,7 +188,8 @@ public class PlayerTurn : MonoBehaviour {
 
     public void SpecialMove() {
         Debug.Log("Executing special move");
-        BattleManager.Instance.AttackingToggle();
+        //BattleManager.Instance.AttackingToggle();
+        //BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
         selectedFriendly.PerformMove("Special", selectedEnemy);
         //BattleManager.Instance.ClearPlayerTurn();
         ResetSelectedUnits();
@@ -180,7 +197,8 @@ public class PlayerTurn : MonoBehaviour {
 
     public void UltimateMove() {
         Debug.Log("Executing ultimate move");
-        BattleManager.Instance.AttackingToggle();
+        //BattleManager.Instance.AttackingToggle();
+        //BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
         selectedFriendly.PerformMove("Ultimate", selectedEnemy);
         //BattleManager.Instance.ClearPlayerTurn();
         ResetSelectedUnits();

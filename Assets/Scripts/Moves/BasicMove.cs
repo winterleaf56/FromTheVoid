@@ -5,10 +5,6 @@ using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "Move", menuName = "Moves/Basic Attack")]
 public class BasicMove : ActionBase {
-    //private new GameObject target;
-
-    /*[SerializeField] private GameObject confirmPage;
-    [SerializeField] private GameObject confirmBtn;*/
 
     public virtual float CalculateDamage() {
         return damage;
@@ -16,10 +12,10 @@ public class BasicMove : ActionBase {
 
     public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
         ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
-        button.GetComponentInChildren<TMP_Text>().SetText("Basic Attack");
         button.onClick.AddListener(() => {
-            BattleManager.Instance.AttackingToggle();
-            OnClickedBasic(confirmPage, confirmBtn, cancelBtn);
+            //BattleManager.Instance.AttackingToggle();
+            BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerAttack);
+            OnClickedBasic(unit, confirmPage, confirmBtn, cancelBtn);
             Debug.Log("Executing basic move by setting up button");
         });
 
@@ -30,18 +26,27 @@ public class BasicMove : ActionBase {
     }
 
     // OnClickedBasic is OnClicked but toggles BattleState to PlayerAttack so children can override OnClicked and not have to worry about toggling BattleState to PlayerAttack
-    protected virtual void OnClickedBasic(GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+    protected virtual void OnClickedBasic(Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
         base.OnClicked(confirmPage, confirmBtn, cancelBtn);
 
+        confirmBtn.GetComponent<Button>().onClick.AddListener(() => {
+            PlayerTurn.Instance.StartDirectAttack(this);
+        });
+
         cancelBtn.onClick.AddListener(() => {
-            BattleManager.Instance.AttackingToggle();
+            //BattleManager.Instance.AttackingToggle();
+            BattleManager.Instance.ManageLights(GetEnemiesInRange(unit));
+            BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
+            //PlayerTurn.Instance.StartDirectAttack(this);
+            PlayerTurn.Instance.CancelMove();
         });
     }
 
     // Make a coroutine that runs while the player is selecting an enemy to attack, then when the attack occurs, the coroutine ends
     public override IEnumerator Execute(Lifeforms unit, Lifeforms target) {
-        Debug.Log("DAMAGE: " + damage);
-        //Debug.Log("Performing move: " + moveName);
+        Debug.Log($"Unit: {unit}, Target: {target}");
+        OnMoveFinished(unit);
+        ClickManager.Instance.allowClicks = false;
         Debug.Log($"Performing move: {moveName}, against: {target}");
 
         // Damage the target
@@ -59,6 +64,7 @@ public class BasicMove : ActionBase {
         }
 
         Debug.Log("Move Executed. Ending Coroutine.");
+        ClickManager.Instance.allowClicks = true;
         yield break;
     }
 

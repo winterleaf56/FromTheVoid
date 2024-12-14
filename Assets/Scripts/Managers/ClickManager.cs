@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -6,12 +7,18 @@ public class ClickManager : MonoBehaviour {
     private float lastClickTime = 0f;
     private const float doubleClickThreshold = 0.3f;
 
+    [SerializeField] private GameObject markerPrefab;
+    private GameObject markerInstance;
+    private Coroutine followMouseCoroutine;
+
     // Sent to PlayerTurn to determine which unit the moves will be performed by
     private GameObject unitToSend = null;
 
     // Used to keep track of the last unit clicked for activating the lights on each unit
     private GameObject lastEnemyClicked = null;
     private GameObject lastFriendlyClicked = null;
+
+    public bool allowClicks = true;
 
     public static ClickManager Instance;
 
@@ -28,6 +35,8 @@ public class ClickManager : MonoBehaviour {
             if (EventSystem.current.IsPointerOverGameObject()) {
                 return;
             }
+
+            if (allowClicks == false) return;
 
             float timeSinceLastClick = Time.time - lastClickTime;
             if (timeSinceLastClick <= doubleClickThreshold) {
@@ -48,6 +57,8 @@ public class ClickManager : MonoBehaviour {
         if (!BattleManager.Instance.currentTurn.Equals(BattleManager.GameState.PlayerTurn)) {
             return null;
         }
+
+        if (!allowClicks) return null;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
@@ -126,6 +137,43 @@ public class ClickManager : MonoBehaviour {
                 Debug.Log("Non-unit object double-clicked");
                 BattleManager.Instance.HideUnitStats();
             }
+        }
+    }
+
+    public void FindMovePosition(System.Action<Vector3> callback) {
+        if (markerInstance == null) {
+            markerInstance = Instantiate(markerPrefab);
+        }
+        
+
+        followMouseCoroutine = StartCoroutine(FollowMouse(callback));
+    }
+
+    private IEnumerator FollowMouse(System.Action<Vector3> callback) {
+        Vector3 lastMousePos = Vector3.zero;
+        int layerMask = ~LayerMask.GetMask("IgnoreRaycast");
+
+        while (true) {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+
+            if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) {
+                if (Vector3.Distance(hit.point, lastMousePos) > 0.1f) {
+                    markerInstance.transform.position = hit.point;
+                    lastMousePos = hit.point;
+                }
+
+                if (Input.GetMouseButtonDown(0)) {
+                    Vector3 placedPosition = markerInstance.transform.position;
+                    Instantiate(markerPrefab, placedPosition, Quaternion.identity);
+                    Destroy(markerInstance.gameObject);
+                    markerInstance = null;
+                    followMouseCoroutine = null;
+                    callback(placedPosition);
+                    yield break;
+                }
+            }
+            yield return null;
         }
     }
 }

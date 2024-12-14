@@ -16,10 +16,11 @@ public class SpecialMove : BasicMove {
 
     public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
         ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
-        button.GetComponentInChildren<TMP_Text>().SetText("Special Attack");
+        //button.GetComponentInChildren<TMP_Text>().SetText("Special Attack");
         button.onClick.AddListener(() => {
             //BattleManager.Instance.AttackingToggle();
-            OnClickedBasic(confirmPage, confirmBtn, cancelBtn);
+            BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerAttack);
+            OnClickedBasic(unit, confirmPage, confirmBtn, cancelBtn);
             Debug.Log("Executing Special move by setting up button");
         });
 

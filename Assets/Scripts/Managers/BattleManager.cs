@@ -1,5 +1,7 @@
+using NUnit.Framework;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,8 +17,9 @@ public class BattleManager : MonoBehaviour {
     [Header("UI Elements")]
     [SerializeField] private GameObject battleUI;
     [SerializeField] private GameObject battleActionsUI;
+    [SerializeField] private GameObject unitMovesUI;
     [SerializeField] private GameObject unitActionUI;
-    [SerializeField] private GameObject battleAttackActionsUI;
+    [SerializeField] private GameObject battleAttackBtnUI;
     [SerializeField] private GameObject unitStatUI;
 
     [Header("Lighting")]
@@ -40,6 +43,8 @@ public class BattleManager : MonoBehaviour {
     public float increaseGAPBy { get; private set; } = 50;
 
     public Action onPlayerTurnStart;
+    public Action<BattleState> changeBattleState;
+    public Action onMoveFinished;
 
     public static BattleManager Instance;
 
@@ -54,7 +59,8 @@ public class BattleManager : MonoBehaviour {
         PlayerIdle,
         PlayerAttack,
         PlayerDefend,
-        PlayerItem
+        PlayerItem,
+        PlayerMoving
     }
 
     //public GameState currentTurn { get; private set; }
@@ -82,8 +88,13 @@ public class BattleManager : MonoBehaviour {
     public BattleState currentBattleState { 
         get => _currentBattleState; 
         private set {
+            if (currentBattleState == BattleState.PlayerAttack) {
+                ToggleWorldLight();
+            } else {
+                ToggleWorldLight();
+            }
             _currentBattleState = value;
-            ToggleWorldLight();
+            //ToggleWorldLight();
         } 
     }
 
@@ -94,6 +105,9 @@ public class BattleManager : MonoBehaviour {
         }
 
         Instance = this;
+
+        changeBattleState += ChangeBattleState;
+        onMoveFinished += OnMoveFinshed;
 
         currentTurn = GameState.Intro;
 
@@ -215,25 +229,52 @@ public class BattleManager : MonoBehaviour {
     //
     //
 
+    private void ChangeBattleState(BattleState state) {
+        currentBattleState = state;
+    }
+
+    public void ManageLights(List<Enemy> enemyList) {
+        foreach (Enemy enemy in enemyList) {
+            Light displayLight = enemy.GetComponent<Light>();
+            displayLight.color = Color.green;
+            displayLight.enabled = !displayLight.enabled;
+        }
+    }
+
     public void AttackingToggle() {
         //currentTurn = (currentTurn == GameState.PlayerTurn) ? GameState.EnemyTurn : GameState.PlayerTurn;
         currentBattleState = (currentBattleState == BattleState.PlayerAttack) ? BattleState.PlayerIdle : BattleState.PlayerAttack;
         Debug.Log($"Changing state to: {currentBattleState}");
 
-        foreach (GameObject enemy in enemyUnits) {
+        /*foreach (GameObject enemy in enemyUnits) {
             Light displayLight = enemy.GetComponent<Light>();
             displayLight.color = Color.green;
             displayLight.enabled = !displayLight.enabled;
-        }
+        }*/
 
         // Change Lighting
         //ToggleWorldLight();
     }
 
     private void ToggleWorldLight() {
-        selectingEnemyLight.SetActive(!selectingEnemyLight.activeSelf);
+        selectingEnemyLight.SetActive(!worldLight.activeSelf);
         worldLight.SetActive(!worldLight.activeSelf);
     }
+
+    public void OnMoveFinshed() {
+        currentBattleState = BattleState.PlayerIdle;
+
+        unitActionUI.SetActive(false);
+        unitMovesUI.SetActive(false);
+        battleActionsUI.SetActive(false);
+
+        UIManager.Instance.ToggleStats(false);
+
+        foreach (GameObject unit in playerUnits) {
+            unit.GetComponent<Light>().enabled = false;
+        }
+    }
+
 
     public void ClearPlayerTurn() {
         // Disable the lights on every player unit
@@ -248,7 +289,7 @@ public class BattleManager : MonoBehaviour {
 
         //battleUI.SetActive(false);
         battleActionsUI.SetActive(false);
-        foreach (Transform child in battleAttackActionsUI.transform) {
+        foreach (Transform child in battleAttackBtnUI.transform) {
             if (child.name != "BackBtn") {
                 child.gameObject.SetActive(false);
             }

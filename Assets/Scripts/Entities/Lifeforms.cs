@@ -9,11 +9,14 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     [Header("Actions")]
     protected RecoverAction recoverAction;
+    protected RepositionAction repositionAction;
 
     [Header("Stats")]
     [SerializeField] private string unitName;
     [SerializeField] private int actionPoints;
     [SerializeField] private int actionPointRecovery;
+    [SerializeField] private int ultimatePoints;
+    [SerializeField] private int maxUltimatePoints;
     [SerializeField] private float maxHealth;
     [SerializeField] private float maxMoveDistance;
     [SerializeField] private float defence;
@@ -41,7 +44,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     public abstract void Damage(float value);
 
     private void Awake() {
-        stats.InitializeStats(unitName, actionPoints, actionPointRecovery, maxHealth, maxMoveDistance, defence);
+        stats.InitializeStats(unitName, actionPoints, actionPointRecovery, ultimatePoints, maxUltimatePoints, maxHealth, maxMoveDistance, defence);
         Debug.Log($"Unit Name: {stats.UnitName}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
         SetMoves();
 
@@ -76,29 +79,40 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
         // Actions
         recoverAction = actions[0] as RecoverAction;
+        repositionAction = actions[1] as RepositionAction;
     }
 
     public void PerformMove(string moveType, Lifeforms target) {
         StartCoroutine(PerformMoveType(moveType, target));
     }
 
+    public void PerformDirectAttack(ActionBase move, Lifeforms target) {
+        StartCoroutine(move.Execute(this, target));
+    }
+
+    /*public IEnumerator PerformAreaAttack(ActionBase move, Vector3 target) {
+        yield return StartCoroutine(move.Execute(this, target));
+    }*/
+
+    public void PerformAction(ActionBase action) {
+        StartCoroutine(action.Execute(this));
+    }
+
+    /*public IEnumerator PerformAction(ActionBase action) {
+        yield return StartCoroutine(action.Execute(this));
+    }*/
+
     public IEnumerator PerformMoveType(string moveType, Lifeforms target) {
         Debug.Log($"{target.stats.UnitName} is the target");
         switch (moveType) {
             case "Basic":
                 yield return StartCoroutine(basicMove.Execute(this, target));
-                stats.SubtractActionPoints(basicMove.GetAPRequirement());
-                //CurrentActionPoints -= basicMove.GetAPRequirement();
                 break;
             case "Special":
                 yield return StartCoroutine(specialMove.Execute(this, target));
-                stats.SubtractActionPoints(specialMove.GetAPRequirement());
-                //CurrentActionPoints -= specialMove.GetAPRequirement();
                 break;
             case "Ultimate":
                 yield return StartCoroutine(ultimateMove.Execute(this, target));
-                stats.SubtractActionPoints(ultimateMove.GetAPRequirement());
-                //CurrentActionPoints -= ultimateMove.GetAPRequirement();
                 break;
             default:
                 Debug.Log("Misspelled Move Type or Invalid Type");
@@ -119,6 +133,10 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
             case "Recover":
                 yield return StartCoroutine(recoverAction.Execute(this));
                 CurrentActionPoints -= recoverAction.GetAPRequirement();
+                break;
+            case "Reposition":
+                yield return StartCoroutine(repositionAction.Execute(this));
+                CurrentActionPoints -= repositionAction.GetAPRequirement();
                 break;
         }
     }
@@ -159,14 +177,18 @@ public class Stats {
     private string unitName;
     private int actionPoints;
     private int actionPointRecovery;
+    private int ultimatePoints;
+    private int maxUltimatePoints;
     private float maxHealth;
     private float maxMoveDistance;
     private float defence;
 
-    public void InitializeStats(string unitName, int actionPoints, int actionPointRecovery, float maxHealth, float maxMoveDistance, float defence) {
+    public void InitializeStats(string unitName, int actionPoints, int actionPointRecovery, int ultimatePoints, int maxUltimatePoints, float maxHealth, float maxMoveDistance, float defence) {
         UnitName = unitName;
         ActionPoints = actionPoints;
         ActionPointRecovery = actionPointRecovery;
+        UltimatePoints = ultimatePoints;
+        MaxUltimatePoints = maxUltimatePoints;
         MaxHealth = maxHealth;
         MaxMoveDistance = maxMoveDistance;
         Defence = defence;
@@ -190,6 +212,16 @@ public class Stats {
     public int ActionPointRecovery {
         get { return actionPointRecovery; }
         private set { actionPointRecovery = value; }
+    }
+
+    public int UltimatePoints {
+        get { return ultimatePoints; }
+        private set { ultimatePoints = value; }
+    }
+
+    public int MaxUltimatePoints {
+        get { return maxUltimatePoints; }
+        private set { maxUltimatePoints = value; }
     }
 
     public float MaxMoveDistance {
@@ -224,6 +256,10 @@ public class Stats {
 
     public void SetDefence(float value) {
         Defence = value;
+    }
+
+    public void AddUltimatePoints(int value) {
+        UltimatePoints += value;
     }
 
 }
