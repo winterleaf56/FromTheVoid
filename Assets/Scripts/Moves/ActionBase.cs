@@ -16,6 +16,8 @@ public abstract class ActionBase : ScriptableObject {
 
     [SerializeField] protected LayerMask obstacleLayer;
 
+    protected GameObject rangeRing;
+
     private BattleManager BattleManager => BattleManager.Instance;
 
     //public UnityAction moveFinishedEvent;
@@ -49,29 +51,13 @@ public abstract class ActionBase : ScriptableObject {
 
         button.transform.Find("CostTxt").GetComponent<TMP_Text>().SetText($"{GetAPRequirement().ToString()} AP");
 
-        button.onClick.RemoveAllListeners();
+        /*button.onClick.RemoveAllListeners();
         confirmBtn.GetComponent<Button>().onClick.RemoveAllListeners();
-        cancelBtn.onClick.RemoveAllListeners();
+        cancelBtn.onClick.RemoveAllListeners();*/
 
-        List<Enemy> enemyList = GetEnemiesInRange(unit);
-        GameObject rangeRing = unit.transform.Find("RangeRing").gameObject;
-
-        button.onClick.AddListener(() => {
+        /*button.onClick.AddListener(() => {
             confirmPage.gameObject.SetActive(true);
-            PlayerTurn.Instance.SetAttackableEnemies(enemyList);
-            BattleManager.Instance.ManageLights(enemyList);
-
-            rangeRing.SetActive(true);
-            rangeRing.transform.localScale = new Vector3(range * 2, 0.1f, range * 2);
-        });
-
-        cancelBtn.GetComponent<Button>().onClick.AddListener(() => {
-            //BattleManager.Instance.ManageLights(enemyList);
-            Debug.Log("Canceling move");
-            confirmPage.gameObject.SetActive(false);
-
-            rangeRing.SetActive(false);
-        });
+        });*/
     }
 
     protected virtual void OnClicked(GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
@@ -81,6 +67,14 @@ public abstract class ActionBase : ScriptableObject {
             confirmBtn.SetActive(false);
             //PlayerTurn.Instance.BasicMove();
         });
+
+        /*cancelBtn.GetComponent<Button>().onClick.AddListener(() => {
+            //BattleManager.Instance.ManageLights(enemyList);
+            Debug.Log("Canceling move");
+            confirmPage.gameObject.SetActive(false);
+
+            //rangeRing.SetActive(false);
+        });*/
     }
 
     public virtual IEnumerator Execute(Lifeforms unit, Lifeforms target) {

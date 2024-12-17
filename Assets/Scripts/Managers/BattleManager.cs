@@ -88,12 +88,14 @@ public class BattleManager : MonoBehaviour {
     public BattleState currentBattleState { 
         get => _currentBattleState; 
         private set {
-            if (currentBattleState == BattleState.PlayerAttack) {
-                ToggleWorldLight();
-            } else {
-                ToggleWorldLight();
-            }
             _currentBattleState = value;
+            Debug.Log($"Current Battle State now set to: {_currentBattleState}");
+            if (_currentBattleState == BattleState.PlayerAttack) {
+                ToggleWorldLight(false);
+            } else {
+                ToggleWorldLight(true);
+            }
+            
             //ToggleWorldLight();
         } 
     }
@@ -231,6 +233,7 @@ public class BattleManager : MonoBehaviour {
 
     private void ChangeBattleState(BattleState state) {
         currentBattleState = state;
+        Debug.Log($"Changing state to: {currentBattleState}");
     }
 
     public void ManageLights(List<Enemy> enemyList) {
@@ -256,9 +259,22 @@ public class BattleManager : MonoBehaviour {
         //ToggleWorldLight();
     }
 
-    private void ToggleWorldLight() {
-        selectingEnemyLight.SetActive(!worldLight.activeSelf);
-        worldLight.SetActive(!worldLight.activeSelf);
+    private void ToggleWorldLight(bool value) {
+        /*selectingEnemyLight.SetActive(!worldLight.activeSelf);
+        worldLight.SetActive(!worldLight.activeSelf);*/
+
+        /*selectingEnemyLight.SetActive(!value);
+        worldLight.SetActive(value);*/
+
+        Debug.Log($"WORLD LIGHT TOGGLE VALUE: {value}");
+
+        if (value) {
+            selectingEnemyLight.SetActive(false);
+            worldLight.SetActive(true);
+        } else {
+            selectingEnemyLight.SetActive(true);
+            worldLight.SetActive(false);
+        }
     }
 
     public void OnMoveFinshed() {

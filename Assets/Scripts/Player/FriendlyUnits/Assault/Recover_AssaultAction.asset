@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5822e18c4423f784b905bae39d4538a0, type: 3}
   m_Name: Recover_AssaultAction
   m_EditorClassIdentifier: 
-  moveName: Recover
-  actionPoints: 50
+  moveName: Recover AP
+  actionPointCost: 0
   range: 0
   damage: 0
-  confirmPage: {fileID: 0}
-  confirmBtn: {fileID: 0}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
   buttonPrefab: {fileID: 3947152011441101157, guid: 79148d939daecdf46a8079cf1d9ce4a9, type: 3}
   recoveryAmount: 50

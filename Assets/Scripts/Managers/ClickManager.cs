@@ -9,6 +9,7 @@ public class ClickManager : MonoBehaviour {
 
     [SerializeField] private GameObject markerPrefab;
     private GameObject markerInstance;
+    private GameObject markerPlaced;
     private Coroutine followMouseCoroutine;
 
     // Sent to PlayerTurn to determine which unit the moves will be performed by
@@ -140,40 +141,64 @@ public class ClickManager : MonoBehaviour {
         }
     }
 
-    public void FindMovePosition(System.Action<Vector3> callback) {
+    public void FindMovePosition(System.Action<Vector3> callback, System.Action<GameObject> marker) {
+        if (followMouseCoroutine != null) {
+            CancelFollowMouse();
+        }
+
         if (markerInstance == null) {
             markerInstance = Instantiate(markerPrefab);
         }
         
 
-        followMouseCoroutine = StartCoroutine(FollowMouse(callback));
+        followMouseCoroutine = StartCoroutine(FollowMouse(callback, marker));
     }
 
-    private IEnumerator FollowMouse(System.Action<Vector3> callback) {
+    private IEnumerator FollowMouse(System.Action<Vector3> callback, System.Action<GameObject> marker) {
         Vector3 lastMousePos = Vector3.zero;
         int layerMask = ~LayerMask.GetMask("IgnoreRaycast");
 
+        
         while (true) {
+            if (EventSystem.current.IsPointerOverGameObject()) {
+                yield return null;
+                continue;
+            }
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) {
                 if (Vector3.Distance(hit.point, lastMousePos) > 0.1f) {
-                    markerInstance.transform.position = hit.point;
+                    markerInstance.transform.position = new Vector3(hit.point.x, 0.5f, hit.point.z);
                     lastMousePos = hit.point;
                 }
 
                 if (Input.GetMouseButtonDown(0)) {
                     Vector3 placedPosition = markerInstance.transform.position;
-                    Instantiate(markerPrefab, placedPosition, Quaternion.identity);
+                    markerPlaced = Instantiate(markerPrefab, placedPosition, Quaternion.identity);
                     Destroy(markerInstance.gameObject);
                     markerInstance = null;
                     followMouseCoroutine = null;
+                    placedPosition.y = 1;
                     callback(placedPosition);
+                    marker(markerPlaced);
                     yield break;
                 }
             }
             yield return null;
         }
+    }
+
+    public void CancelFollowMouse() {
+        Debug.Log("CancelFollowMouse called");
+        if (followMouseCoroutine != null) {
+            StopCoroutine(followMouseCoroutine);
+            followMouseCoroutine = null;
+        }
+        if (markerInstance != null) {
+            Destroy(markerInstance.gameObject);
+            markerInstance = null;
+        }
+        Debug.Log("FollowMouse coroutine and marker instance cleaned up");
     }
 }

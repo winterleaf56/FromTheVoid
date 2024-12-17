@@ -98,6 +98,10 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
         StartCoroutine(action.Execute(this));
     }
 
+    public void PerformReposition(RepositionAction reposition) {
+        StartCoroutine(reposition.Execute(this));
+    }
+
     /*public IEnumerator PerformAction(ActionBase action) {
         yield return StartCoroutine(action.Execute(this));
     }*/

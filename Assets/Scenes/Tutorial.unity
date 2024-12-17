@@ -797,6 +797,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8493b00b58f0e234f9847927acd0bc07, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  markerPrefab: {fileID: 6971819242378076031, guid: d0ea98f65d22cc04183d6baf6b34f737, type: 3}
   allowClicks: 1
 --- !u!4 &218184305
 Transform:

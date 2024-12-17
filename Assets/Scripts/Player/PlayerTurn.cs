@@ -169,6 +169,11 @@ public class PlayerTurn : MonoBehaviour {
         selectedFriendly.PerformAction(action);
     }
 
+    public void StartReposition(RepositionAction reposition) {
+        Debug.Log($"Starting reposition from StartReposition: {reposition.name}");
+        selectedFriendly.PerformReposition(reposition);
+    }
+
     public void BasicMove() {
         if (!CheckAP("Basic")) {
             Debug.Log("Not enough AP to perform basic move");

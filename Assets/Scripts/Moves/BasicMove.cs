@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,7 +16,7 @@ public class BasicMove : ActionBase {
         button.onClick.AddListener(() => {
             //BattleManager.Instance.AttackingToggle();
             BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerAttack);
-            OnClickedBasic(unit, confirmPage, confirmBtn, cancelBtn);
+            //OnClickedBasic(unit, confirmPage, confirmBtn, cancelBtn, rangeRing);
             Debug.Log("Executing basic move by setting up button");
         });
 
@@ -23,10 +24,26 @@ public class BasicMove : ActionBase {
 
     protected override void ConfigureButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
         base.ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
+
+        List<Enemy> enemyList = GetEnemiesInRange(unit);
+        rangeRing = unit.transform.Find("RangeRing").gameObject;
+
+        button.onClick.AddListener(() => {
+            confirmPage.gameObject.SetActive(true);
+            PlayerTurn.Instance.SetAttackableEnemies(enemyList);
+            BattleManager.Instance.ManageLights(enemyList);
+
+            rangeRing.SetActive(true);
+            rangeRing.transform.localScale = new Vector3(range * 2, 0.1f, range * 2);
+
+            OnClickedBasic(unit, confirmPage, confirmBtn, cancelBtn, rangeRing);
+        });
+
+        
     }
 
     // OnClickedBasic is OnClicked but toggles BattleState to PlayerAttack so children can override OnClicked and not have to worry about toggling BattleState to PlayerAttack
-    protected virtual void OnClickedBasic(Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+    protected virtual void OnClickedBasic(Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn, GameObject rangeRing) {
         base.OnClicked(confirmPage, confirmBtn, cancelBtn);
 
         confirmBtn.GetComponent<Button>().onClick.AddListener(() => {
@@ -39,6 +56,13 @@ public class BasicMove : ActionBase {
             BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
             //PlayerTurn.Instance.StartDirectAttack(this);
             PlayerTurn.Instance.CancelMove();
+            rangeRing.SetActive(false);
+        });
+
+        cancelBtn.GetComponent<Button>().onClick.AddListener(() => {
+            //BattleManager.Instance.ManageLights(enemyList);
+            Debug.Log("Canceling move");
+            confirmPage.gameObject.SetActive(false);
         });
     }
 
