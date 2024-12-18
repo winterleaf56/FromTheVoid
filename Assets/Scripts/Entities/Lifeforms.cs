@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using static BattleManager;
 
 public abstract class Lifeforms : MonoBehaviour, IDamageable {
     [Header("Moves")]
@@ -153,6 +154,12 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
         ultimateMove.Execute(this);
     }
 
+    public void RecoverAP() {
+        int recoveryAmount = (stats.ActionPoints + stats.ActionPointRecovery > stats.MaxActionPoints) ? stats.MaxActionPoints - stats.ActionPoints : stats.ActionPointRecovery;
+
+        stats.AddActionPoints(recoveryAmount);
+    }
+
     public int GetMoveAPRequirement(string moveType) {
         switch (moveType) {
             case "Basic":
@@ -180,6 +187,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 public class Stats {
     private string unitName;
     private int actionPoints;
+    private int maxActionPoints;
     private int actionPointRecovery;
     private int ultimatePoints;
     private int maxUltimatePoints;
@@ -190,6 +198,7 @@ public class Stats {
     public void InitializeStats(string unitName, int actionPoints, int actionPointRecovery, int ultimatePoints, int maxUltimatePoints, float maxHealth, float maxMoveDistance, float defence) {
         UnitName = unitName;
         ActionPoints = actionPoints;
+        maxActionPoints = actionPoints;
         ActionPointRecovery = actionPointRecovery;
         UltimatePoints = ultimatePoints;
         MaxUltimatePoints = maxUltimatePoints;
@@ -211,6 +220,11 @@ public class Stats {
     public int ActionPoints {
         get { return actionPoints; }
         private set { actionPoints = value; }
+    }
+
+    public int MaxActionPoints {
+        get { return maxActionPoints; }
+        private set { }
     }
 
     public int ActionPointRecovery {

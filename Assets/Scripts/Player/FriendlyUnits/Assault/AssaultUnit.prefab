@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 3943833056246487254}
   - component: {fileID: -8251278617271875159}
   - component: {fileID: -2812296884578319538}
+  - component: {fileID: -2368375347369097136}
+  - component: {fileID: -7628141093187557361}
   m_Layer: 0
   m_Name: AssaultUnit
   m_TagString: Friendly
@@ -231,6 +233,40 @@ MonoBehaviour:
   health: {fileID: 0}
   friendlyUnitID: 0
   staminaStimAction: {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}
+--- !u!195 &-2368375347369097136
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2988888026099170687}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &-7628141093187557361
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2988888026099170687}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f7e79eb1b09225d49b1731ea0fd4bcf8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &4737602549971112782
 GameObject:
   m_ObjectHideFlags: 0

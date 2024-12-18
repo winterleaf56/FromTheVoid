@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 
@@ -12,18 +13,22 @@ private Vector3 positionToMoveTo;
     private Button cancelButton;
 
     private GameObject placedMarker;
+    private int unitAP;
+    private float moveCost;
+    private Lifeforms unitToMove;
 
     public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
         confirmButton = confirmBtn;
         cancelButton = cancelBtn;
         base.SetupButton(button, unit, confirmPage, confirmBtn, cancelBtn);
 
-        //cancelBtn.interactable = false;
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => {
+            unitAP = unit.stats.ActionPoints;
             confirmPage.SetActive(true);
-            BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerMoving);
-            ClickManager.Instance.FindMovePosition(SetMoveLocation, SetMarker);
+            BattleManager.changeBattleState?.Invoke(BattleManager.BattleState.PlayerMoving);
+            unitToMove = unit;
+            ClickManager.Instance.FindMovePosition(unitToMove, unitAP, SetValues);
             cancelBtn.onClick.RemoveAllListeners();
             OnClicked(confirmPage, confirmBtn, cancelBtn);
             Debug.Log("CLICKED BUTTON");
@@ -46,42 +51,52 @@ private Vector3 positionToMoveTo;
             PlayerTurn.Instance.StartReposition(this);
 
             confirmPage.SetActive(false);
-            //Vector3 newMovePos = new Vector3(positionToMoveTo.x, 1, positionToMoveTo.z);
-            //unit.transform.position = Vector3.MoveTowards(unit.transform.position, newMovePos, 1);
         });
     }
 
-    // NEED TO SET CONFIRM BUTTON TO INTERACTABLE AFTER SETTING MOVE POSITION
-
     private void CancelReposition(GameObject confirmPage) {
-        Debug.Log("Is this working?");
         Debug.Log($"PositionToMoveTo value: {positionToMoveTo}");
         if (positionToMoveTo == Vector3.zero) {
             confirmPage.SetActive(false);
-            BattleManager.Instance.changeBattleState?.Invoke(BattleManager.BattleState.PlayerIdle);
+            BattleManager.changeBattleState?.Invoke(BattleManager.BattleState.PlayerIdle);
             ClickManager.Instance.CancelFollowMouse();
         } else {
             positionToMoveTo = Vector3.zero;
             Debug.Log($"POSITION TO MOVE TO: {positionToMoveTo}");
             confirmButton.GetComponent<Button>().interactable = false;
             ClickManager.Instance.CancelFollowMouse();
-            Destroy(placedMarker.gameObject);
-            ClickManager.Instance.FindMovePosition(SetMoveLocation, SetMarker);
+            if (placedMarker != null) Destroy(placedMarker.gameObject);
+            //ClickManager.Instance.FindMovePosition(unitAP, SetMoveLocation, SetMarker, SetCost);
+            ClickManager.Instance.FindMovePosition(unitToMove, unitAP, SetValues);
         }
     }
 
-    private void SetMoveLocation(Vector3 position) {
+    private void SetValues(Vector3 position, GameObject marker, float cost) {
         positionToMoveTo = position;
         confirmButton.GetComponent<Button>().interactable = true;
-        Debug.Log(position);
-    }
 
-    private void SetMarker(GameObject marker) {
         placedMarker = marker;
-    }
 
-    public void SetMovePosition() {
-        BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerMoving);
+        NavMeshAgent agent = unitToMove.GetComponent<NavMeshAgent>();
+        if (agent != null) {
+            float pathDistance = NavigationUtils.CalculatePathDistance(agent, position);
+
+            if (pathDistance < Mathf.Infinity) {
+                moveCost = pathDistance * 4; // Example cost multiplier
+            } else {
+                Debug.LogWarning("Invalid path to the target position.");
+                moveCost = Mathf.Infinity;
+            }
+        } else {
+            Debug.LogError("NavMeshAgent not found on the unit.");
+            moveCost = Mathf.Infinity;
+        }
+
+        moveCost = Mathf.Round(moveCost);
+
+        string stringToSend = $"Movement Cost:\n{moveCost.ToString()} AP";
+        UIManager.updateConfirmTxt(stringToSend);
+        Debug.Log($"Position: {positionToMoveTo}, Marker: {placedMarker}, Cost: {moveCost}");
     }
 
     public override IEnumerator Execute(Lifeforms unit) {
@@ -89,13 +104,33 @@ private Vector3 positionToMoveTo;
         //return base.Execute(unit);
         Vector3 newMovePos = positionToMoveTo;
         
+        unit.stats.SubtractActionPoints((int)moveCost);
 
-        while (unit.transform.position != newMovePos) {
-            unit.gameObject.transform.position = Vector3.MoveTowards(unit.gameObject.transform.position, newMovePos, Time.deltaTime * 5);
+        Navigation navigation = unit.GetComponent<Navigation>();
+        if (navigation == null) {
+            Debug.LogError("No navigation component found");
+            yield break;
+        }
+
+        bool movementComplete = false;
+        navigation.MoveTo(positionToMoveTo, () => {
+            movementComplete = true;
+            Debug.Log("Movement complete");
+        });
+
+        while (!movementComplete) {
             yield return null;
         }
 
-        Destroy(placedMarker.gameObject);
+        /*while (unit.transform.position != newMovePos) {
+            unit.gameObject.transform.position = Vector3.MoveTowards(unit.gameObject.transform.position, newMovePos, Time.deltaTime * 5);
+            yield return null;
+        }*/
+
+        if (placedMarker != null) Destroy(placedMarker.gameObject);
+
+        OnMoveFinished();
+        positionToMoveTo = Vector3.zero;
 
         yield break;
     }

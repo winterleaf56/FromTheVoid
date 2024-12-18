@@ -15,7 +15,7 @@ public class BasicMove : ActionBase {
         ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
         button.onClick.AddListener(() => {
             //BattleManager.Instance.AttackingToggle();
-            BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerAttack);
+            BattleManager.changeBattleState?.Invoke(BattleManager.BattleState.PlayerAttack);
             //OnClickedBasic(unit, confirmPage, confirmBtn, cancelBtn, rangeRing);
             Debug.Log("Executing basic move by setting up button");
         });
@@ -25,13 +25,15 @@ public class BasicMove : ActionBase {
     protected override void ConfigureButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
         base.ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
 
-        List<Enemy> enemyList = GetEnemiesInRange(unit);
+        
         rangeRing = unit.transform.Find("RangeRing").gameObject;
 
+        button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => {
+            List<Enemy> enemyList = GetEnemiesInRange(unit);
             confirmPage.gameObject.SetActive(true);
             PlayerTurn.Instance.SetAttackableEnemies(enemyList);
-            BattleManager.Instance.ManageLights(enemyList);
+            BattleManager.manageLights?.Invoke(enemyList);
 
             rangeRing.SetActive(true);
             rangeRing.transform.localScale = new Vector3(range * 2, 0.1f, range * 2);
@@ -46,24 +48,28 @@ public class BasicMove : ActionBase {
     protected virtual void OnClickedBasic(Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn, GameObject rangeRing) {
         base.OnClicked(confirmPage, confirmBtn, cancelBtn);
 
+        confirmBtn.GetComponent<Button>().onClick.RemoveAllListeners();
         confirmBtn.GetComponent<Button>().onClick.AddListener(() => {
             PlayerTurn.Instance.StartDirectAttack(this);
+            confirmPage.gameObject.SetActive(false);
         });
 
+        cancelBtn.onClick.RemoveAllListeners();
         cancelBtn.onClick.AddListener(() => {
             //BattleManager.Instance.AttackingToggle();
-            BattleManager.Instance.ManageLights(GetEnemiesInRange(unit));
-            BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
+            BattleManager.manageLights?.Invoke(GetEnemiesInRange(unit));
+            BattleManager.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
             //PlayerTurn.Instance.StartDirectAttack(this);
             PlayerTurn.Instance.CancelMove();
             rangeRing.SetActive(false);
+            confirmPage.gameObject.SetActive(false);
         });
 
-        cancelBtn.GetComponent<Button>().onClick.AddListener(() => {
+        /*cancelBtn.GetComponent<Button>().onClick.AddListener(() => {
             //BattleManager.Instance.ManageLights(enemyList);
             Debug.Log("Canceling move");
             confirmPage.gameObject.SetActive(false);
-        });
+        });*/
     }
 
     // Make a coroutine that runs while the player is selecting an enemy to attack, then when the attack occurs, the coroutine ends
@@ -90,6 +96,16 @@ public class BasicMove : ActionBase {
         Debug.Log("Move Executed. Ending Coroutine.");
         ClickManager.Instance.allowClicks = true;
         yield break;
+    }
+
+    protected override void OnMoveFinished(Lifeforms unit) {
+        //MoveFinishedEvent?.Invoke();
+        GameObject rangeRing = unit.transform.Find("RangeRing").gameObject;
+        rangeRing.SetActive(false);
+
+        BattleManager.onMoveFinished?.Invoke();
+        //BattleManager.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
+        BattleManager.manageLights?.Invoke(GetEnemiesInRange(unit));
     }
 
     /*private IEnumerator ExecuteMoveCoroutine(Lifeforms unit) {

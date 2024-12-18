@@ -7,6 +7,7 @@ using UnityEngine.Events;
 using UnityEngine.Experimental.GlobalIllumination;
 using Unity.VisualScripting.FullSerializer;
 using TMPro;
+using static UnityEngine.UI.CanvasScaler;
 
 public abstract class ActionBase : ScriptableObject {
     public string moveName;
@@ -14,11 +15,14 @@ public abstract class ActionBase : ScriptableObject {
     [SerializeField] protected float range;
     [SerializeField] protected float damage;
 
+    [SerializeField] private Button attackButton;
+    [SerializeField] private Button actionButton;
+
     [SerializeField] protected LayerMask obstacleLayer;
 
     protected GameObject rangeRing;
 
-    private BattleManager BattleManager => BattleManager.Instance;
+    //protected BattleManager BattleManager => BattleManager.Instance;
 
     //public UnityAction moveFinishedEvent;
 
@@ -50,31 +54,13 @@ public abstract class ActionBase : ScriptableObject {
         }
 
         button.transform.Find("CostTxt").GetComponent<TMP_Text>().SetText($"{GetAPRequirement().ToString()} AP");
-
-        /*button.onClick.RemoveAllListeners();
-        confirmBtn.GetComponent<Button>().onClick.RemoveAllListeners();
-        cancelBtn.onClick.RemoveAllListeners();*/
-
-        /*button.onClick.AddListener(() => {
-            confirmPage.gameObject.SetActive(true);
-        });*/
     }
 
     protected virtual void OnClicked(GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
         Button confBtn = confirmBtn.gameObject.GetComponent<Button>();
         confBtn.onClick.AddListener(() => {
             confirmPage.SetActive(false);
-            confirmBtn.SetActive(false);
-            //PlayerTurn.Instance.BasicMove();
         });
-
-        /*cancelBtn.GetComponent<Button>().onClick.AddListener(() => {
-            //BattleManager.Instance.ManageLights(enemyList);
-            Debug.Log("Canceling move");
-            confirmPage.gameObject.SetActive(false);
-
-            //rangeRing.SetActive(false);
-        });*/
     }
 
     public virtual IEnumerator Execute(Lifeforms unit, Lifeforms target) {
@@ -106,17 +92,17 @@ public abstract class ActionBase : ScriptableObject {
             }
         }
 
+        Debug.Log(enemiesInRange);
         return enemiesInRange;
     }
 
-    protected void OnMoveFinished(Lifeforms unit) {
-        //MoveFinishedEvent?.Invoke();
-        GameObject rangeRing = unit.transform.Find("RangeRing").gameObject;
-        rangeRing.SetActive(false);
-
+    protected virtual void OnMoveFinished(Lifeforms unit) {
+        PlayerTurn.Instance.changedAP?.Invoke();
         BattleManager.onMoveFinished?.Invoke();
-        //BattleManager.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
-        BattleManager.ManageLights(GetEnemiesInRange(unit));
+    }
+
+    protected virtual void OnMoveFinished() {
+        PlayerTurn.Instance.changedAP?.Invoke();
     }
 
     public int GetAPRequirement() {

@@ -19,7 +19,7 @@ public class SpecialMove : BasicMove {
         //button.GetComponentInChildren<TMP_Text>().SetText("Special Attack");
         button.onClick.AddListener(() => {
             //BattleManager.Instance.AttackingToggle();
-            BattleManager.Instance.changeBattleState.Invoke(BattleManager.BattleState.PlayerAttack);
+            BattleManager.changeBattleState?.Invoke(BattleManager.BattleState.PlayerAttack);
             OnClickedBasic(unit, confirmPage, confirmBtn, cancelBtn, rangeRing);
             Debug.Log("Executing Special move by setting up button");
         });

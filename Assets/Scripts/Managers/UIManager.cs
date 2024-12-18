@@ -1,4 +1,6 @@
+using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.UI;
@@ -7,6 +9,13 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private TMP_Text selectedUnitName;
     [SerializeField] private TMP_Text selectedUnitHealthTxt;
     [SerializeField] private TMP_Text selectedUnitAPTxt;
+
+    [SerializeField] private GameObject turnUI;
+    [SerializeField] private TMP_Text roundTxt;
+    [SerializeField] private GameObject battleUI;
+    [SerializeField] private GameObject actionsPanel;
+    [SerializeField] private GameObject unitMoves;
+    [SerializeField] private GameObject unitActions;
 
     [Header("Move Buttons")]
     [SerializeField] private Transform moveButtonsParent;
@@ -20,6 +29,7 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private GameObject confirmPage;
     [SerializeField] private GameObject confirmBtn;
     [SerializeField] private GameObject cancelBtn;
+    [SerializeField] private TMP_Text confirmTxt;
 
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private TMP_Text costTxt;
@@ -28,6 +38,8 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private float buttonSpacing = 100;
 
     public UnityEvent MoveComplete;
+
+    public static Action<string> updateConfirmTxt;
 
     public static UIManager Instance;
 
@@ -38,12 +50,25 @@ public class UIManager : MonoBehaviour {
         }
 
         Instance = this;
+
+        //PlayerTurn.Instance.playerTurnEnded += EndPlayerTurn;
+        updateConfirmTxt += UpdateConfirmTxt;
     }
 
-    public void UpdateStatBar(string name, float health, int actionPoints) {
+    private void OnDestroy() {
+        updateConfirmTxt -= UpdateConfirmTxt;
+        Debug.Log("UIManager destroyed");
+    }
+
+    private void Start() {
+        PlayerTurn.Instance.playerTurnStarted += StartPlayerTurn;
+        PlayerTurn.Instance.playerTurnEnded += EndPlayerTurn;
+    }
+
+    public void UpdateStatBar(string name, float health, int actionPoints, int maxActionPoints) {
         selectedUnitName.SetText(name);
         selectedUnitHealthTxt.SetText($"Health: {health.ToString()}");
-        selectedUnitAPTxt.SetText($"Action Points: {actionPoints.ToString()}");
+        selectedUnitAPTxt.SetText($"Action Points: {actionPoints.ToString()} / {maxActionPoints.ToString()}");
     }
 
     public void UpdateStatBar(string name, float health) {
@@ -58,11 +83,34 @@ public class UIManager : MonoBehaviour {
         selectedUnitAPTxt.gameObject.SetActive(enable);
     }
 
+    public void SwitchFriendlyUnit(Lifeforms unit) {
+        LoadButtons(unit);
+        ToggleStats(true);
+        unitMoves.SetActive(false);
+        unitActions.SetActive(false);
+    }
+
     public void TestingForThis() {
         Debug.Log("HELLO IS THIS WORKING");
     }
 
-    [SerializeField] GameObject testButton;
+    private void UpdateConfirmTxt(string value) {
+        confirmTxt.SetText(value);
+    }
+
+    private void EndPlayerTurn() {
+        ToggleStats(false);
+        unitMoves.SetActive(false);
+        unitActions.SetActive(false);
+        actionsPanel.SetActive(false);
+        turnUI.SetActive(false);
+    }
+
+    private void StartPlayerTurn() {
+        battleUI.SetActive(true);
+        turnUI.SetActive(true);
+        roundTxt.SetText($"Round\n{BattleManager.Instance.turnNumber.ToString()}");
+    }
 
     public void LoadButtons(Lifeforms unit) {
         // Clear previous buttons
@@ -73,16 +121,14 @@ public class UIManager : MonoBehaviour {
             Destroy(child.gameObject);
         }
 
-        float buttonSpacing = 10f; // Adjust as needed
-
         // Action buttons
-        SetButtons(unit.GetActions(), unit, actionButtonsParent, buttonSpacing, actionBackButton);
+        SetButtons(unit.GetActions(), unit, actionButtonsParent, actionBackButton);
 
         // Move buttons
-        SetButtons(unit.GetMoves(), unit, moveButtonsParent, buttonSpacing, moveBackButton);
+        SetButtons(unit.GetMoves(), unit, moveButtonsParent, moveBackButton);
     }
 
-    private void SetButtons(ActionBase[] actions, Lifeforms unit, Transform parent, float buttonSpacing, GameObject backButton) {
+    private void SetButtons(ActionBase[] actions, Lifeforms unit, Transform parent, GameObject backButton) {
         GameObject newButton;
 
         foreach (var action in actions) {
@@ -94,25 +140,5 @@ public class UIManager : MonoBehaviour {
         newButton = Instantiate(backButton, parent);
         newButton.GetComponent<Button>().onClick.AddListener(() => parent.parent.gameObject.SetActive(false));
 
-    }
-
-    private void ResetUI() {
-
-    }
-
-
-
-
-
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start() {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 }

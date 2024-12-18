@@ -1,6 +1,8 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 using UnityEngine.EventSystems;
+using UnityEngine.UIElements;
 
 public class ClickManager : MonoBehaviour {
 
@@ -141,7 +143,7 @@ public class ClickManager : MonoBehaviour {
         }
     }
 
-    public void FindMovePosition(System.Action<Vector3> callback, System.Action<GameObject> marker) {
+    public void FindMovePosition(Lifeforms unit, int unitAP, System.Action<Vector3, GameObject, float> callback) {
         if (followMouseCoroutine != null) {
             CancelFollowMouse();
         }
@@ -149,15 +151,19 @@ public class ClickManager : MonoBehaviour {
         if (markerInstance == null) {
             markerInstance = Instantiate(markerPrefab);
         }
-        
 
-        followMouseCoroutine = StartCoroutine(FollowMouse(callback, marker));
+        unitAP = (unitAP / 4) - 1;
+        followMouseCoroutine = StartCoroutine(FollowMouse(unit, unitAP, callback));
     }
 
-    private IEnumerator FollowMouse(System.Action<Vector3> callback, System.Action<GameObject> marker) {
+    private IEnumerator FollowMouse(Lifeforms unit, int unitAP, System.Action<Vector3, GameObject, float> callback) {
+        print($"unitAP {unitAP}");
+        Vector3 initialPosition = unit.gameObject.transform.position;
         Vector3 lastMousePos = Vector3.zero;
         int layerMask = ~LayerMask.GetMask("IgnoreRaycast");
 
+        NavMeshAgent agent = unit.GetComponent<NavMeshAgent>();
+        MeshRenderer markerIndicator = markerInstance.transform.Find("Indicator").GetComponent<MeshRenderer>();
         
         while (true) {
             if (EventSystem.current.IsPointerOverGameObject()) {
@@ -168,20 +174,26 @@ public class ClickManager : MonoBehaviour {
             RaycastHit hit;
 
             if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) {
-                if (Vector3.Distance(hit.point, lastMousePos) > 0.1f) {
-                    markerInstance.transform.position = new Vector3(hit.point.x, 0.5f, hit.point.z);
-                    lastMousePos = hit.point;
+                Vector3 hitPoint = new Vector3(hit.point.x, 0.5f, hit.point.z);
+                float pathDistance = NavigationUtils.CalculatePathDistance(agent, hitPoint);
+                float distance = Mathf.Round(pathDistance);
+                markerInstance.transform.position = hitPoint;
+                //lastMousePos = hit.point;
+                if (distance <= unitAP) {
+                    
+                    markerIndicator.material.color = Color.green;
+                } else {
+                    markerIndicator.material.color = Color.red;
                 }
 
-                if (Input.GetMouseButtonDown(0)) {
+                if (Input.GetMouseButtonDown(0) && distance < unitAP + 0.1) {
                     Vector3 placedPosition = markerInstance.transform.position;
                     markerPlaced = Instantiate(markerPrefab, placedPosition, Quaternion.identity);
                     Destroy(markerInstance.gameObject);
                     markerInstance = null;
                     followMouseCoroutine = null;
                     placedPosition.y = 1;
-                    callback(placedPosition);
-                    marker(markerPlaced);
+                    callback(placedPosition, markerPlaced, distance);
                     yield break;
                 }
             }

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -8,6 +9,7 @@ using UnityEngine.UI;
 
 public class PlayerTurn : MonoBehaviour {
     [SerializeField] private GameObject BattleUI;
+    [SerializeField] private GameObject turnUI;
     [SerializeField] private GameObject actionsUI;
 
     [SerializeField] private Button confirmBtn;
@@ -15,6 +17,10 @@ public class PlayerTurn : MonoBehaviour {
     private UIManager UIManager => UIManager.Instance;
 
     private bool endTurn = false;
+
+    public Action changedAP;
+    public Action playerTurnStarted;
+    public Action playerTurnEnded;
 
     public List<Enemy> AttackableEnemies { get; private set; }
 
@@ -35,9 +41,10 @@ public class PlayerTurn : MonoBehaviour {
                 actionsUI.SetActive(true);
                 selectedFriendly = _selectedUnit.GetComponent<Lifeforms>();
                 selectedFriendly.GetComponent<Light>().enabled = true;
-                UIManager.LoadButtons(selectedFriendly);
-                UIManager.ToggleStats(true);
-                UIManager.UpdateStatBar(selectedFriendly.stats.UnitName, selectedFriendly.stats.MaxHealth, selectedFriendly.stats.ActionPoints);
+                //UIManager.LoadButtons(selectedFriendly);
+                GetButtonInfo();
+                //UIManager.ToggleStats(true);
+                UIManager.UpdateStatBar(selectedFriendly.stats.UnitName, selectedFriendly.stats.MaxHealth, selectedFriendly.stats.ActionPoints, selectedFriendly.stats.MaxActionPoints);
             } else if (!BattleManager.Instance.currentBattleState.Equals(BattleManager.BattleState.PlayerAttack)) {
                 print("Enemy unit selected, deactivating actionsUI");
                 actionsUI.SetActive(false);
@@ -78,6 +85,8 @@ public class PlayerTurn : MonoBehaviour {
         }
 
         Instance = this;
+
+        changedAP += MoveFinished;
     }
 
     /*private void ManageLights() {
@@ -97,8 +106,23 @@ public class PlayerTurn : MonoBehaviour {
         }
     }
 
+    public void GetButtonInfo() {
+        UIManager.SwitchFriendlyUnit(selectedFriendly);
+    }
+
+    /*public void GetButtonInfo() {
+        UIManager.LoadButtons(selectedFriendly);
+        UIManager.ToggleStats(true);
+    }*/
+
+    private void MoveFinished() {
+        UIManager.UpdateStatBar(selectedFriendly.stats.UnitName, selectedFriendly.stats.MaxHealth, selectedFriendly.stats.ActionPoints, selectedFriendly.stats.MaxActionPoints);
+        GetButtonInfo();
+    }
+
     public IEnumerator StartPlayerTurn() {
-        BattleUI.SetActive(true);
+        playerTurnStarted?.Invoke();
+        turnUI.SetActive(true);
         endTurn = false;
         Debug.Log("Player turn started");
 
@@ -108,8 +132,9 @@ public class PlayerTurn : MonoBehaviour {
             yield return null;
         }
 
+        //playerTurnEnded?.Invoke();
         Debug.Log("Player turn ended");
-        BattleUI.SetActive(false);
+        turnUI.SetActive(false);
     }
 
     private void ResetSelectedUnits() {
@@ -125,6 +150,7 @@ public class PlayerTurn : MonoBehaviour {
 
     public void EndTurn() {
         endTurn = true;
+        playerTurnEnded?.Invoke();
     }
 
     public void CancelMove() {

@@ -16,11 +16,13 @@ public class BattleManager : MonoBehaviour {
 
     [Header("UI Elements")]
     [SerializeField] private GameObject battleUI;
+    [SerializeField] private GameObject turnUI;
     [SerializeField] private GameObject battleActionsUI;
     [SerializeField] private GameObject unitMovesUI;
     [SerializeField] private GameObject unitActionUI;
     [SerializeField] private GameObject battleAttackBtnUI;
     [SerializeField] private GameObject unitStatUI;
+    [SerializeField] private TMP_Text roundNumber;
 
     [Header("Lighting")]
     [SerializeField] private GameObject selectingEnemyLight;
@@ -42,9 +44,10 @@ public class BattleManager : MonoBehaviour {
     public float globalActionPoints { get; private set; }
     public float increaseGAPBy { get; private set; } = 50;
 
-    public Action onPlayerTurnStart;
-    public Action<BattleState> changeBattleState;
-    public Action onMoveFinished;
+    public static Action onPlayerTurnStart;
+    public static Action<BattleState> changeBattleState;
+    public static Action onMoveFinished;
+    public static Action<List<Enemy>> manageLights;
 
     public static BattleManager Instance;
 
@@ -110,6 +113,8 @@ public class BattleManager : MonoBehaviour {
 
         changeBattleState += ChangeBattleState;
         onMoveFinished += OnMoveFinshed;
+        manageLights += ManageLights;
+        //PlayerTurn.Instance.playerTurnEnded += ClearPlayerTurn;
 
         currentTurn = GameState.Intro;
 
@@ -128,9 +133,18 @@ public class BattleManager : MonoBehaviour {
         currentTurn = GameState.PlayerTurn;
     }
 
+    private void OnDestroy() {
+        onPlayerTurnStart -= StartPlayerTurn;
+        changeBattleState -= ChangeBattleState;
+        onMoveFinished -= OnMoveFinshed;
+        manageLights -= ManageLights;
+        Debug.Log("Battle Manager destroyed");
+    }
+
     [SerializeField] Canvas randomButtonCanvas;
 
     void Start() {
+        PlayerTurn.Instance.playerTurnEnded += ClearPlayerTurn;
         StartCoroutine(StartBattle());
     }
 
@@ -147,6 +161,12 @@ public class BattleManager : MonoBehaviour {
     private IEnumerator StartBattle() {
         while (!currentTurn.Equals(GameState.BattleOver)) {
             turnNumber++;
+
+            foreach (GameObject unit in playerUnits) {
+                Lifeforms friendlyUnit = unit.GetComponent<Friendly>();
+                friendlyUnit.RecoverAP();
+            }
+
             Debug.Log("Battle Manager: Starting Player Turn");
             yield return StartCoroutine(GetComponent<PlayerTurn>().StartPlayerTurn());
             Debug.Log("Battle Manager: Ending Player Turn");
@@ -244,20 +264,6 @@ public class BattleManager : MonoBehaviour {
         }
     }
 
-    public void AttackingToggle() {
-        //currentTurn = (currentTurn == GameState.PlayerTurn) ? GameState.EnemyTurn : GameState.PlayerTurn;
-        currentBattleState = (currentBattleState == BattleState.PlayerAttack) ? BattleState.PlayerIdle : BattleState.PlayerAttack;
-        Debug.Log($"Changing state to: {currentBattleState}");
-
-        /*foreach (GameObject enemy in enemyUnits) {
-            Light displayLight = enemy.GetComponent<Light>();
-            displayLight.color = Color.green;
-            displayLight.enabled = !displayLight.enabled;
-        }*/
-
-        // Change Lighting
-        //ToggleWorldLight();
-    }
 
     private void ToggleWorldLight(bool value) {
         /*selectingEnemyLight.SetActive(!worldLight.activeSelf);
@@ -303,12 +309,5 @@ public class BattleManager : MonoBehaviour {
             enemyUnit.GetComponent<Light>().enabled = false;
         }
 
-        //battleUI.SetActive(false);
-        battleActionsUI.SetActive(false);
-        foreach (Transform child in battleAttackBtnUI.transform) {
-            if (child.name != "BackBtn") {
-                child.gameObject.SetActive(false);
-            }
-        }
     }
 }
