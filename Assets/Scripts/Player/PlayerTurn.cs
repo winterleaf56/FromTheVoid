@@ -124,6 +124,8 @@ public class PlayerTurn : MonoBehaviour {
         playerTurnStarted?.Invoke();
         turnUI.SetActive(true);
         endTurn = false;
+        ClickManager.Instance.allowClicks = true;
+        StatusEffectManager.Instance.UpdateFriendlyEffects();
         Debug.Log("Player turn started");
 
 

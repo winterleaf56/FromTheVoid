@@ -26,6 +26,7 @@ public class Health : MonoBehaviour {
     }
 
     public void TakeDamage(float value) {
+        Debug.Log($"Taking {value} damage");
         if (isDead) return;
 
         health -= value;
@@ -36,7 +37,7 @@ public class Health : MonoBehaviour {
             OnDeath();
         }
 
-        OnHealthChanged(health);
+        //OnHealthChanged(health);
     }
 
     public void AddHealth(float value) {

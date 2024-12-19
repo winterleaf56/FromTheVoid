@@ -17,6 +17,8 @@ private Vector3 positionToMoveTo;
     private float moveCost;
     private Lifeforms unitToMove;
 
+    public int moveCostMultiplier = 4;
+
     public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
         confirmButton = confirmBtn;
         cancelButton = cancelBtn;
@@ -28,7 +30,7 @@ private Vector3 positionToMoveTo;
             confirmPage.SetActive(true);
             BattleManager.changeBattleState?.Invoke(BattleManager.BattleState.PlayerMoving);
             unitToMove = unit;
-            ClickManager.Instance.FindMovePosition(unitToMove, unitAP, SetValues);
+            ClickManager.Instance.FindMovePosition(unitToMove, unitAP, actionPointCost, SetValues);
             cancelBtn.onClick.RemoveAllListeners();
             OnClicked(confirmPage, confirmBtn, cancelBtn);
             Debug.Log("CLICKED BUTTON");
@@ -67,7 +69,7 @@ private Vector3 positionToMoveTo;
             ClickManager.Instance.CancelFollowMouse();
             if (placedMarker != null) Destroy(placedMarker.gameObject);
             //ClickManager.Instance.FindMovePosition(unitAP, SetMoveLocation, SetMarker, SetCost);
-            ClickManager.Instance.FindMovePosition(unitToMove, unitAP, SetValues);
+            ClickManager.Instance.FindMovePosition(unitToMove, unitAP, actionPointCost, SetValues);
         }
     }
 
@@ -82,7 +84,7 @@ private Vector3 positionToMoveTo;
             float pathDistance = NavigationUtils.CalculatePathDistance(agent, position);
 
             if (pathDistance < Mathf.Infinity) {
-                moveCost = pathDistance * 4; // Example cost multiplier
+                moveCost = pathDistance * actionPointCost;
             } else {
                 Debug.LogWarning("Invalid path to the target position.");
                 moveCost = Mathf.Infinity;

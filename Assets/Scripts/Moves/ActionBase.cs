@@ -103,6 +103,7 @@ public abstract class ActionBase : ScriptableObject {
 
     protected virtual void OnMoveFinished() {
         PlayerTurn.Instance.changedAP?.Invoke();
+        BattleManager.changeBattleState?.Invoke(BattleManager.BattleState.PlayerIdle);
     }
 
     public int GetAPRequirement() {

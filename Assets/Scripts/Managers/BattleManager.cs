@@ -63,6 +63,7 @@ public class BattleManager : MonoBehaviour {
         PlayerAttack,
         PlayerDefend,
         PlayerItem,
+        PlayerAction,
         PlayerMoving
     }
 
@@ -164,7 +165,7 @@ public class BattleManager : MonoBehaviour {
 
             foreach (GameObject unit in playerUnits) {
                 Lifeforms friendlyUnit = unit.GetComponent<Friendly>();
-                friendlyUnit.RecoverAP();
+                friendlyUnit.StartRound();
             }
 
             Debug.Log("Battle Manager: Starting Player Turn");

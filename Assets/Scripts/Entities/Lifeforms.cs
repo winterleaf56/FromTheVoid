@@ -154,10 +154,23 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
         ultimateMove.Execute(this);
     }
 
+    public void StartRound() {
+        RecoverAP();
+        TakeDamage();
+    }
+
     public void RecoverAP() {
         int recoveryAmount = (stats.ActionPoints + stats.ActionPointRecovery > stats.MaxActionPoints) ? stats.MaxActionPoints - stats.ActionPoints : stats.ActionPointRecovery;
 
         stats.AddActionPoints(recoveryAmount);
+
+        Debug.Log($"Recovering {recoveryAmount} AP");
+    }
+
+    public void TakeDamage() {
+        health.TakeDamage(stats.DamageOverTime);
+
+        Debug.Log($"Taking {stats.DamageOverTime} damage");
     }
 
     public int GetMoveAPRequirement(string moveType) {
@@ -185,20 +198,35 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 [System.Serializable]
 //[SerializeField]
 public class Stats {
-    private string unitName;
+    /*private string unitName;
+    private string unitType;
     private int actionPoints;
     private int maxActionPoints;
     private int actionPointRecovery;
     private int ultimatePoints;
     private int maxUltimatePoints;
     private float maxHealth;
+    private float healOverTime;
     private float maxMoveDistance;
-    private float defence;
+    private float defence;*/
+
+    public string UnitName { get; private set; }
+    public string UnitType { get; private set; }
+    public int ActionPoints { get; private set; }
+    public int MaxActionPoints { get; private set; }
+    public int ActionPointRecovery { get; private set; }
+    public int UltimatePoints { get; private set; }
+    public int MaxUltimatePoints { get; private set; }
+    public float MaxHealth { get; private set; }
+    public float HealOverTime { get; private set; }
+    public float DamageOverTime { get; private set; }
+    public float MaxMoveDistance { get; private set; }
+    public float Defence { get; private set; }
 
     public void InitializeStats(string unitName, int actionPoints, int actionPointRecovery, int ultimatePoints, int maxUltimatePoints, float maxHealth, float maxMoveDistance, float defence) {
         UnitName = unitName;
         ActionPoints = actionPoints;
-        maxActionPoints = actionPoints;
+        MaxActionPoints = actionPoints;
         ActionPointRecovery = actionPointRecovery;
         UltimatePoints = ultimatePoints;
         MaxUltimatePoints = maxUltimatePoints;
@@ -207,14 +235,26 @@ public class Stats {
         Defence = defence;
     }
 
-    public string UnitName {
+
+    /*public string UnitName {
         get { return unitName; }
         private set { unitName = value; }
+    }
+
+    // Maybe make types classes or enums and when damage is dealt, send it through an Action and the corresponding type can mitigate or amplify the damage
+    public string UnitType {
+        get { return unitType; }
+        private set { unitType = value; }
     }
 
     public float MaxHealth {
         get { return maxHealth; }
         private set { maxHealth = value; }
+    }
+
+    public float HealOverTime {
+        get { return healOverTime; }
+        private set { healOverTime = value; }
     }
 
     public int ActionPoints {
@@ -250,14 +290,14 @@ public class Stats {
     public float Defence {
         get { return defence; }
         private set { defence = value; }
-    }
+    }*/
 
     public void SetActionPoints(int value) {
         ActionPoints = value;
     }
 
-    public void SetActionPointRecovery(int value) {
-        ActionPointRecovery = value;
+    public void AddActionPointRecovery(int value) {
+        ActionPointRecovery += value;
     }
 
     public void AddActionPoints(int value) {
@@ -278,6 +318,14 @@ public class Stats {
 
     public void AddUltimatePoints(int value) {
         UltimatePoints += value;
+    }
+
+    public void SetHealOverTime(float value) {
+        HealOverTime = value;
+    }
+
+    public void SetDamageOverTime(float value) {
+        DamageOverTime = value;
     }
 
 }

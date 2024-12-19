@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   unitName: Assault
-  actionPoints: 100
+  actionPoints: 150
   actionPointRecovery: 75
   ultimatePoints: 0
   maxUltimatePoints: 0

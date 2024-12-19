@@ -90,7 +90,7 @@ public class ClickManager : MonoBehaviour {
                     return unitToSend;
                 } else if (clickedObject.CompareTag("UI")) {
                     Debug.Log("UI Clicked");
-                    
+
                 } else {
                     Debug.Log("Non-unit object clicked");
                     //BattleManager.Instance.HideUnitStats();
@@ -143,7 +143,7 @@ public class ClickManager : MonoBehaviour {
         }
     }
 
-    public void FindMovePosition(Lifeforms unit, int unitAP, System.Action<Vector3, GameObject, float> callback) {
+    public void FindMovePosition(Lifeforms unit, int unitAP, int actionPointCost, System.Action<Vector3, GameObject, float> callback) {
         if (followMouseCoroutine != null) {
             CancelFollowMouse();
         }
@@ -152,7 +152,7 @@ public class ClickManager : MonoBehaviour {
             markerInstance = Instantiate(markerPrefab);
         }
 
-        unitAP = (unitAP / 4) - 1;
+        unitAP = (unitAP / actionPointCost) - 1;
         followMouseCoroutine = StartCoroutine(FollowMouse(unit, unitAP, callback));
     }
 

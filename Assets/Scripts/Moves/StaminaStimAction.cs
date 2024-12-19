@@ -36,6 +36,12 @@ public class StaminaStimAction : ActionBase {
     }
 
     public override IEnumerator Execute(Lifeforms unit) {
+        //StatusEffectManager.Instance.AddEffect(StatusEffectManager.StatusEffectType.ActionPointEffect, "StaminaStimEffect", 2, 25, unit);
+
+        yield break;
+    }
+
+    /*public override IEnumerator Execute(Lifeforms unit) {
         actionActive = true;
         disableOnTurn = currentTurn + turnsActive;
 
@@ -65,6 +71,6 @@ public class StaminaStimAction : ActionBase {
 
         actionActive = false;
         yield break;
-    }
+    }*/
 
 }
