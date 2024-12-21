@@ -8,6 +8,7 @@ using UnityEngine.Experimental.GlobalIllumination;
 using Unity.VisualScripting.FullSerializer;
 using TMPro;
 using static UnityEngine.UI.CanvasScaler;
+using System;
 
 public abstract class ActionBase : ScriptableObject {
     public string moveName;
@@ -39,18 +40,16 @@ public abstract class ActionBase : ScriptableObject {
     }
 
     public virtual void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
+        button.interactable = true;
         ConfigureButton(button, unit, confirmPage, confirmBtn, cancelBtn);
     }
 
     protected virtual void ConfigureButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
         string formattedName = moveName.Replace(" ", "\n");
         button.GetComponentInChildren<TMP_Text>().SetText(formattedName);
-        ColorBlock colors = button.colors;
-        colors.normalColor = Color.white;
 
         if (unit.stats.ActionPoints < GetAPRequirement()) {
-            button.interactable = false;
-            colors.normalColor = new Color(0.5f, 0.5f, 0.5f);
+            DisableButton(button);
         }
 
         button.transform.Find("CostTxt").GetComponent<TMP_Text>().SetText($"{GetAPRequirement().ToString()} AP");
@@ -61,6 +60,14 @@ public abstract class ActionBase : ScriptableObject {
         confBtn.onClick.AddListener(() => {
             confirmPage.SetActive(false);
         });
+    }
+
+    protected void DisableButton(Button button) {
+        ColorBlock colors = button.colors;
+        colors.normalColor = Color.white;
+
+        button.interactable = false;
+        colors.normalColor = new Color(0.5f, 0.5f, 0.5f);
     }
 
     public virtual IEnumerator Execute(Lifeforms unit, Lifeforms target) {

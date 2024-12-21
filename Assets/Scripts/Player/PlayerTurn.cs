@@ -44,7 +44,8 @@ public class PlayerTurn : MonoBehaviour {
                 //UIManager.LoadButtons(selectedFriendly);
                 GetButtonInfo();
                 //UIManager.ToggleStats(true);
-                UIManager.UpdateStatBar(selectedFriendly.stats.UnitName, selectedFriendly.stats.MaxHealth, selectedFriendly.stats.ActionPoints, selectedFriendly.stats.MaxActionPoints);
+                Stats stats = selectedFriendly.stats;
+                UIManager.UpdateStatBar(stats.UnitName, stats.MaxHealth, stats.ActionPoints, stats.MaxActionPoints, stats.ActionPointRecovery);
             } else if (!BattleManager.Instance.currentBattleState.Equals(BattleManager.BattleState.PlayerAttack)) {
                 print("Enemy unit selected, deactivating actionsUI");
                 actionsUI.SetActive(false);
@@ -116,7 +117,8 @@ public class PlayerTurn : MonoBehaviour {
     }*/
 
     private void MoveFinished() {
-        UIManager.UpdateStatBar(selectedFriendly.stats.UnitName, selectedFriendly.stats.MaxHealth, selectedFriendly.stats.ActionPoints, selectedFriendly.stats.MaxActionPoints);
+        Stats stats = selectedFriendly.stats;
+        UIManager.UpdateStatBar(stats.UnitName, stats.MaxHealth, stats.ActionPoints, stats.MaxActionPoints, stats.ActionPointRecovery);
         GetButtonInfo();
     }
 

@@ -16,8 +16,13 @@ MonoBehaviour:
   actionPointCost: 50
   range: 0
   damage: 0
+  attackButton: {fileID: 0}
+  actionButton: {fileID: 0}
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 256
   buttonPrefab: {fileID: 0}
+  effectPrefab: {fileID: 1738359313393494406, guid: 64d9c69952b06e1429734de92b650f09, type: 3}
+  button: {fileID: 0}
   recoveryAmount: 100
+  duration: 2

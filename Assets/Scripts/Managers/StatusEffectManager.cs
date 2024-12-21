@@ -16,7 +16,7 @@ public class StatusEffectManager : MonoBehaviour {
 
     private List<StatusEffect> friendlyActiveEffects = new List<StatusEffect>();
     private List<StatusEffect> enemyActiveEffects = new List<StatusEffect>();
-    private Dictionary<StatusEffectType, Func<string, int, int, StatusEffectBase>> effectFactories;
+    private Dictionary<StatusEffectType, Func<GameObject, string, int, int, StatusEffectBase>> effectFactories;
 
     private void Awake() {
         if (Instance != null && Instance != this) {
@@ -26,7 +26,7 @@ public class StatusEffectManager : MonoBehaviour {
 
         Instance = this;
 
-        effectFactories = new Dictionary<StatusEffectType, Func<string, int, int, StatusEffectBase>> {
+        effectFactories = new Dictionary<StatusEffectType, Func<GameObject, string, int, int, StatusEffectBase>> {
             { StatusEffectType.ActionPointEffect, StatusEffectFactory.CreateActionPointEffect },
             { StatusEffectType.DamageEffect, StatusEffectFactory.CreateDamageEffect }
         };
@@ -38,10 +38,9 @@ public class StatusEffectManager : MonoBehaviour {
         newEffect.ApplyEffect();
     }*/
 
-    public void AddEffect(StatusEffectType effectType, string effectName, int duration, int value, Lifeforms target) {
-        // Use the dictionary to create the effect
+    public void AddEffect(StatusEffectType effectType, GameObject effectPrefab, string effectName, int duration, int value, Lifeforms target) {
         if (effectFactories.TryGetValue(effectType, out var factory)) {
-            StatusEffectBase effectData = factory(effectName, duration, value);
+            StatusEffectBase effectData = factory(effectPrefab, effectName, duration, value);
             if (effectData != null) {
                 var newEffect = new StatusEffect(effectData, target);
 
@@ -52,7 +51,7 @@ public class StatusEffectManager : MonoBehaviour {
                 } else {
                     Debug.LogError($"Target {target.name} is not a Friendly or Enemy.");
                 }
-
+                target.AddStatusEffect(newEffect);
                 newEffect.ApplyEffect();
             }
         } else {
@@ -64,6 +63,8 @@ public class StatusEffectManager : MonoBehaviour {
         for (int i = friendlyActiveEffects.Count - 1; i >= 0; i--) {
             friendlyActiveEffects[i].UpdateEffect();
             if (friendlyActiveEffects[i].IsExpired()) {
+                //friendlyActiveEffects[i].GetTarget().RemoveStatusEffect(friendlyActiveEffects[i]);
+                friendlyActiveEffects[i].GetData().RemoveEffect(friendlyActiveEffects[i].GetTarget());
                 friendlyActiveEffects.RemoveAt(i);
             }
         }
@@ -74,6 +75,7 @@ public class StatusEffectManager : MonoBehaviour {
         for (int i = enemyActiveEffects.Count - 1; i >= 0; i--) {
             enemyActiveEffects[i].UpdateEffect();
             if (enemyActiveEffects[i].IsExpired()) {
+                enemyActiveEffects[i].GetData().RemoveEffect(enemyActiveEffects[i].GetTarget());
                 enemyActiveEffects.RemoveAt(i);
             }
         }

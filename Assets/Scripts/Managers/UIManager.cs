@@ -6,9 +6,12 @@ using UnityEngine.Events;
 using UnityEngine.UI;
 
 public class UIManager : MonoBehaviour {
+    [Header("Selected Unit Header")]
     [SerializeField] private TMP_Text selectedUnitName;
     [SerializeField] private TMP_Text selectedUnitHealthTxt;
     [SerializeField] private TMP_Text selectedUnitAPTxt;
+    [SerializeField] private TMP_Text selectedUnitAPRecoveryTxt;
+    [SerializeField] private GameObject selectedUnitStatusEffects;
 
     [SerializeField] private GameObject turnUI;
     [SerializeField] private TMP_Text roundTxt;
@@ -24,6 +27,8 @@ public class UIManager : MonoBehaviour {
     [Header("Action Buttons")]
     [SerializeField] private Transform actionButtonsParent;
     [SerializeField] private GameObject actionBackButton;
+
+    [SerializeField] private Transform statusEffectParent;
 
     [Header("Confirmation UI")]
     [SerializeField] private GameObject confirmPage;
@@ -65,10 +70,11 @@ public class UIManager : MonoBehaviour {
         PlayerTurn.Instance.playerTurnEnded += EndPlayerTurn;
     }
 
-    public void UpdateStatBar(string name, float health, int actionPoints, int maxActionPoints) {
+    public void UpdateStatBar(string name, float health, int actionPoints, int maxActionPoints, int actionPointRecovery) {
         selectedUnitName.SetText(name);
         selectedUnitHealthTxt.SetText($"Health: {health.ToString()}");
         selectedUnitAPTxt.SetText($"Action Points: {actionPoints.ToString()} / {maxActionPoints.ToString()}");
+        selectedUnitAPRecoveryTxt.SetText($"AP Recovery: {actionPointRecovery.ToString()} AP");
     }
 
     public void UpdateStatBar(string name, float health) {
@@ -81,6 +87,8 @@ public class UIManager : MonoBehaviour {
         selectedUnitName.gameObject.SetActive(enable);
         selectedUnitHealthTxt.gameObject.SetActive(enable);
         selectedUnitAPTxt.gameObject.SetActive(enable);
+        selectedUnitAPRecoveryTxt.gameObject.SetActive(enable);
+        selectedUnitStatusEffects.SetActive(enable);
     }
 
     public void SwitchFriendlyUnit(Lifeforms unit) {
@@ -88,10 +96,6 @@ public class UIManager : MonoBehaviour {
         ToggleStats(true);
         unitMoves.SetActive(false);
         unitActions.SetActive(false);
-    }
-
-    public void TestingForThis() {
-        Debug.Log("HELLO IS THIS WORKING");
     }
 
     private void UpdateConfirmTxt(string value) {
@@ -120,12 +124,17 @@ public class UIManager : MonoBehaviour {
         foreach (Transform child in actionButtonsParent) {
             Destroy(child.gameObject);
         }
+        foreach (Transform child in statusEffectParent) {
+            Destroy(child.gameObject);
+        }
 
         // Action buttons
         SetButtons(unit.GetActions(), unit, actionButtonsParent, actionBackButton);
 
         // Move buttons
         SetButtons(unit.GetMoves(), unit, moveButtonsParent, moveBackButton);
+
+        SetEffects(unit);
     }
 
     private void SetButtons(ActionBase[] actions, Lifeforms unit, Transform parent, GameObject backButton) {
@@ -140,5 +149,13 @@ public class UIManager : MonoBehaviour {
         newButton = Instantiate(backButton, parent);
         newButton.GetComponent<Button>().onClick.AddListener(() => parent.parent.gameObject.SetActive(false));
 
+    }
+
+    private void SetEffects(Lifeforms unit) {
+        GameObject newEffect;
+        if (unit.GetStatusEffects().Count == 0) return;
+        foreach (var effect in unit.GetStatusEffects()) {
+            newEffect = Instantiate(effect.effectPrefab, statusEffectParent);
+        }
     }
 }

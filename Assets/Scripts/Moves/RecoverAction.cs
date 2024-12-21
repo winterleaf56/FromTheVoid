@@ -8,12 +8,21 @@ using UnityEngine.UI;
 public class RecoverAction : ActionBase {
     // This action will recover the player's Action Points by a set amount next turn
     // Can only be used if player has not made a move, they can reposition a short distance though.
+    [SerializeField] private GameObject effectPrefab;
+    [SerializeField] private Button button;
     [SerializeField] private int recoveryAmount = 50;
-    [SerializeField] private int duration = 1;
+    [SerializeField] private int duration = 2;
 
     public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {
         base.SetupButton(button, unit, confirmPage, confirmBtn, cancelBtn);
         //button.GetComponentInChildren<TMP_Text>().SetText("Recover AP");
+
+        foreach (var effect in unit.GetStatusEffects()) {
+            if (effect.GetData().EffectName == "Recovering") {
+                DisableButton(button);
+                break;
+            }
+        }
 
         button.onClick.RemoveAllListeners();
         button.onClick.AddListener(() => {
@@ -45,7 +54,7 @@ public class RecoverAction : ActionBase {
     public override IEnumerator Execute(Lifeforms unit) {
         unit.stats.SubtractActionPoints(actionPointCost);
         
-        StatusEffectManager.Instance.AddEffect(StatusEffectManager.StatusEffectType.ActionPointEffect, "Stamina Stim", duration, recoveryAmount, unit);
+        StatusEffectManager.Instance.AddEffect(StatusEffectManager.StatusEffectType.ActionPointEffect, effectPrefab, "Recovering", duration, recoveryAmount, unit);
 
         OnMoveFinished();
         ClickManager.Instance.allowClicks = true;

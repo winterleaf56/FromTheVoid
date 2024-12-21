@@ -1,4 +1,5 @@
 using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.EventSystems;
@@ -95,7 +96,7 @@ public class ClickManager : MonoBehaviour {
                     Debug.Log("Non-unit object clicked");
                     //BattleManager.Instance.HideUnitStats();
                     BattleManager.Instance.UnitClicked(false);
-                    return unitToSend;
+                    return null;
                 }
             } else {
                 if (lastEnemyClicked != null) {
@@ -139,6 +140,8 @@ public class ClickManager : MonoBehaviour {
             } else {
                 Debug.Log("Non-unit object double-clicked");
                 BattleManager.Instance.HideUnitStats();
+                lastEnemyClicked = null;
+                UIManager.Instance.ToggleStats(false);
             }
         }
     }

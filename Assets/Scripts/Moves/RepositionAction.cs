@@ -51,6 +51,7 @@ private Vector3 positionToMoveTo;
             //SetMovePosition();
             Debug.Log($"Moving to {positionToMoveTo}");
             PlayerTurn.Instance.StartReposition(this);
+            UIManager.updateConfirmTxt("");
 
             confirmPage.SetActive(false);
         });

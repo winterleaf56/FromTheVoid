@@ -1,4 +1,6 @@
+using NUnit.Framework;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using static BattleManager;
 
@@ -24,6 +26,8 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     [SerializeField] protected ActionBase[] moves;
     [SerializeField] protected ActionBase[] actions;
+
+    [SerializeField] protected List<StatusEffect> statusEffects = new List<StatusEffect>();
 
     public Health health;
 
@@ -70,6 +74,18 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     public ActionBase[] GetActions() {
         return actions;
+    }
+
+    public List<StatusEffect> GetStatusEffects() {
+        return statusEffects;
+    }
+
+    public void AddStatusEffect(StatusEffect statusEffect) {
+        statusEffects.Add(statusEffect);
+    }
+
+    public void RemoveStatusEffect(StatusEffect statusEffect) {
+        statusEffects.Remove(statusEffect);
     }
 
     protected virtual void SetMoves() {

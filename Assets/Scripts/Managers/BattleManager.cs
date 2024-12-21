@@ -173,11 +173,15 @@ public class BattleManager : MonoBehaviour {
             Debug.Log("Battle Manager: Ending Player Turn");
             //SwitchTurns();
             Debug.Log("Battle Manager: Starting Enemy Turn");
-
+            yield return StartCoroutine(GetComponent<EnemyTurn>().StartEnemyTurn(enemyUnits));
             Debug.Log("Battle Manager: Ending Enemy Turn");
             //SwitchTurns();
             yield return new WaitForSeconds(1);
         }
+    }
+
+    private void UnitKilled() {
+
     }
 
     // Update is called once per frame
