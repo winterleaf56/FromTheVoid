@@ -230,8 +230,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: dd240c48d55231b43946bc165b2bf269, type: 2}
   - {fileID: 11400000, guid: f7fbd7faf6418d040a4c39e76996b6e3, type: 2}
   - {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}
+  statusEffects: []
   health: {fileID: 0}
   friendlyUnitID: 0
+  unitStats: {fileID: 11400000, guid: ce042649277693c48af06ae7178d258f, type: 2}
   staminaStimAction: {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}
 --- !u!195 &-2368375347369097136
 NavMeshAgent:
@@ -295,7 +297,7 @@ Transform:
   m_GameObject: {fileID: 4737602549971112782}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.49, z: 0}
   m_LocalScale: {x: 18.143309, y: 0.01, z: 18.143309}
   m_ConstrainProportionsScale: 0
   m_Children: []

@@ -22,6 +22,8 @@ public class ClickManager : MonoBehaviour {
     private GameObject lastEnemyClicked = null;
     private GameObject lastFriendlyClicked = null;
 
+    private Lifeforms selectedFriendlyUnit;
+
     public bool allowClicks = true;
 
     public static ClickManager Instance;
@@ -32,6 +34,10 @@ public class ClickManager : MonoBehaviour {
         } else {
             Destroy(gameObject);
         }
+    }
+
+    private void Start() {
+        selectedFriendlyUnit = PlayerTurn.Instance.selectedFriendly;
     }
 
     void Update() {
@@ -64,7 +70,14 @@ public class ClickManager : MonoBehaviour {
 
         if (!allowClicks) return null;
 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray;
+
+        if (selectedFriendlyUnit != null) {
+            ray = new Ray(selectedFriendlyUnit.transform.position, selectedFriendlyUnit.transform.forward);
+        } else {
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        }
+
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit)) {
@@ -96,7 +109,7 @@ public class ClickManager : MonoBehaviour {
                     Debug.Log("Non-unit object clicked");
                     //BattleManager.Instance.HideUnitStats();
                     BattleManager.Instance.UnitClicked(false);
-                    return null;
+                    return unitToSend;
                 }
             } else {
                 if (lastEnemyClicked != null) {
@@ -125,7 +138,13 @@ public class ClickManager : MonoBehaviour {
         if (!BattleManager.Instance.currentTurn.Equals(BattleManager.GameState.PlayerTurn)) {
             return;
         }
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+
+        Ray ray;
+        if (selectedFriendlyUnit != null) {
+            ray = new Ray(selectedFriendlyUnit.transform.position, selectedFriendlyUnit.transform.forward);
+        } else {
+            ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        }
         RaycastHit hit;
 
         if (Physics.Raycast(ray, out hit)) {
@@ -173,6 +192,7 @@ public class ClickManager : MonoBehaviour {
                 yield return null;
                 continue;
             }
+
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
 

@@ -8,6 +8,7 @@ public class Health : MonoBehaviour {
     public bool isDead { get; private set; }
 
     public Action<float> OnHealthChanged;
+    public Action<Lifeforms> onAttacked;
 
     private void Start() {
         OnHealthChanged += OnHealthUpdate;
@@ -25,7 +26,7 @@ public class Health : MonoBehaviour {
         return health;
     }
 
-    public void TakeDamage(float value) {
+    public void TakeDamage(float value, Lifeforms attacker) {
         Debug.Log($"Taking {value} damage");
         if (isDead) return;
 
@@ -35,7 +36,10 @@ public class Health : MonoBehaviour {
             health = 0;
             isDead = true;
             OnDeath();
+            return;
         }
+
+        //onAttacked(attacker);
 
         //OnHealthChanged(health);
     }
@@ -54,6 +58,7 @@ public class Health : MonoBehaviour {
 
     void OnDeath() {
         Debug.Log("Unit Dead");
+        BattleManager.unitDied(transform.GetComponent<Lifeforms>());
     }
 
     void OnHealthUpdate(float value) {

@@ -25,7 +25,7 @@ public class PlayerTurn : MonoBehaviour {
     public List<Enemy> AttackableEnemies { get; private set; }
 
     private Lifeforms selectedEnemy;
-    private Lifeforms selectedFriendly;
+    public Lifeforms selectedFriendly { get; private set; }
     private Lifeforms lastSelectedEnemy;
     private Lifeforms lastSelectedFriendly;
 

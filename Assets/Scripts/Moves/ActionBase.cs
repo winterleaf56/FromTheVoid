@@ -1,14 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.Events;
-using UnityEngine.Experimental.GlobalIllumination;
-using Unity.VisualScripting.FullSerializer;
 using TMPro;
-using static UnityEngine.UI.CanvasScaler;
-using System;
 
 public abstract class ActionBase : ScriptableObject {
     public string moveName;

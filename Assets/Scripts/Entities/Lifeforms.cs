@@ -6,9 +6,9 @@ using static BattleManager;
 
 public abstract class Lifeforms : MonoBehaviour, IDamageable {
     [Header("Moves")]
-    private BasicMove basicMove;
-    private SpecialMove specialMove;
-    private UltimateMove ultimateMove;
+    protected BasicMove basicMove;
+    protected SpecialMove specialMove;
+    protected UltimateMove ultimateMove;
 
     [Header("Actions")]
     protected RecoverAction recoverAction;
@@ -49,23 +49,35 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     public abstract void Damage(float value);
 
     private void Awake() {
+        /*Debug.Log("Loading for the first time");
         stats.InitializeStats(unitName, actionPoints, actionPointRecovery, ultimatePoints, maxUltimatePoints, maxHealth, maxMoveDistance, defence);
         Debug.Log($"Unit Name: {stats.UnitName}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
-        SetMoves();
+        if (GetComponent<Friendly>()) SetMoves();
 
         health = gameObject.AddComponent<Health>();
-        health.InitializeHealth(stats.MaxHealth, stats.MaxHealth);
+        health.InitializeHealth(stats.MaxHealth, stats.MaxHealth);*/
     }
 
     private void Start() {
+        Debug.Log($"Unit Name: {stats.UnitName}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints} IN LIFEFORMS START");
+
         /*health = gameObject.AddComponent<Health>();
         health.InitializeHealth(stats.MaxHealth, stats.MaxHealth);*/
         MaxActionPoints = stats.ActionPoints;
 
         CurrentActionPoints = stats.ActionPoints;
-        Debug.Log($"Current Action Points: {CurrentActionPoints}");
 
         //Debug.Log($"Unit Name: {stats.Name}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
+    }
+
+    protected void FirstStart() {
+        Debug.Log("Loading for the first time");
+        stats.InitializeStats(unitName, actionPoints, actionPointRecovery, ultimatePoints, maxUltimatePoints, maxHealth, maxMoveDistance, defence);
+        Debug.Log($"Unit Name: {stats.UnitName}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
+        if (GetComponent<Friendly>()) SetMoves();
+
+        health = gameObject.AddComponent<Health>();
+        health.InitializeHealth(stats.MaxHealth, stats.MaxHealth);
     }
 
     public ActionBase[] GetMoves() {
@@ -184,7 +196,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     }
 
     public void TakeDamage() {
-        health.TakeDamage(stats.DamageOverTime);
+        health.TakeDamage(stats.DamageOverTime, this);
 
         Debug.Log($"Taking {stats.DamageOverTime} damage");
     }

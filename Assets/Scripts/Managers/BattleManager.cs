@@ -3,8 +3,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Collections.LowLevel.Unsafe;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class BattleManager : MonoBehaviour {
@@ -35,6 +37,15 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] private GameObject[] friendlySpawns;
     [SerializeField] private GameObject[] enemySpawns;
 
+    [SerializeField] private List<Friendly> deadFriendlyUnits;
+    [SerializeField] private List<Enemy> deadEnemyUnits;
+
+    public List<Enemy> DeadEnemyUnits { get => deadEnemyUnits; }
+
+    //[SerializeField] private Level Level;
+
+    public static Level SelectedLevel { get; set; }
+
     public GameObject[] playerUnits;
     public GameObject[] enemyUnits;
 
@@ -48,6 +59,9 @@ public class BattleManager : MonoBehaviour {
     public static Action<BattleState> changeBattleState;
     public static Action onMoveFinished;
     public static Action<List<Enemy>> manageLights;
+
+    public static Action<Lifeforms> unitDied;
+    //public static Action enemyUnitDied;
 
     public static BattleManager Instance;
 
@@ -115,23 +129,12 @@ public class BattleManager : MonoBehaviour {
         changeBattleState += ChangeBattleState;
         onMoveFinished += OnMoveFinshed;
         manageLights += ManageLights;
+        unitDied += UnitDied;
         //PlayerTurn.Instance.playerTurnEnded += ClearPlayerTurn;
 
         currentTurn = GameState.Intro;
 
-        enemyUnits = new GameObject[enemySpawns.Length];
-
-        for (int i = 0; i < friendlySpawns.Length; i++) {
-            playerUnits[i] = Instantiate(playerUnits[i], friendlySpawns[i].transform.position, Quaternion.identity);
-        }
-
-        for (int i = 0; i < enemySpawns.Length; i++) {
-            GameObject enemy = Instantiate(enemyPrefab, enemySpawns[i].transform.position, Quaternion.identity);
-            enemyUnits[i] = enemy;
-
-        }
-
-        currentTurn = GameState.PlayerTurn;
+        //currentTurn = GameState.PlayerTurn;
     }
 
     private void OnDestroy() {
@@ -145,6 +148,21 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] Canvas randomButtonCanvas;
 
     void Start() {
+        enemyUnits = new GameObject[enemySpawns.Length];
+        playerUnits = new GameObject[friendlySpawns.Length];
+
+        for (int i = 0; i < SelectedLevel.PlayerUnits.Count; i++) {
+            GameObject unit = Instantiate(SelectedLevel.PlayerUnits[i], friendlySpawns[i].transform.position, Quaternion.identity);
+            playerUnits[i] = unit;
+        }
+
+        for (int i = 0; i < enemySpawns.Length; i++) {
+            GameObject enemy = Instantiate(enemyPrefab, enemySpawns[i].transform.position, Quaternion.identity);
+            enemyUnits[i] = enemy;
+        }
+
+        currentTurn = GameState.PlayerTurn;
+
         PlayerTurn.Instance.playerTurnEnded += ClearPlayerTurn;
         StartCoroutine(StartBattle());
     }
@@ -173,15 +191,64 @@ public class BattleManager : MonoBehaviour {
             Debug.Log("Battle Manager: Ending Player Turn");
             //SwitchTurns();
             Debug.Log("Battle Manager: Starting Enemy Turn");
-            yield return StartCoroutine(GetComponent<EnemyTurn>().StartEnemyTurn(enemyUnits));
+            //yield return StartCoroutine(GetComponent<EnemyTurn>().StartEnemyTurn(enemyUnits));
             Debug.Log("Battle Manager: Ending Enemy Turn");
             //SwitchTurns();
             yield return new WaitForSeconds(1);
         }
     }
 
-    private void UnitKilled() {
+    private void UnitDied(Lifeforms unit) {
+        if (unit.GetComponent<Friendly>()) {
+            for (int i = 0; i < playerUnits.Length; i++) {
+                if (playerUnits[i] == unit.gameObject) {
+                    deadFriendlyUnits.Add(unit.GetComponent<Friendly>());
+                    playerUnits[i] = null;
+                    break;
+                }
+            }
+        } else if (unit.GetComponent<Enemy>()) {
+            for (int i = 0; i < enemyUnits.Length; i++) {
+                if (enemyUnits[i] == unit.gameObject) {
+                    deadEnemyUnits.Add(unit.GetComponent<Enemy>());
+                    enemyUnits[i] = null;
+                    break;
+                }
+            }
+        }
 
+        UIManager.updateObjectiveText(unit);
+
+        AllUnitsDied();
+    }
+
+    private void AllUnitsDied() {
+        if (deadFriendlyUnits.Count == 4) {
+            GameOver();
+        } else if (deadEnemyUnits.Count == 4) {
+            Victory();
+        }
+    }
+
+    private void PlayerUnitDied() {
+
+    }
+
+    private void EnemyUnitDied() {
+
+    }
+
+    private void GameOver() {
+        Debug.Log("Game Over");
+        UIManager.Instance.ShowDefeatPanel();
+        currentTurn = GameState.BattleOver;
+    }
+
+    private void Victory() {
+        Debug.Log("Victory");
+        UIManager.Instance.ShowVictoryPanel();
+        SelectedLevel.CompleteLevel();
+        currentTurn = GameState.BattleOver;
     }
 
     // Update is called once per frame
@@ -314,5 +381,14 @@ public class BattleManager : MonoBehaviour {
             enemyUnit.GetComponent<Light>().enabled = false;
         }
 
+    }
+
+    public void BackToMenu() {
+        SceneManager.LoadScene("MainMenu");
+    }
+
+    public void RestartLevel() {
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
     }
 }

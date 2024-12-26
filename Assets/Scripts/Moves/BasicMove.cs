@@ -80,7 +80,7 @@ public class BasicMove : ActionBase {
         Debug.Log($"Performing move: {moveName}, against: {target}");
 
         // Damage the target
-        target.GetComponentInParent<Health>().TakeDamage(CalculateDamage());
+        target.GetComponentInParent<Health>().TakeDamage(CalculateDamage(), unit);
         Debug.Log($"Damaging {target} for {CalculateDamage()} damage.");
 
         // Subtract action points for executing move

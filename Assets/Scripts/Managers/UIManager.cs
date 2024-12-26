@@ -39,12 +39,21 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private TMP_Text costTxt;
 
+    [Header("Temporary Variables")]
+    [SerializeField] private TMP_Text objectiveTxt;
+    [SerializeField] private GameObject menuCanvas;
+    [SerializeField] private GameObject victoryPanel;
+    [SerializeField] private GameObject defeatPanel;
+    [SerializeField] private GameObject pausePanel;
+
 
     [SerializeField] private float buttonSpacing = 100;
 
     public UnityEvent MoveComplete;
 
     public static Action<string> updateConfirmTxt;
+
+    public static Action<Lifeforms> updateObjectiveText;
 
     public static UIManager Instance;
 
@@ -58,6 +67,7 @@ public class UIManager : MonoBehaviour {
 
         //PlayerTurn.Instance.playerTurnEnded += EndPlayerTurn;
         updateConfirmTxt += UpdateConfirmTxt;
+        updateObjectiveText += CheckDeadEnemies;
     }
 
     private void OnDestroy() {
@@ -114,6 +124,24 @@ public class UIManager : MonoBehaviour {
         battleUI.SetActive(true);
         turnUI.SetActive(true);
         roundTxt.SetText($"Round\n{BattleManager.Instance.turnNumber.ToString()}");
+    }
+
+    public void ShowVictoryPanel() {
+        menuCanvas.SetActive(true);
+        victoryPanel.SetActive(true);
+    }
+
+    public void ShowDefeatPanel() {
+        menuCanvas.SetActive(true);
+        defeatPanel.SetActive(true);
+    }
+
+    // Temporary. Change to a scripbable object
+    private void CheckDeadEnemies(Lifeforms unit) {
+        if (unit.CompareTag("Enemy")) {
+            int deadEnemies = BattleManager.Instance.DeadEnemyUnits.Count;
+            objectiveTxt.SetText($"Defeat all enemies\n{deadEnemies} / 4");
+        }
     }
 
     public void LoadButtons(Lifeforms unit) {

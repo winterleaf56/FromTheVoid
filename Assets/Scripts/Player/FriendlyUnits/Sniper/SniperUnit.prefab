@@ -229,8 +229,10 @@ MonoBehaviour:
   actions:
   - {fileID: 11400000, guid: 9108616438fb73b4abd15521a6df821c, type: 2}
   - {fileID: 11400000, guid: 56882e8c0e77d734881b474163b1afbe, type: 2}
+  statusEffects: []
   health: {fileID: 0}
   friendlyUnitID: 0
+  unitStats: {fileID: 11400000, guid: ef6950ebb7414e44b88a5ef5825d3b6c, type: 2}
 --- !u!114 &-2001479216266078931
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -293,7 +295,7 @@ Transform:
   m_GameObject: {fileID: 4656854012230441149}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: -0.49, z: 0}
   m_LocalScale: {x: 18.143309, y: 0.01, z: 18.143309}
   m_ConstrainProportionsScale: 0
   m_Children: []

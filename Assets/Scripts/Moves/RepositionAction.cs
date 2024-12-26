@@ -7,7 +7,7 @@ using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "RepositionAction", menuName = "Actions/Reposition Action")]
 public class RepositionAction : ActionBase {
-private Vector3 positionToMoveTo;
+    private Vector3 positionToMoveTo;
 
     private GameObject confirmButton;
     private Button cancelButton;

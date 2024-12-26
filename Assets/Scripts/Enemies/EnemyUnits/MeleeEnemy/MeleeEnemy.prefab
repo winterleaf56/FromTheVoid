@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 2588733955065246241}
   - component: {fileID: 3590778828521743429}
   - component: {fileID: 9067585127402841811}
+  - component: {fileID: 1811000091456399431}
+  - component: {fileID: 2251089266872303462}
   m_Layer: 0
   m_Name: MeleeEnemy
   m_TagString: Enemy
@@ -118,7 +120,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8834981840068828579}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 297396f30ae397f48bbf47764c6b30db, type: 3}
   m_Name: 
@@ -132,13 +134,16 @@ MonoBehaviour:
   maxMoveDistance: 0
   defence: 0
   moves:
-  - {fileID: 11400000, guid: cc6ec39a5f049cd4abe99ebd12902e72, type: 2}
-  - {fileID: 11400000, guid: e2ea3fa633233464f9882ee21ac189ef, type: 2}
-  - {fileID: 11400000, guid: 5fdf589fbf6b08741ac3f0b38d9c1190, type: 2}
+  - {fileID: 0}
   actions:
   - {fileID: 11400000, guid: ff79bb81a3a94124ba52a93b9cc39655, type: 2}
   - {fileID: 11400000, guid: c48a9b3ff77055a4eb34bcf4eb4bac3e, type: 2}
+  statusEffects: []
   health: {fileID: 0}
+  viewRange: 0
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!108 &3590778828521743429
 Light:
   m_ObjectHideFlags: 0
@@ -227,3 +232,55 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!195 &1811000091456399431
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8834981840068828579}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 3.5
+  m_Acceleration: 8
+  avoidancePriority: 50
+  m_AngularSpeed: 120
+  m_StoppingDistance: 0
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 1
+  m_BaseOffset: 0.5
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
+--- !u!114 &2251089266872303462
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8834981840068828579}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 297396f30ae397f48bbf47764c6b30db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitName: 
+  actionPoints: 0
+  actionPointRecovery: 0
+  ultimatePoints: 0
+  maxUltimatePoints: 0
+  maxHealth: 0
+  maxMoveDistance: 0
+  defence: 0
+  moves:
+  - {fileID: 0}
+  actions:
+  - {fileID: 0}
+  statusEffects: []
+  health: {fileID: 0}
+  viewRange: 0
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 0

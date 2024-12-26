@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 891af9e314c3b18418dded346e62bdd2, type: 3}
+  m_Name: 5_TutorialStep
+  m_EditorClassIdentifier: 
+  titleText: Repositioning
+  bodyText: If you need a unit to move to a new location, you can issue a reposition
+    command which will consume AP based on the distance they are moving. This is
+    useful if you need to hide behind something to prevent an enemy from attacking
+    you.
