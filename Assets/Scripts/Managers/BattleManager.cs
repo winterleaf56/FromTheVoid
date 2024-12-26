@@ -40,14 +40,19 @@ public class BattleManager : MonoBehaviour {
     [SerializeField] private List<Friendly> deadFriendlyUnits;
     [SerializeField] private List<Enemy> deadEnemyUnits;
 
+    [SerializeField] private AudioSource audioSource;
+
+    private bool paused = false;
+
     public List<Enemy> DeadEnemyUnits { get => deadEnemyUnits; }
 
     //[SerializeField] private Level Level;
 
     public static Level SelectedLevel { get; set; }
 
-    public GameObject[] playerUnits;
-    public GameObject[] enemyUnits;
+    //public GameObject[] playerUnits;
+    public List<GameObject> playerUnits;
+    public List<GameObject> enemyUnits;
 
     public int turnNumber { get; private set; }
     public int waveNumber { get; private set; } // Waves not implemented, add at later time
@@ -59,6 +64,8 @@ public class BattleManager : MonoBehaviour {
     public static Action<BattleState> changeBattleState;
     public static Action onMoveFinished;
     public static Action<List<Enemy>> manageLights;
+    public static Action<AudioClip> audioClip;
+    public static Action<bool> onGamePaused;
 
     public static Action<Lifeforms> unitDied;
     //public static Action enemyUnitDied;
@@ -91,7 +98,6 @@ public class BattleManager : MonoBehaviour {
         private set { 
             _currentTurn = value;
             if (_currentTurn == GameState.PlayerTurn) {
-                StartPlayerTurn();
                 //battleActionsUI.SetActive(true);
                 print("Player turn started");
             } else {
@@ -130,6 +136,11 @@ public class BattleManager : MonoBehaviour {
         onMoveFinished += OnMoveFinshed;
         manageLights += ManageLights;
         unitDied += UnitDied;
+
+        audioClip += (clip) => {
+            audioSource.clip = clip;
+            audioSource.Play();
+        };
         //PlayerTurn.Instance.playerTurnEnded += ClearPlayerTurn;
 
         currentTurn = GameState.Intro;
@@ -138,27 +149,29 @@ public class BattleManager : MonoBehaviour {
     }
 
     private void OnDestroy() {
-        onPlayerTurnStart -= StartPlayerTurn;
         changeBattleState -= ChangeBattleState;
         onMoveFinished -= OnMoveFinshed;
         manageLights -= ManageLights;
         Debug.Log("Battle Manager destroyed");
     }
 
-    [SerializeField] Canvas randomButtonCanvas;
+    private void Update() {
+        if (Input.GetKeyDown(KeyCode.Escape)) {
+            Debug.Log("Escape Pressed");
+            PauseGame();
+        }
+    }
 
     void Start() {
-        enemyUnits = new GameObject[enemySpawns.Length];
-        playerUnits = new GameObject[friendlySpawns.Length];
 
         for (int i = 0; i < SelectedLevel.PlayerUnits.Count; i++) {
-            GameObject unit = Instantiate(SelectedLevel.PlayerUnits[i], friendlySpawns[i].transform.position, Quaternion.identity);
-            playerUnits[i] = unit;
+            GameObject unit = Instantiate(SelectedLevel.PlayerUnits[i], friendlySpawns[i].transform.position, Quaternion.Euler(0, -90, 0));
+            playerUnits.Add(unit);
         }
 
         for (int i = 0; i < enemySpawns.Length; i++) {
-            GameObject enemy = Instantiate(enemyPrefab, enemySpawns[i].transform.position, Quaternion.identity);
-            enemyUnits[i] = enemy;
+            GameObject enemy = Instantiate(enemyPrefab, enemySpawns[i].transform.position, Quaternion.Euler(0, 180, 0));
+            enemyUnits.Add(enemy);
         }
 
         currentTurn = GameState.PlayerTurn;
@@ -167,31 +180,36 @@ public class BattleManager : MonoBehaviour {
         StartCoroutine(StartBattle());
     }
 
-    private void StartPlayerTurn() {
-        // Increases the global action points by the value of increaseGAPBy which can be changed in other scripts to increase the value
-        // Reset this value to 50 after every turn
-        globalActionPoints += increaseGAPBy;
-
-        /*foreach (GameObject unit in playerUnits) {
-            unit..GetComponent<Friendly>().firstAction = true;
-        }*/
-    }
-
     private IEnumerator StartBattle() {
         while (!currentTurn.Equals(GameState.BattleOver)) {
             turnNumber++;
 
             foreach (GameObject unit in playerUnits) {
-                Lifeforms friendlyUnit = unit.GetComponent<Friendly>();
-                friendlyUnit.StartRound();
+                if (unit != null) {
+                    Debug.Log($"GETTING UNIT: {unit} IN PLAYERUNITS");
+                    Lifeforms friendlyUnit = unit.GetComponent<Friendly>();
+                    friendlyUnit.StartRound();
+                }
             }
 
             Debug.Log("Battle Manager: Starting Player Turn");
+            currentTurn = GameState.PlayerTurn;
             yield return StartCoroutine(GetComponent<PlayerTurn>().StartPlayerTurn());
             Debug.Log("Battle Manager: Ending Player Turn");
             //SwitchTurns();
             Debug.Log("Battle Manager: Starting Enemy Turn");
-            //yield return StartCoroutine(GetComponent<EnemyTurn>().StartEnemyTurn(enemyUnits));
+
+            currentTurn = GameState.EnemyTurn;
+
+            foreach (GameObject enemy in enemyUnits) {
+                if (enemy != null) {
+                    Debug.Log($"GETTING UNIT: {enemy} IN ENEMYUNITS");
+                    Lifeforms enemyUnit = enemy.GetComponent<Enemy>();
+                    enemyUnit.StartRound();
+                }
+            }
+
+            yield return StartCoroutine(GetComponent<EnemyTurn>().StartEnemyTurn(enemyUnits));
             Debug.Log("Battle Manager: Ending Enemy Turn");
             //SwitchTurns();
             yield return new WaitForSeconds(1);
@@ -200,7 +218,7 @@ public class BattleManager : MonoBehaviour {
 
     private void UnitDied(Lifeforms unit) {
         if (unit.GetComponent<Friendly>()) {
-            for (int i = 0; i < playerUnits.Length; i++) {
+            for (int i = 0; i < playerUnits.Count; i++) {
                 if (playerUnits[i] == unit.gameObject) {
                     deadFriendlyUnits.Add(unit.GetComponent<Friendly>());
                     playerUnits[i] = null;
@@ -208,7 +226,7 @@ public class BattleManager : MonoBehaviour {
                 }
             }
         } else if (unit.GetComponent<Enemy>()) {
-            for (int i = 0; i < enemyUnits.Length; i++) {
+            for (int i = 0; i < enemyUnits.Count; i++) {
                 if (enemyUnits[i] == unit.gameObject) {
                     deadEnemyUnits.Add(unit.GetComponent<Enemy>());
                     enemyUnits[i] = null;
@@ -238,6 +256,18 @@ public class BattleManager : MonoBehaviour {
 
     }
 
+    private void PauseGame() {
+        if (!paused) {
+            paused = true;
+            onGamePaused?.Invoke(true);
+            Time.timeScale = 0;
+        } else {
+            paused = false;
+            onGamePaused?.Invoke(false);
+            Time.timeScale = 1;
+        }
+    }
+
     private void GameOver() {
         Debug.Log("Game Over");
         UIManager.Instance.ShowDefeatPanel();
@@ -249,15 +279,6 @@ public class BattleManager : MonoBehaviour {
         UIManager.Instance.ShowVictoryPanel();
         SelectedLevel.CompleteLevel();
         currentTurn = GameState.BattleOver;
-    }
-
-    // Update is called once per frame
-    void Update() {
-        /*if (_currentBattleState == BattleState.PlayerAttack) {
-            if (Input.GetKeyDown(KeyCode.Escape)) {
-                _currentBattleState = BattleState.PlayerIdle;
-            }
-        }*/
     }
 
     // Possibly Not Needed / Replaced by StartBattle IEnumerator
@@ -299,29 +320,6 @@ public class BattleManager : MonoBehaviour {
     public void HideUnitStats() {
         unitStatsPanel.SetActive(false);
     }
-
-    public void ToggleButton(string btnToDisable, bool toggle) {
-        switch (btnToDisable) {
-            case "Stamina":
-                // Probably better to have this in the action itself
-                unitActionUI.transform.Find("StaminaStim").gameObject.GetComponent<Button>().interactable = toggle;
-                break;
-            default:
-                break;
-        }
-    }
-
-    public void ShowPlayerAttacks() {
-        //battleActionsUI.SetActive(true);
-    }
-
-    public void PlayerRecovering(float value) {
-        increaseGAPBy = value;
-    }
-
-    // Should make a ResetBattleUI method to reset UI to deafult state on PlayerTurn end
-    //
-    //
 
     private void ChangeBattleState(BattleState state) {
         currentBattleState = state;
@@ -365,7 +363,9 @@ public class BattleManager : MonoBehaviour {
         UIManager.Instance.ToggleStats(false);
 
         foreach (GameObject unit in playerUnits) {
-            unit.GetComponent<Light>().enabled = false;
+            if (unit != null) {
+                unit.GetComponent<Light>().enabled = false;
+            }
         }
     }
 
@@ -373,12 +373,16 @@ public class BattleManager : MonoBehaviour {
     public void ClearPlayerTurn() {
         // Disable the lights on every player unit
         foreach (GameObject playerUnit in playerUnits) {
-            playerUnit.GetComponent<Light>().enabled = false;
+            if (playerUnit != null) {
+                playerUnit.GetComponent<Light>().enabled = false;
+            }
         }
 
         // Disable the lights on every enemy unit
         foreach (GameObject enemyUnit in enemyUnits) {
-            enemyUnit.GetComponent<Light>().enabled = false;
+            if (enemyUnit != null) {
+                enemyUnit.GetComponent<Light>().enabled = false;
+            }
         }
 
     }

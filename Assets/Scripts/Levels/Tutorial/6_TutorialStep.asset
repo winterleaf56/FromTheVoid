@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 891af9e314c3b18418dded346e62bdd2, type: 3}
   m_Name: 6_TutorialStep
   m_EditorClassIdentifier: 
-  titleText: Good Luck
-  bodyText: I believe that should be all for now. Try it out for yourself, and good
-    luck! The world needs you and your team.
+  titleText: Unit Stats
+  bodyText: Clicking a friendly unit will display their stats in the stat bar along
+    with any status effects they have.\n\n Double clicking an enemy will display
+    their stats on a panel. Double clicking on the ground away from the enemy will
+    close the panel.

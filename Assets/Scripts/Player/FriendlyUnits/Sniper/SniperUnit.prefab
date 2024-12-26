@@ -225,7 +225,6 @@ MonoBehaviour:
   moves:
   - {fileID: 11400000, guid: 40464e0edf2e5e64eaf3bb27eefbf8fd, type: 2}
   - {fileID: 11400000, guid: 5cb5e8fc9bf7b3847a6d6d36a01e5310, type: 2}
-  - {fileID: 11400000, guid: 90a39a2f0a9d4fe4a9772d64c6667ffc, type: 2}
   actions:
   - {fileID: 11400000, guid: 9108616438fb73b4abd15521a6df821c, type: 2}
   - {fileID: 11400000, guid: 56882e8c0e77d734881b474163b1afbe, type: 2}
@@ -245,6 +244,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e79eb1b09225d49b1731ea0fd4bcf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  separationDistance: 2
+  separationForce: 2
+  nearbyAgents: []
 --- !u!195 &5251326357955696719
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -257,7 +259,7 @@ NavMeshAgent:
   m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
-  avoidancePriority: 50
+  avoidancePriority: 26
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1

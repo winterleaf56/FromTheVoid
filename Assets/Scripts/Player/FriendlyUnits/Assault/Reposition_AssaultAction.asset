@@ -18,6 +18,7 @@ MonoBehaviour:
   damage: 0
   attackButton: {fileID: 0}
   actionButton: {fileID: 0}
+  actionSound: {fileID: 8300000, guid: 13a7128583321bb41b4356e09a58891d, type: 3}
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 256

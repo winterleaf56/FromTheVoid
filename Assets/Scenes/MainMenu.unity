@@ -2971,6 +2971,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 11400000, guid: b2ad5ad75c321424fba82467775b913b, type: 2}
+        m_TargetAssemblyTypeName: Level, Assembly-CSharp
+        m_MethodName: ClearUnits
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1372866537
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3473,10 +3485,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerUnits:
-  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
-  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
   - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
   - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
+  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
+  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
   buttonPrefab: {fileID: 8958874857644350604, guid: 09b7de5b01d0f014c8bece5c11813851, type: 3}
   unitButtonContainer: {fileID: 582264952}
   selectedLevel: {fileID: 0}

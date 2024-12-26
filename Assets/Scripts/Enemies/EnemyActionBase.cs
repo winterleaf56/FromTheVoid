@@ -8,6 +8,8 @@ public abstract class EnemyActionBase : ScriptableObject {
     [SerializeField] protected int actionPointCost;
     [SerializeField] protected float range;
 
+    [SerializeField] protected AudioClip actionSound;
+
     [SerializeField] protected LayerMask obstacleLayer;
 
     private void OnEnable() {
@@ -33,6 +35,10 @@ public abstract class EnemyActionBase : ScriptableObject {
     public int GetActionPointCost() {
         return actionPointCost;
     }
+
+    public float GetRange() {
+        return range;
+    }
 }
 
 [CreateAssetMenu(fileName = "EnemyBasicAttack", menuName = "Enemy Actions/Basic Attack")]
@@ -43,14 +49,17 @@ public class EnemyBasicAttack : EnemyActionBase {
         Debug.Log("Performing move: " + moveName + ", against: " + target);
 
         target.health.TakeDamage(damage, unit);
+        BattleManager.audioClip.Invoke(actionSound);
 
         unit.stats.SubtractActionPoints(actionPointCost);
+        Debug.Log($"SUBTRACTED {actionPointCost} AP FROM ENEMY UNIT {unit.stats.UnitName}");
         //OnMoveFinished(unit);
 
         yield return null;
     }
 }
 
+[CreateAssetMenu(fileName = "EnemyRepositionAction", menuName = "Enemy Actions/Reposition")]
 public class EnemyRepositionAction : EnemyActionBase {
     [SerializeField] private float distance;
 
@@ -59,7 +68,25 @@ public class EnemyRepositionAction : EnemyActionBase {
     public IEnumerator Execute(Lifeforms unit, Lifeforms target) {
         Debug.Log("Performing move: " + moveName + ", against: " + target);
 
-        unit.transform.position = target.transform.position + target.transform.forward * distance;
+        //unit.transform.position = target.transform.position + target.transform.forward * distance;
+
+        Navigation navigation = unit.GetComponent<Navigation>();
+        if (navigation == null) {
+            Debug.LogError("No navigation component found");
+            yield break;
+        }
+
+        bool movementComplete = false;
+        navigation.MoveTo(positionToMoveTo, () => {
+            movementComplete = true;
+            Debug.Log("Movement complete");
+        });
+
+        BattleManager.audioClip.Invoke(actionSound);
+
+        while (!movementComplete) {
+            yield return null;
+        }
 
         unit.stats.SubtractActionPoints(actionPointCost);
         //OnMoveFinished(unit);
@@ -69,6 +96,7 @@ public class EnemyRepositionAction : EnemyActionBase {
 
     public void SetMovePos(Vector3 movePos) {
         positionToMoveTo = movePos;
+        Debug.Log($"Move position set to: {positionToMoveTo} in EnemyRepositionAction.");
     }
 
     

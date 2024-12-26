@@ -14,9 +14,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveName: Sniper Shot
   actionPointCost: 75
-  range: 39
+  range: 40
   damage: 75
+  attackButton: {fileID: 0}
+  actionButton: {fileID: 0}
+  actionSound: {fileID: 8300000, guid: f871fe7f58a525f449290785c4ef4964, type: 3}
   obstacleLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   buttonPrefab: {fileID: 0}

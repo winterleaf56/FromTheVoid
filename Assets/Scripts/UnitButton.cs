@@ -8,7 +8,9 @@ public class UnitButton : MonoBehaviour
     private bool clicked = false;
 
     private void OnEnable() {
-        GetComponent<Button>().onClick.AddListener(OnClick);
+        Button btn = GetComponent<Button>();
+        btn.onClick.RemoveAllListeners();
+        btn.onClick.AddListener(OnClick);
     }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created

@@ -24,7 +24,16 @@ public class Enemy : Lifeforms {
     }
 
     private void Awake() {
+        Debug.Log("Enemy Awake");
         FirstStart();
+        Debug.Log($"Unit Name: {stats.UnitName}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints} IN ENEMY START");
+    }
+
+    private void Start() {
+        /*Debug.Log("Enemy Start");
+        FirstStart();
+        Debug.Log("After First Start");
+        Debug.Log($"Unit Name: {stats.UnitName}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints} IN ENEMY START");*/
     }
 
     public new EnemyActionBase[] GetMoves() {
@@ -72,7 +81,7 @@ public class Enemy : Lifeforms {
         foreach (var hitCollider in hitColliders) {
             Friendly enemy = hitCollider.GetComponent<Friendly>();
             if (enemy != null) {
-                if (!Physics.Linecast(unit.transform.position, enemy.transform.position, out RaycastHit hit)) {
+                if (!Physics.Linecast(unit.transform.position, enemy.transform.position, out RaycastHit hit, obstacleLayer)) {
                     enemiesInRange.Add(enemy);
 
                     float distance = NavigationUtils.CalculatePathDistance(navMeshAgent, enemy.transform.position);

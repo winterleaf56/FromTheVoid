@@ -8,7 +8,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     [Header("Moves")]
     protected BasicMove basicMove;
     protected SpecialMove specialMove;
-    protected UltimateMove ultimateMove;
+    //protected UltimateMove ultimateMove;
 
     [Header("Actions")]
     protected RecoverAction recoverAction;
@@ -104,7 +104,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
         // Moves
         basicMove = moves[0] as BasicMove;
         specialMove = moves[1] as SpecialMove;
-        ultimateMove = moves[2] as UltimateMove;
+        //ultimateMove = moves[2] as UltimateMove;
 
         // Actions
         recoverAction = actions[0] as RecoverAction;
@@ -144,9 +144,9 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
             case "Special":
                 yield return StartCoroutine(specialMove.Execute(this, target));
                 break;
-            case "Ultimate":
+/*            case "Ultimate":
                 yield return StartCoroutine(ultimateMove.Execute(this, target));
-                break;
+                break;*/
             default:
                 Debug.Log("Misspelled Move Type or Invalid Type");
                 break;
@@ -179,7 +179,7 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     }*/
 
     public void PerformUltimateMove() {
-        ultimateMove.Execute(this);
+        //ultimateMove.Execute(this);
     }
 
     public void StartRound() {
@@ -196,9 +196,10 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     }
 
     public void TakeDamage() {
-        health.TakeDamage(stats.DamageOverTime, this);
-
-        Debug.Log($"Taking {stats.DamageOverTime} damage");
+        if (stats.DamageOverTime > 0) {
+            health.TakeDamage(stats.DamageOverTime, this);
+            Debug.Log($"Taking {stats.DamageOverTime} damage");
+        }
     }
 
     public int GetMoveAPRequirement(string moveType) {
@@ -208,8 +209,8 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
                 return basicMove.GetAPRequirement();
             case "Special":
                 return specialMove.GetAPRequirement();
-            case "Ultimate":
-                return ultimateMove.GetAPRequirement();
+            /*case "Ultimate":
+                return ultimateMove.GetAPRequirement()*/;
             default:
                 return 0;
         }
@@ -217,8 +218,8 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     // Probably dont need this if I make actionPoints into a property
     public int GetActionPoints() {
-        Debug.Log($"Current Action Points GETAP: {CurrentActionPoints}");
-        return CurrentActionPoints;
+        Debug.Log($"Current Action Points GETAP: {stats.ActionPoints}");
+        return stats.ActionPoints;
     }
 }
 

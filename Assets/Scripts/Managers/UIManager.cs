@@ -20,6 +20,10 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private GameObject unitMoves;
     [SerializeField] private GameObject unitActions;
 
+    [SerializeField] private GameObject pauseCanvas;
+
+    [SerializeField] private GameObject endTurnBtn;
+
     [Header("Move Buttons")]
     [SerializeField] private Transform moveButtonsParent;
     [SerializeField] private GameObject moveBackButton;
@@ -52,7 +56,7 @@ public class UIManager : MonoBehaviour {
     public UnityEvent MoveComplete;
 
     public static Action<string> updateConfirmTxt;
-
+    public static Action<bool> ButtonsToggle;
     public static Action<Lifeforms> updateObjectiveText;
 
     public static UIManager Instance;
@@ -68,16 +72,22 @@ public class UIManager : MonoBehaviour {
         //PlayerTurn.Instance.playerTurnEnded += EndPlayerTurn;
         updateConfirmTxt += UpdateConfirmTxt;
         updateObjectiveText += CheckDeadEnemies;
+        ButtonsToggle += ToggleButtons;
+
+        
     }
 
     private void OnDestroy() {
         updateConfirmTxt -= UpdateConfirmTxt;
+        updateObjectiveText -= CheckDeadEnemies;
+        ButtonsToggle -= ToggleButtons;
         Debug.Log("UIManager destroyed");
     }
 
     private void Start() {
         PlayerTurn.Instance.playerTurnStarted += StartPlayerTurn;
         PlayerTurn.Instance.playerTurnEnded += EndPlayerTurn;
+        BattleManager.onGamePaused += PauseGame;
     }
 
     public void UpdateStatBar(string name, float health, int actionPoints, int maxActionPoints, int actionPointRecovery) {
@@ -134,6 +144,21 @@ public class UIManager : MonoBehaviour {
     public void ShowDefeatPanel() {
         menuCanvas.SetActive(true);
         defeatPanel.SetActive(true);
+    }
+
+    private void PauseGame(bool value) {
+        menuCanvas.SetActive(value);
+        menuCanvas.transform.Find("PausePanel").gameObject.SetActive(value);
+    }
+
+    private void ToggleButtons(bool value) {
+        if (value) {
+            endTurnBtn.SetActive(true);
+            actionsPanel.SetActive(true);
+        } else {
+            endTurnBtn.SetActive(false);
+            actionsPanel.SetActive(false);
+        }
     }
 
     // Temporary. Change to a scripbable object

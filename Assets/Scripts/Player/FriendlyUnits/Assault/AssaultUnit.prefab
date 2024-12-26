@@ -225,11 +225,9 @@ MonoBehaviour:
   moves:
   - {fileID: 11400000, guid: 5ee47552f6859ca45a764647e039f4b9, type: 2}
   - {fileID: 11400000, guid: af92dec0700f7464a820ef1f2b5d32f0, type: 2}
-  - {fileID: 11400000, guid: e7c23ccae87f1cd4b836ed63cdfdb626, type: 2}
   actions:
   - {fileID: 11400000, guid: dd240c48d55231b43946bc165b2bf269, type: 2}
   - {fileID: 11400000, guid: f7fbd7faf6418d040a4c39e76996b6e3, type: 2}
-  - {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}
   statusEffects: []
   health: {fileID: 0}
   friendlyUnitID: 0
@@ -247,7 +245,7 @@ NavMeshAgent:
   m_Radius: 0.5
   m_Speed: 3.5
   m_Acceleration: 8
-  avoidancePriority: 50
+  avoidancePriority: 27
   m_AngularSpeed: 120
   m_StoppingDistance: 0
   m_AutoTraverseOffMeshLink: 1
@@ -269,6 +267,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f7e79eb1b09225d49b1731ea0fd4bcf8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  separationDistance: 2
+  separationForce: 2
+  nearbyAgents: []
 --- !u!1 &4737602549971112782
 GameObject:
   m_ObjectHideFlags: 0

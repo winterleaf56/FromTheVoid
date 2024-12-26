@@ -59,6 +59,7 @@ public class Health : MonoBehaviour {
     void OnDeath() {
         Debug.Log("Unit Dead");
         BattleManager.unitDied(transform.GetComponent<Lifeforms>());
+        transform.gameObject.SetActive(false);
     }
 
     void OnHealthUpdate(float value) {

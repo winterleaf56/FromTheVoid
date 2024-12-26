@@ -109,6 +109,8 @@ public class RepositionAction : ActionBase {
         
         unit.stats.SubtractActionPoints((int)moveCost);
 
+        BattleManager.audioClip?.Invoke(actionSound);
+
         Navigation navigation = unit.GetComponent<Navigation>();
         if (navigation == null) {
             Debug.LogError("No navigation component found");

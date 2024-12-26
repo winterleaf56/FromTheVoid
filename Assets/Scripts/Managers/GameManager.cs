@@ -40,6 +40,10 @@ public class GameManager : MonoBehaviour
         unitSelected += SelectedUnit;
     }
 
+    private void OnDestroy() {
+        unitSelected -= SelectedUnit;
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
         if (tutorial.LevelCompleted == true) {
@@ -72,6 +76,10 @@ public class GameManager : MonoBehaviour
         selectedLevel = level;
     }
 
+    public int RandomNumber() {
+        return 25;
+    }
+
     public void LoadUnitButtons() {
         foreach (Transform child in unitButtonContainer.transform) {
             Destroy(child.gameObject);
@@ -79,7 +87,7 @@ public class GameManager : MonoBehaviour
 
         foreach (GameObject unit in playerUnits) {
             GameObject button = Instantiate(buttonPrefab, unitButtonContainer.transform);
-            button.GetComponentInChildren<TMP_Text>().SetText(unit.name);
+            button.GetComponentInChildren<TMP_Text>().SetText(unit.GetComponent<Friendly>().UnitStats.UnitName);
 
             button.GetComponent<UnitButton>().SetUnit(unit);
         }

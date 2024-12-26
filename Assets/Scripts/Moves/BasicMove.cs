@@ -77,6 +77,10 @@ public class BasicMove : ActionBase {
         Debug.Log($"Unit: {unit}, Target: {target}");
         OnMoveFinished(unit);
         ClickManager.Instance.allowClicks = false;
+        BattleManager.audioClip?.Invoke(actionSound);
+
+        unit.transform.LookAt(target.transform.position);
+
         Debug.Log($"Performing move: {moveName}, against: {target}");
 
         // Damage the target
@@ -86,12 +90,12 @@ public class BasicMove : ActionBase {
         // Subtract action points for executing move
         unit.stats.SubtractActionPoints(actionPointCost);
 
-        int i = 0;
+        /*int i = 0;
         while (i < 3) {
             Debug.Log("BasicMove Animation Playing...");
             yield return new WaitForSeconds(1f);
             i++;
-        }
+        }*/
 
         Debug.Log("Move Executed. Ending Coroutine.");
         ClickManager.Instance.allowClicks = true;

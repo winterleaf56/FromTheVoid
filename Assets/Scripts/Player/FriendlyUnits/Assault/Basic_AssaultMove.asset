@@ -13,9 +13,13 @@ MonoBehaviour:
   m_Name: Basic_AssaultMove
   m_EditorClassIdentifier: 
   moveName: Machine Gun Fire
-  actionPoints: 25
-  range: 40
+  actionPointCost: 50
+  range: 25
   damage: 25
-  confirmPage: {fileID: 0}
-  confirmBtn: {fileID: 0}
+  attackButton: {fileID: 0}
+  actionButton: {fileID: 0}
+  actionSound: {fileID: 8300000, guid: da082d13bf4a05d4791d2392342c0813, type: 3}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
   buttonPrefab: {fileID: 5276875881035326380, guid: 4001925ea516e794386800f793cb0693, type: 3}

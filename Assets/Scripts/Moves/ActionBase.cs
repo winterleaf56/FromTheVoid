@@ -13,6 +13,8 @@ public abstract class ActionBase : ScriptableObject {
     [SerializeField] private Button attackButton;
     [SerializeField] private Button actionButton;
 
+    [SerializeField] protected AudioClip actionSound;
+
     [SerializeField] protected LayerMask obstacleLayer;
 
     protected GameObject rangeRing;

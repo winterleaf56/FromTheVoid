@@ -45,7 +45,7 @@ public class PlayerTurn : MonoBehaviour {
                 GetButtonInfo();
                 //UIManager.ToggleStats(true);
                 Stats stats = selectedFriendly.stats;
-                UIManager.UpdateStatBar(stats.UnitName, stats.MaxHealth, stats.ActionPoints, stats.MaxActionPoints, stats.ActionPointRecovery);
+                UIManager.UpdateStatBar(stats.UnitName, selectedFriendly.health.GetHealth(), stats.ActionPoints, stats.MaxActionPoints, stats.ActionPointRecovery);
             } else if (!BattleManager.Instance.currentBattleState.Equals(BattleManager.BattleState.PlayerAttack)) {
                 print("Enemy unit selected, deactivating actionsUI");
                 actionsUI.SetActive(false);
@@ -53,13 +53,6 @@ public class PlayerTurn : MonoBehaviour {
                 UIManager.ToggleStats(false);
             } else if (_selectedUnit.CompareTag("UI")) {
                 return;
-            } else {
-                if (selectedFriendly == null) {
-                    //selectedFriendly = null;
-                }
-                /*selectedFriendly = null;
-                selectedEnemy = null;*/
-                //ToggleStats(false);
             }
 
             Debug.Log("SELECTED UNIT CHANGED");
@@ -68,12 +61,6 @@ public class PlayerTurn : MonoBehaviour {
                 selectedEnemy = _selectedUnit.GetComponent<Lifeforms>();
                 confirmBtn.interactable = true;
             }
-            //_selectedUnit = value;
-
-            /*if (_selectedUnit.CompareTag("Enemy")) {
-                Debug.Log("Enemy unit selected");
-                selectedEnemy = _selectedUnit.GetComponent<Lifeforms>();
-            }*/
         }
     }
 

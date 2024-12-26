@@ -20,10 +20,10 @@ public class Assault : Friendly {
     protected override void SetMoves() {
         base.SetMoves();
 
-        staminaStimAction = actions[1] as StaminaStimAction;
+        //staminaStimAction = actions[1] as StaminaStimAction;
     }
 
-    public override IEnumerator PerformActionType(string actionType, Lifeforms target) {
+    /*public override IEnumerator PerformActionType(string actionType, Lifeforms target) {
         base.PerformActionType(actionType, target);
 
         switch (actionType) {
@@ -35,5 +35,5 @@ public class Assault : Friendly {
         }
 
         yield break;
-    }
+    }*/
 }

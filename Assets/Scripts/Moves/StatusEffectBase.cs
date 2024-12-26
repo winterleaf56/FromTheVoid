@@ -114,3 +114,17 @@ public class DamageEffect : StatusEffectBase {
         target.stats.SetDamageOverTime(-EffectValue);
     }
 }
+
+public class AsleepEffect : StatusEffectBase {
+    public override void Initialize(GameObject effectPrefab, string effectName, int duration, int value) {
+        base.Initialize(effectPrefab, effectName, duration, value);
+    }
+
+    public override void ApplyEffect(Lifeforms target) {
+        Debug.Log("Asleep");
+    }
+
+    public override void RemoveEffect(Lifeforms target) {
+        Debug.Log("Awake");
+    }
+}

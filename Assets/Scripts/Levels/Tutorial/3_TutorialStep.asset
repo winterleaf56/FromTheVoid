@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: 3_TutorialStep
   m_EditorClassIdentifier: 
   titleText: Combat
-  bodyText: 'Combat is easy. \n Action Points: Required for almost all actions your
-    units perform on your turn. \n Health: The health your unit has before it can
-    no longer fight.'
+  bodyText: 'Combat is easy. \n\n Action Points: Required for almost all actions
+    your units perform on your turn. \n\n Health: The health your unit has before
+    it can no longer fight.'

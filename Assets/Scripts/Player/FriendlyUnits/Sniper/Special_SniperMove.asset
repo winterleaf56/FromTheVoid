@@ -16,7 +16,11 @@ MonoBehaviour:
   actionPointCost: 100
   range: 100
   damage: 500
-  confirmPage: {fileID: 0}
-  confirmBtn: {fileID: 0}
+  attackButton: {fileID: 0}
+  actionButton: {fileID: 0}
+  actionSound: {fileID: 8300000, guid: 2a3e099cf08abdf45b4ec2113a98a162, type: 3}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
   buttonPrefab: {fileID: 0}
   cooldown: 2
