@@ -40,7 +40,7 @@ public class EnemyTurn : MonoBehaviour {
                 } else {
                     break; // Not enough AP for any attacks
                 }
-            } else {
+            } else if (playerUnitsInRange.Count > 0) {
                 // Move closer to a player unit but not closer than attack range
                 Vector3 movePosition = DetermineBestMovePosition(enemy, playerUnitsInRange, enemy.GetMoves().OfType<EnemyBasicAttack>().First().GetRange());
                 if (movePosition != Vector3.zero) {
@@ -58,6 +58,8 @@ public class EnemyTurn : MonoBehaviour {
                 } else {
                     break; // No valid move positions
                 }
+            } else {
+                break; // No player units in range
             }
 
             // Check if there are still actions to perform

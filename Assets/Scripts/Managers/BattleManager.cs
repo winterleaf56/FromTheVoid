@@ -64,11 +64,15 @@ public class BattleManager : MonoBehaviour {
     public static Action<BattleState> changeBattleState;
     public static Action onMoveFinished;
     public static Action<List<Enemy>> manageLights;
-    public static Action<AudioClip> audioClip;
+    
     public static Action<bool> onGamePaused;
 
     public static Action<Lifeforms> unitDied;
     //public static Action enemyUnitDied;
+
+    //public delegate void PlayAudioClipDelegate(AudioClip clip, Vector3 position);
+    public static Action<AudioClip, Vector3> audioClip;
+    //public event PlayAudioClipDelegate audioClip;
 
     public static BattleManager Instance;
 
@@ -137,9 +141,9 @@ public class BattleManager : MonoBehaviour {
         manageLights += ManageLights;
         unitDied += UnitDied;
 
-        audioClip += (clip) => {
-            audioSource.clip = clip;
-            audioSource.Play();
+        audioClip += (clip, position) => {
+            //audioSource.clip = clip;
+            AudioSource.PlayClipAtPoint(clip, position);
         };
         //PlayerTurn.Instance.playerTurnEnded += ClearPlayerTurn;
 
@@ -161,6 +165,10 @@ public class BattleManager : MonoBehaviour {
             PauseGame();
         }
     }
+
+    /*public void PlayAudioClip(AudioClip clip, Vector3 position) {
+        AudioSource.PlayClipAtPoint(clip, position);
+    }*/
 
     void Start() {
 
@@ -256,7 +264,7 @@ public class BattleManager : MonoBehaviour {
 
     }
 
-    private void PauseGame() {
+    public void PauseGame() {
         if (!paused) {
             paused = true;
             onGamePaused?.Invoke(true);

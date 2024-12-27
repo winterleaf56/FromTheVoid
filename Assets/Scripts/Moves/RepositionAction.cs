@@ -109,7 +109,7 @@ public class RepositionAction : ActionBase {
         
         unit.stats.SubtractActionPoints((int)moveCost);
 
-        BattleManager.audioClip?.Invoke(actionSound);
+        BattleManager.audioClip?.Invoke(actionSound, unit.transform.position);
 
         Navigation navigation = unit.GetComponent<Navigation>();
         if (navigation == null) {

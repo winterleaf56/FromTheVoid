@@ -13,11 +13,7 @@ MonoBehaviour:
   m_Name: Tutorial
   m_EditorClassIdentifier: 
   levelName: Tutorial
-  playerUnits:
-  - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
-  - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
-  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
-  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
+  playerUnits: []
   reward: 0
   requiredNumberOfUnits: 0
-  levelCompleted: 1
+  levelCompleted: 0

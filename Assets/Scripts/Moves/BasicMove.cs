@@ -77,7 +77,7 @@ public class BasicMove : ActionBase {
         Debug.Log($"Unit: {unit}, Target: {target}");
         OnMoveFinished(unit);
         ClickManager.Instance.allowClicks = false;
-        BattleManager.audioClip?.Invoke(actionSound);
+        BattleManager.audioClip?.Invoke(actionSound, unit.transform.position);
 
         unit.transform.LookAt(target.transform.position);
 

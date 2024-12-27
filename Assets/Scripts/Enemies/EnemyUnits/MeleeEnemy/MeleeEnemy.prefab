@@ -133,11 +133,9 @@ MonoBehaviour:
   maxHealth: 100
   maxMoveDistance: 0
   defence: 0
-  moves:
-  - {fileID: 0}
+  moves: []
   actions:
   - {fileID: 11400000, guid: ff79bb81a3a94124ba52a93b9cc39655, type: 2}
-  - {fileID: 11400000, guid: c48a9b3ff77055a4eb34bcf4eb4bac3e, type: 2}
   statusEffects: []
   health: {fileID: 0}
   viewRange: 40
@@ -146,9 +144,9 @@ MonoBehaviour:
     m_Bits: 0
   enemyType: {fileID: 0}
   enemyMoves:
-  - {fileID: 11400000, guid: 3c20b65d62028524c967bd3e630b0fdd, type: 2}
+  - {fileID: 11400000, guid: 09a522f8b3bc4624cb2c6c646cb1d804, type: 2}
   enemyActions:
-  - {fileID: 11400000, guid: e1f17c8d7633cca4a8aade05bf1649e2, type: 2}
+  - {fileID: 11400000, guid: 4c4249a01e3eda44c844aa2ee7950084, type: 2}
 --- !u!108 &3590778828521743429
 Light:
   m_ObjectHideFlags: 0

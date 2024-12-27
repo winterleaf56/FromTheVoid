@@ -9,14 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: Reposition_MeleeEnemy
-  m_EditorClassIdentifier: Assembly-CSharp::EnemyRepositionAction
-  moveName: Reposition
-  actionPointCost: 4
-  range: 0
-  actionSound: {fileID: 8300000, guid: 13a7128583321bb41b4356e09a58891d, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e2bac6170c9a1e46ac6f7892a3467d1, type: 3}
+  m_Name: Basic_MeleeEnemy 1
+  m_EditorClassIdentifier: 
+  moveName: Slash
+  actionPointCost: 50
+  range: 5
+  actionSound: {fileID: 8300000, guid: b107dc24f15356f4cbaae4120d9d539b, type: 3}
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 256
-  distance: 0
+  damage: 35
