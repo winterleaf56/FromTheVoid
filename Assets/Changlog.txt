@@ -1,0 +1,13 @@
+Changelog
+
+15/06/2025 V0.1.3
+- Fixed enemy units not being able to be selected
+- Added Currency (Void Shards)
+-- Not yet implemented, just a basis
+- Added LevelManager
+-- Currently creates mission buttons for each level in the levels list
+- Added SaveManager
+- Added MenuUIManager
+-- Keeps track of the UI elements needed when a scene reload happens.
+- Added PlayerDetailsManager, will probably be replaced by PlayerDetails class
+- Added Delete Data button.

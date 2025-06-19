@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
     private int selectedUnits;
 
     // This will be for disabling the buttons so you can only have 4 selected at once
+    // Change this so that instead of 4 units, it is the number of units required for the level
     public static Action<int> unitSelected;
 
     public GameObject[] PlayerUnits => playerUnits;
@@ -46,9 +47,9 @@ public class GameManager : MonoBehaviour
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start() {
-        if (tutorial.LevelCompleted == true) {
+        /*if (tutorial.LevelCompleted == true) {
             levelButtons.transform.Find("CompletedImage").gameObject.SetActive(true);
-        }
+        }*/
     }
 
     // Update is called once per frame
@@ -65,7 +66,14 @@ public class GameManager : MonoBehaviour
     private void SelectedUnit(int value) {
         selectedUnits += value;
 
-        if (selectedUnits == 4) {
+        // Message here as well. Change this so instead of 4 units, it is the number of units required for the level
+        /*if (selectedUnits == 4) {
+            startButton.GetComponent<Button>().interactable = true;
+        } else {
+            startButton.GetComponent<Button>().interactable = false;
+        }*/
+
+        if (selectedUnits == selectedLevel.RequiredNumberOfUnits) {
             startButton.GetComponent<Button>().interactable = true;
         } else {
             startButton.GetComponent<Button>().interactable = false;

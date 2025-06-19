@@ -178,7 +178,7 @@ public class BattleManager : MonoBehaviour {
         }
 
         for (int i = 0; i < enemySpawns.Length; i++) {
-            GameObject enemy = Instantiate(enemyPrefab, enemySpawns[i].transform.position, Quaternion.Euler(0, 180, 0));
+            GameObject enemy = Instantiate(enemyPrefab, enemySpawns[i].transform.position, Quaternion.Euler(0, 90, 0));
             enemyUnits.Add(enemy);
         }
 
@@ -256,6 +256,10 @@ public class BattleManager : MonoBehaviour {
         }
     }
 
+    public void DevModeVictory() {
+        Victory();
+    }
+
     private void PlayerUnitDied() {
 
     }
@@ -285,7 +289,7 @@ public class BattleManager : MonoBehaviour {
     private void Victory() {
         Debug.Log("Victory");
         UIManager.Instance.ShowVictoryPanel();
-        SelectedLevel.CompleteLevel();
+        SelectedLevel.ChangeCompletionStatus(true);
         currentTurn = GameState.BattleOver;
     }
 

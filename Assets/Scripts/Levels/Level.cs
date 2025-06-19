@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "Level", menuName = "New Level")]
@@ -47,5 +48,37 @@ public class Level : ScriptableObject {
 
     public void CompleteLevel() {
         levelCompleted = true;
+
+        Debug.Log($"Level {levelName} completed: {levelCompleted}. Invoke Saving...");
+        SaveManager.Instance.SaveGame.Invoke();
+        //SaveManager.Instance.SaveLevelCompleted(levelName, levelCompleted);
+        //SaveLevelCompleted();
     }
+
+    /*public void LoadCompletionStatus() {
+        levelCompleted = true;
+    }*/
+
+    public void ChangeCompletionStatus(bool status) {
+        levelCompleted = status;
+        SaveManager.Instance.SaveGame?.Invoke();
+    }
+
+    /*public void SaveLevelCompleted() {
+        SaveManager.Instance.SaveLevelCompleted(levelName, levelCompleted);
+        //GameManager.Instance.TutorialComplete();
+    }
+
+    public void LoadLevelCompleted() {
+        if (SaveManager.Instance == null) {
+            Debug.LogError("SaveManager instance is not available.");
+            return;
+        }
+        levelCompleted = SaveManager.Instance.LoadLevelCompleted(levelName);
+        Debug.Log($"Level {levelName} completed status: {levelCompleted}");
+
+        if (levelCompleted) {
+            GameManager.Instance.TutorialComplete();
+        }
+    }*/
 }

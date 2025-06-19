@@ -205,12 +205,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100060, guid: e621b45f234e80740a84c4f4c05ee8e9, type: 3}
       insertIndex: -1
       addedObject: {fileID: -5794964084556346171}
-    - targetCorrespondingSourceObject: {fileID: 100060, guid: e621b45f234e80740a84c4f4c05ee8e9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 439643981535055598}
-    - targetCorrespondingSourceObject: {fileID: 100060, guid: e621b45f234e80740a84c4f4c05ee8e9, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: -6940503081226737269}
   m_SourcePrefab: {fileID: 100100000, guid: e621b45f234e80740a84c4f4c05ee8e9, type: 3}
 --- !u!1 &7395631586138283521 stripped
 GameObject:
@@ -336,46 +330,3 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
---- !u!65 &439643981535055598
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7395631586138283521}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 2.8, z: 1}
-  m_Center: {x: 0, y: 1.28, z: 0}
---- !u!195 &-6940503081226737269
-NavMeshAgent:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7395631586138283521}
-  m_Enabled: 1
-  m_AgentTypeID: 0
-  m_Radius: 0.5
-  m_Speed: 3.5
-  m_Acceleration: 8
-  avoidancePriority: 50
-  m_AngularSpeed: 120
-  m_StoppingDistance: 0
-  m_AutoTraverseOffMeshLink: 1
-  m_AutoBraking: 1
-  m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 0
-  m_WalkableMask: 4294967295
-  m_ObstacleAvoidanceType: 4
