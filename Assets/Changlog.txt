@@ -1,5 +1,17 @@
 Changelog
 
+20/06/2025 V0.1.3.5-DEV
+- Entirely backend update
+- Tutorials are now Story
+- Story set in Level ScriptableObject
+- Fixed Assault unit
+-- No longer giving a move that doesnt exist
+- Level 1 Added
+-- Completely blank, waiting for level logic update
+- Updating entire level loading logic in order to be more efficient in loading levels
+-- Level environment, spawn, etc now a prefab assigned to Level ScriptableObject
+
+
 15/06/2025 V0.1.3
 - Fixed enemy units not being able to be selected
 - Added Currency (Void Shards)

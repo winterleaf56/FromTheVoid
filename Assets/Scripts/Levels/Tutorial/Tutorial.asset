@@ -13,6 +13,7 @@ MonoBehaviour:
   m_Name: Tutorial
   m_EditorClassIdentifier: 
   levelName: Tutorial
+  environmentPrefab: {fileID: 6941774664282879087, guid: 13475e3b34c8ec14b9df968b623c0254, type: 3}
   playerUnits: []
   storySteps:
   - {fileID: 11400000, guid: 7584c9ed3044cba48ae8a109cfd5aaf0, type: 2}

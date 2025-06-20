@@ -42,6 +42,8 @@ public class BattleManager : MonoBehaviour {
 
     [SerializeField] private AudioSource audioSource;
 
+    [SerializeField] private CameraController customCamera;
+
     private bool paused = false;
 
     public List<Enemy> DeadEnemyUnits { get => deadEnemyUnits; }
@@ -146,6 +148,14 @@ public class BattleManager : MonoBehaviour {
             AudioSource.PlayClipAtPoint(clip, position);
         };
         //PlayerTurn.Instance.playerTurnEnded += ClearPlayerTurn;
+
+        GameObject prefab = SelectedLevel.EnvironmentPrefab;
+        GameObject environmentInstance = Instantiate(prefab, prefab.transform.position, prefab.transform.rotation); // Might need to change this or perhaps need to change camera position instead
+        EnvironmentBridge bridge = environmentInstance.GetComponent<EnvironmentBridge>();
+
+        friendlySpawns = bridge.friendlySpawns;
+        enemySpawns = bridge.enemySpawns;
+        customCamera.boundaryObject = bridge.cameraBoundary;
 
         currentTurn = GameState.Intro;
 

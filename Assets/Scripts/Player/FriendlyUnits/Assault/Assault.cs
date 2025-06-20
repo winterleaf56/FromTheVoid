@@ -5,6 +5,10 @@ public class Assault : Friendly {
     [Header("Actions")]
     [SerializeField] protected StaminaStimAction staminaStimAction;
 
+    private void OnDisable() {
+        Debug.LogError("Assault Script Disabled");
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -18,8 +22,13 @@ public class Assault : Friendly {
     }
 
     protected override void SetMoves() {
-        base.SetMoves();
+        //base.SetMoves();
 
+        // Currently overrideing because there is only 1 move for Assault
+        basicMove = moves[0] as BasicMove;
+
+        recoverAction = actions[0] as RecoverAction;
+        repositionAction = actions[1] as RepositionAction;
         //staminaStimAction = actions[1] as StaminaStimAction;
     }
 

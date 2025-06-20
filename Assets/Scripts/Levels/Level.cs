@@ -7,10 +7,12 @@ using UnityEngine;
 public class Level : ScriptableObject {
     [SerializeField] private string levelName;
 
+    [SerializeField] private GameObject environmentPrefab;
+    public GameObject EnvironmentPrefab => environmentPrefab;
+
     [SerializeField] private List<GameObject> playerUnits;
 
     [SerializeField] private List<StoryStep> storySteps;
-
     public List<StoryStep> StorySteps => storySteps;
 
     [SerializeField] private int reward;
