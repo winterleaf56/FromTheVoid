@@ -13,11 +13,15 @@ MonoBehaviour:
   m_Name: Tutorial
   m_EditorClassIdentifier: 
   levelName: Tutorial
-  playerUnits:
-  - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
-  - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
-  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
-  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
+  playerUnits: []
+  storySteps:
+  - {fileID: 11400000, guid: 7584c9ed3044cba48ae8a109cfd5aaf0, type: 2}
+  - {fileID: 11400000, guid: 182c77f6ff04a4744b1d29d5baa78adc, type: 2}
+  - {fileID: 11400000, guid: 424e82e03de3895479f25b37bb53ba55, type: 2}
+  - {fileID: 11400000, guid: ff5fa79b9df8e6449b9a986f4e2828fb, type: 2}
+  - {fileID: 11400000, guid: e1ce44b4bb6ec9e43b387086c56aad4a, type: 2}
+  - {fileID: 11400000, guid: 3d8610cdb86cccd4784291430fd4bd90, type: 2}
+  - {fileID: 11400000, guid: c328e5a1b00b69f4899fe0cb71b07bcb, type: 2}
   reward: 0
   requiredNumberOfUnits: 4
   levelCompleted: 0

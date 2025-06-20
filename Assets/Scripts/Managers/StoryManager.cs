@@ -1,8 +1,10 @@
 using UnityEngine;
 using TMPro;
+using NUnit.Framework;
+using System.Collections.Generic;
 
-public class TutorialManager : MonoBehaviour {
-    [SerializeField] private TutorialStep[] tutorialSteps;
+public class StoryManager : MonoBehaviour {
+    [SerializeField] private List<StoryStep> storySteps;
     [SerializeField] private TMP_Text titleText;
     [SerializeField] private TMP_Text bodyText;
     private int currentStepIndex = 0;
@@ -12,16 +14,19 @@ public class TutorialManager : MonoBehaviour {
     [SerializeField] private GameObject tutorialUI;
 
     private void Start() {
+        storySteps = BattleManager.SelectedLevel.StorySteps;
+        Debug.LogAssertion($"Level Name: {BattleManager.SelectedLevel.LevelName}");
+        Debug.Log($"Story steps loaded: {storySteps.Count}");
         ShowNextStep();
     }
 
     public void ShowNextStep() {
-        if (currentStepIndex < tutorialSteps.Length) {
-            titleText.text = tutorialSteps[currentStepIndex].titleText;
-            bodyText.text = tutorialSteps[currentStepIndex].bodyText;
+        if (currentStepIndex < storySteps.Count) {
+            titleText.text = storySteps[currentStepIndex].titleText;
+            bodyText.text = storySteps[currentStepIndex].bodyText;
             currentStepIndex++;
 
-            if (currentStepIndex == tutorialSteps.Length) {
+            if (currentStepIndex == storySteps.Count) {
                 FinalStep();
             }
         } else {

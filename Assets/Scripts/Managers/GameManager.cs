@@ -4,7 +4,6 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using System;
 using UnityEngine.SceneManagement;
-using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -54,34 +53,10 @@ public class GameManager : MonoBehaviour
         }*/
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     public void StartLevel() {
         BattleManager.SelectedLevel = selectedLevel;
-        StartCoroutine(LoadLevelWithUI(selectedLevel.LevelName));
+        SceneManager.LoadScene(selectedLevel.name);
     }
-
-    private IEnumerator LoadLevelWithUI(string levelSceneName) {
-        // Load the main level scene (unloads others)
-        AsyncOperation levelLoad = SceneManager.LoadSceneAsync(levelSceneName, LoadSceneMode.Single);
-        while (!levelLoad.isDone)
-            yield return null;
-
-        // Now load the UI scene additively
-        Debug.Log("Loading UIScene additively...");
-        SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
-    }
-
-    /*public void StartLevel() {
-        BattleManager.SelectedLevel = selectedLevel;
-        //SceneManager.LoadScene(selectedLevel.name);
-        SceneManager.LoadScene(selectedLevel.LevelName, LoadSceneMode.Single);
-        SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
-    }*/
 
     private void SelectedUnit(int value) {
         selectedUnits += value;

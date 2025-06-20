@@ -7210,7 +7210,7 @@ GameObject:
   - component: {fileID: 1240550283}
   - component: {fileID: 1240550282}
   m_Layer: 0
-  m_Name: TutorialManager
+  m_Name: StoryManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -7228,14 +7228,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 09a3843f02a155947ac83b1ad4472685, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tutorialSteps:
-  - {fileID: 11400000, guid: 7584c9ed3044cba48ae8a109cfd5aaf0, type: 2}
-  - {fileID: 11400000, guid: 182c77f6ff04a4744b1d29d5baa78adc, type: 2}
-  - {fileID: 11400000, guid: 424e82e03de3895479f25b37bb53ba55, type: 2}
-  - {fileID: 11400000, guid: ff5fa79b9df8e6449b9a986f4e2828fb, type: 2}
-  - {fileID: 11400000, guid: e1ce44b4bb6ec9e43b387086c56aad4a, type: 2}
-  - {fileID: 11400000, guid: 3d8610cdb86cccd4784291430fd4bd90, type: 2}
-  - {fileID: 11400000, guid: c328e5a1b00b69f4899fe0cb71b07bcb, type: 2}
+  storySteps: []
   titleText: {fileID: 1426947997}
   bodyText: {fileID: 630800918}
   closeBtn: {fileID: 945275017}
