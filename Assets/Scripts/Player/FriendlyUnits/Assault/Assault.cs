@@ -5,22 +5,6 @@ public class Assault : Friendly {
     [Header("Actions")]
     [SerializeField] protected StaminaStimAction staminaStimAction;
 
-    private void OnDisable() {
-        Debug.LogError("Assault Script Disabled");
-    }
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     protected override void SetMoves() {
         //base.SetMoves();
 

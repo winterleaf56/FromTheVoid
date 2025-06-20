@@ -15,6 +15,9 @@ public class Level : ScriptableObject {
     [SerializeField] private List<StoryStep> storySteps;
     public List<StoryStep> StorySteps => storySteps;
 
+    [SerializeField] private List<ObjectiveBase> objectives;
+    public List<ObjectiveBase> Objectives => objectives;
+
     [SerializeField] private int reward;
     [SerializeField] private int requiredNumberOfUnits;
 

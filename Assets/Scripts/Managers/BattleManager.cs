@@ -258,8 +258,9 @@ public class BattleManager : MonoBehaviour {
         AllUnitsDied();
     }
 
+    // Change deadEnemyUnits.Count from 4 to what the objective value is. Or if there is a different objective, figure that out later
     private void AllUnitsDied() {
-        if (deadFriendlyUnits.Count == 4) {
+        if (deadFriendlyUnits.Count == SelectedLevel.RequiredNumberOfUnits) {
             GameOver();
         } else if (deadEnemyUnits.Count == 4) {
             Victory();
