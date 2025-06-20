@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using System;
 using UnityEngine.SceneManagement;
+using System.Collections;
 
 public class GameManager : MonoBehaviour
 {
@@ -15,8 +16,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private GameObject startButton;
 
-    [SerializeField] private GameObject levelButtons;
-    [SerializeField] private Level tutorial;
+    // Both of these aren't being used here anymore but I'll keep them here for now
+    //[SerializeField] private GameObject levelButtons;
+    //[SerializeField] private Level tutorial;
 
     private int selectedUnits;
 
@@ -60,8 +62,26 @@ public class GameManager : MonoBehaviour
 
     public void StartLevel() {
         BattleManager.SelectedLevel = selectedLevel;
-        SceneManager.LoadScene(selectedLevel.name);
+        StartCoroutine(LoadLevelWithUI(selectedLevel.LevelName));
     }
+
+    private IEnumerator LoadLevelWithUI(string levelSceneName) {
+        // Load the main level scene (unloads others)
+        AsyncOperation levelLoad = SceneManager.LoadSceneAsync(levelSceneName, LoadSceneMode.Single);
+        while (!levelLoad.isDone)
+            yield return null;
+
+        // Now load the UI scene additively
+        Debug.Log("Loading UIScene additively...");
+        SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
+    }
+
+    /*public void StartLevel() {
+        BattleManager.SelectedLevel = selectedLevel;
+        //SceneManager.LoadScene(selectedLevel.name);
+        SceneManager.LoadScene(selectedLevel.LevelName, LoadSceneMode.Single);
+        SceneManager.LoadScene("UIScene", LoadSceneMode.Additive);
+    }*/
 
     private void SelectedUnit(int value) {
         selectedUnits += value;
