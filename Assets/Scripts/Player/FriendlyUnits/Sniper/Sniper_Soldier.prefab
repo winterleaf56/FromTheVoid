@@ -240,7 +240,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 56882e8c0e77d734881b474163b1afbe, type: 2}
   statusEffects: []
   health: {fileID: 0}
-  friendlyUnitID: 0
+  friendlyUnitID: 2
   unitStats: {fileID: 11400000, guid: ef6950ebb7414e44b88a5ef5825d3b6c, type: 2}
 --- !u!108 &-1623813058339059909
 Light:

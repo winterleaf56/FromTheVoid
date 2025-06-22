@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -44,14 +45,16 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private TMP_Text costTxt;
 
     [Header("Temporary Variables")]
-    [SerializeField] private TMP_Text objectiveTxt;
+    [SerializeField] private GameObject objectivePanel;
+    [SerializeField] private TMP_Text objectivePrefab;
     [SerializeField] private GameObject menuCanvas;
     [SerializeField] private GameObject victoryPanel;
     [SerializeField] private GameObject defeatPanel;
     [SerializeField] private GameObject pausePanel;
 
-
     [SerializeField] private float buttonSpacing = 100;
+
+    private Dictionary<ObjectiveBase, TMP_Text> objectiveTexts = new Dictionary<ObjectiveBase, TMP_Text>();
 
     public UnityEvent MoveComplete;
 
@@ -88,6 +91,8 @@ public class UIManager : MonoBehaviour {
         PlayerTurn.Instance.playerTurnStarted += StartPlayerTurn;
         PlayerTurn.Instance.playerTurnEnded += EndPlayerTurn;
         BattleManager.onGamePaused += PauseGame;
+
+        SetObjectives();
     }
 
     public void UpdateStatBar(string name, float health, int actionPoints, int maxActionPoints, int actionPointRecovery) {
@@ -161,11 +166,42 @@ public class UIManager : MonoBehaviour {
         }
     }
 
+    private void SetObjectives() {
+        // Clear existing objective UI elements except the title text
+        foreach (Transform child in objectivePanel.transform) {
+            if (child.name == "ObjectivePrefab")
+                Destroy(child.gameObject);
+        }
+
+        objectiveTexts.Clear();
+
+        // Add each objective to the UI
+        foreach (var objective in BattleManager.SelectedLevel.Objectives) {
+            TMP_Text newObjective = Instantiate(objectivePrefab, objectivePanel.transform);
+            newObjective.SetText(objective.objectiveText);
+
+            // Add the objective to the dictionary
+            // Remember, objectiveTexts[objective] is the key (using the ObjectiveBase reference) and newObjective is the value (the TMP_Text component)
+            objectiveTexts[objective] = newObjective;
+        }
+    }
+
+    public void UpdateObjectiveUI(ObjectiveBase objective) {
+        if (objectiveTexts.ContainsKey(objective)) {
+            TMP_Text objectiveText = objectiveTexts[objective];
+
+            // Change color to green if completed
+            if (objective.isCompleted) {
+                objectiveText.color = Color.green;
+            }
+        }
+    }
+
     // Temporary. Change to a scripbable object
     private void CheckDeadEnemies(Lifeforms unit) {
         if (unit.CompareTag("Enemy")) {
             int deadEnemies = BattleManager.Instance.DeadEnemyUnits.Count;
-            objectiveTxt.SetText($"Defeat all enemies\n{deadEnemies} / 4");
+            //objectiveTxt.SetText($"Defeat all enemies\n{deadEnemies} / 4");
         }
     }
 

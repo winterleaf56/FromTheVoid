@@ -3,12 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.ComponentModel;
 
 public abstract class ActionBase : ScriptableObject {
     public string moveName;
     [SerializeField] protected int actionPointCost;
     [SerializeField] protected float range;
-    [SerializeField] protected float damage;
+    //[Tooltip("This value can be used for different purposes like damage, or healing.")]
+    [InspectorDescription("This value can be used for different purposes like damage, or healing.")]
+    [SerializeField] protected float value; // Changed from damage to value, as it can be used for different purposes like damage, or healing.
 
     [SerializeField] private Button attackButton;
     [SerializeField] private Button actionButton;
@@ -97,6 +100,21 @@ public abstract class ActionBase : ScriptableObject {
 
         Debug.Log(enemiesInRange);
         return enemiesInRange;
+    }
+
+    public List<Friendly> GetFriendliesInRange(Lifeforms unit) {
+        List<Friendly> friendliesInRange = new List<Friendly>();
+        Collider[] hitColliders = Physics.OverlapSphere(unit.transform.position, range);
+        foreach (var hitCollider in hitColliders) {
+            Friendly friendly = hitCollider.GetComponent<Friendly>();
+            if (friendly != null) {
+                if (!Physics.Linecast(unit.transform.position, friendly.transform.position, out RaycastHit hit, obstacleLayer)) {
+                    friendliesInRange.Add(friendly);
+                }
+            }
+        }
+        Debug.Log(friendliesInRange);
+        return friendliesInRange;
     }
 
     protected virtual void OnMoveFinished(Lifeforms unit) {

@@ -1,6 +1,16 @@
 Changelog
 
-/06/2025 V0.1.4 (Release of Level 1)
+20/06/2025 V0.1.4 (Release of Level 1)
+- Added story for Level 1
+- Added Level 1 environment
+- Started work on mission rewards
+-- Will need to finish player details before finishing this
+- Username input and void shard saving
+- Reworked some saving logic
+
+20/06/2025 V0.1.3.7-DEV
+- UIManager creates objective text for every objective
+- Reworked game logic so now Victory is determined by objective completion
 
 20/06/2025 V0.1.3.6-DEV
 - Added Objectives SOs
@@ -9,7 +19,7 @@ Changelog
 Thinking about making objectives optional. Will decide later, for now they will be manditory
 
 20/06/2025 V0.1.3.5-DEV 
-- Entirely backend update
+- Entirely a backend update
 - Tutorials are now Story
 - Story set in Level ScriptableObject
 - Fixed Assault unit

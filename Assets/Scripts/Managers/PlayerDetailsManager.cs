@@ -36,4 +36,11 @@ public class PlayerDetailsManager : MonoBehaviour {
     public int GetCurrentVoidShards() {
         return currentVoidShards;
     }
+
+    public void SetPlayerName(string name) {
+        playerName = name;
+
+        Debug.LogAssertion($"Player name set to: {playerName}. Saving...");
+        SaveManager.Instance.SaveGame?.Invoke();
+    }
 }

@@ -11,7 +11,7 @@ public class StoryManager : MonoBehaviour {
 
     [SerializeField] private GameObject closeBtn;
     [SerializeField] private GameObject nextPageBtn;
-    [SerializeField] private GameObject tutorialUI;
+    [SerializeField] private GameObject StoryUI;
 
     private void Start() {
         storySteps = BattleManager.SelectedLevel.StorySteps;
@@ -35,7 +35,7 @@ public class StoryManager : MonoBehaviour {
     }
 
     private void FinalStep() {
-        Debug.Log("Tutorial complete!");
+        Debug.Log("Story complete!");
 
         closeBtn.SetActive(true);
         nextPageBtn.SetActive(false);

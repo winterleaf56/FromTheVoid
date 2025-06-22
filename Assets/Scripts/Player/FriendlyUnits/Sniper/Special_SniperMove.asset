@@ -15,7 +15,7 @@ MonoBehaviour:
   moveName: Headshot
   actionPointCost: 100
   range: 100
-  damage: 500
+  value: 500
   attackButton: {fileID: 0}
   actionButton: {fileID: 0}
   actionSound: {fileID: 8300000, guid: 2a3e099cf08abdf45b4ec2113a98a162, type: 3}

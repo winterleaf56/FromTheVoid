@@ -51,11 +51,35 @@ public class GameManager : MonoBehaviour
         /*if (tutorial.LevelCompleted == true) {
             levelButtons.transform.Find("CompletedImage").gameObject.SetActive(true);
         }*/
+
+        PlayerDetailsManager playerDetails = PlayerDetailsManager.Instance;
+        MenuUIManager menuUIManager = MenuUIManager.Instance;
+
+        //menuUIManager.UnitSelectPanel.SetActive(true);
+
+        if (playerDetails != null) {
+            if (playerDetails.PlayerName == null || playerDetails.PlayerName == "") {
+                // Open the name input UI
+                menuUIManager.UsernamePanel.SetActive(true);
+                menuUIManager.SubmitUsernameBtn.onClick.AddListener(() => {
+                    string playerName = menuUIManager.UsernameInput.text;
+                    if (!string.IsNullOrEmpty(playerName)) {
+                        playerDetails.SetPlayerName(playerName);
+                        menuUIManager.UsernamePanel.SetActive(false);
+                        Debug.Log($"Player name set to: {playerName}");
+                    } else {
+                        Debug.LogWarning("Player name cannot be empty.");
+                    }
+                });
+
+            }
+        }
     }
 
     public void StartLevel() {
         BattleManager.SelectedLevel = selectedLevel;
-        SceneManager.LoadScene(selectedLevel.name);
+        SceneManager.LoadScene("Tutorial");
+        //SceneManager.LoadScene(selectedLevel.name);
     }
 
     private void SelectedUnit(int value) {

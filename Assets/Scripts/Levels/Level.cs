@@ -59,7 +59,7 @@ public class Level : ScriptableObject {
         levelCompleted = true;
 
         Debug.Log($"Level {levelName} completed: {levelCompleted}. Invoke Saving...");
-        SaveManager.Instance.SaveGame.Invoke();
+        //SaveManager.Instance.SaveGame.Invoke();
         //SaveManager.Instance.SaveLevelCompleted(levelName, levelCompleted);
         //SaveLevelCompleted();
     }
@@ -68,9 +68,15 @@ public class Level : ScriptableObject {
         levelCompleted = true;
     }*/
 
-    public void ChangeCompletionStatus(bool status) {
+    /*public void ChangeCompletionStatus(bool status) {
+        Debug.LogAssertion($"Changing completion status of level {levelName} to {status}");
         levelCompleted = status;
         SaveManager.Instance.SaveGame?.Invoke();
+    }*/
+
+    public void ChangeCompletionStatus(bool status) {
+        levelCompleted = status;
+        SaveManager.Instance.SaveLevelData(this);
     }
 
     /*public void SaveLevelCompleted() {

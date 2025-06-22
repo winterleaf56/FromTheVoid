@@ -1,3 +1,4 @@
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -13,6 +14,12 @@ public class MenuUIManager : MonoBehaviour {
     [SerializeField] private GameObject missionList;
     [SerializeField] private Button backBtn;
     [SerializeField] private Button deleteDataBtn;
+    [SerializeField] private GameObject mainMenuPanel;
+
+    [SerializeField] private GameObject usernamePanel;
+    [SerializeField] private TMP_InputField usernameInput;
+    [SerializeField] private Button submitUsernameBtn;
+
 
     public static MenuUIManager Instance { get; private set; }
 
@@ -24,6 +31,10 @@ public class MenuUIManager : MonoBehaviour {
     public GameObject MissionList => missionList;
     public Button BackBtn => backBtn;
     public Button DeleteDataBtn => deleteDataBtn;
+    public GameObject UsernamePanel => usernamePanel;
+    public TMP_InputField UsernameInput => usernameInput;
+    public Button SubmitUsernameBtn => submitUsernameBtn;
+    public GameObject MainMenuPanel => mainMenuPanel;
 
     void Awake() {
         if (Instance != null && Instance != this) {
@@ -41,7 +52,7 @@ public class MenuUIManager : MonoBehaviour {
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode) {
         if (scene.name == "MainMenu") {
             missionBtnPrefab.onClick.AddListener(() => {
-                unitSelectPanel.SetActive(true);
+                //unitSelectPanel.SetActive(true);
                 missionText.SetActive(false);
                 missionPanel.SetActive(false);
             });

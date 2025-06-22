@@ -12,6 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0b76e05eaa1cec4dabd132e7ba63321, type: 3}
   m_Name: Objective_Tutorial
   m_EditorClassIdentifier: 
-  objectiveText: 
-  isCompleted: 0
-  targetCount: 0
+  objectiveText: Kill 4 Enemies
+  isCompleted: 1
+  targetCount: 4

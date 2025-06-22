@@ -15,7 +15,7 @@ MonoBehaviour:
   moveName: Machine Gun Fire
   actionPointCost: 50
   range: 25
-  damage: 25
+  value: 30
   attackButton: {fileID: 0}
   actionButton: {fileID: 0}
   actionSound: {fileID: 8300000, guid: da082d13bf4a05d4791d2392342c0813, type: 3}

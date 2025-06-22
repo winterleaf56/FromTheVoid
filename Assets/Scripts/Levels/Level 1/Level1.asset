@@ -13,7 +13,15 @@ MonoBehaviour:
   m_Name: Level1
   m_EditorClassIdentifier: 
   levelName: Cleanup Duty
+  environmentPrefab: {fileID: 7903297192831102368, guid: 41eb5c37fe856ee46a4fba37a26c9aa3, type: 3}
   playerUnits: []
+  storySteps:
+  - {fileID: 11400000, guid: dbedf49dcaabfa84883b80b2e8400018, type: 2}
+  - {fileID: 11400000, guid: c29102810d904bf4ab6ad89790767574, type: 2}
+  - {fileID: 11400000, guid: d97b81dbe26667940851dd8e0054ad6a, type: 2}
+  - {fileID: 11400000, guid: 68b6519fc3104de418bafcd61029d8c1, type: 2}
+  objectives:
+  - {fileID: 11400000, guid: 98e181f3d1111bf4db3bf2f80ef3663f, type: 2}
   reward: 0
   requiredNumberOfUnits: 4
   levelCompleted: 0

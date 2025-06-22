@@ -106,7 +106,7 @@ public class BattleManager : MonoBehaviour {
             if (_currentTurn == GameState.PlayerTurn) {
                 //battleActionsUI.SetActive(true);
                 print("Player turn started");
-            } else {
+            } else if (_currentTurn == GameState.EnemyTurn) {
                 //battleActionsUI.SetActive(false);
                 print("Enemy turn started");
             }
@@ -137,6 +137,8 @@ public class BattleManager : MonoBehaviour {
         }
 
         Instance = this;
+
+        deadEnemyUnits = new List<Enemy>();
 
         changeBattleState += ChangeBattleState;
         onMoveFinished += OnMoveFinshed;
@@ -202,6 +204,13 @@ public class BattleManager : MonoBehaviour {
         while (!currentTurn.Equals(GameState.BattleOver)) {
             turnNumber++;
 
+            Debug.Log("Battle Manager: Starting Player Turn");
+            currentTurn = GameState.PlayerTurn;
+
+            yield return null;
+            // Check objectives before player turn starts
+            CheckObjectives();
+
             foreach (GameObject unit in playerUnits) {
                 if (unit != null) {
                     Debug.Log($"GETTING UNIT: {unit} IN PLAYERUNITS");
@@ -210,14 +219,15 @@ public class BattleManager : MonoBehaviour {
                 }
             }
 
-            Debug.Log("Battle Manager: Starting Player Turn");
-            currentTurn = GameState.PlayerTurn;
+            // Runs PlayerTurn logic and waits for the turn to end
             yield return StartCoroutine(GetComponent<PlayerTurn>().StartPlayerTurn());
             Debug.Log("Battle Manager: Ending Player Turn");
-            //SwitchTurns();
-            Debug.Log("Battle Manager: Starting Enemy Turn");
 
+            Debug.Log("Battle Manager: Starting Enemy Turn");
             currentTurn = GameState.EnemyTurn;
+
+            // Check objectives before enemy turn starts
+            CheckObjectives();
 
             foreach (GameObject enemy in enemyUnits) {
                 if (enemy != null) {
@@ -229,12 +239,28 @@ public class BattleManager : MonoBehaviour {
 
             yield return StartCoroutine(GetComponent<EnemyTurn>().StartEnemyTurn(enemyUnits));
             Debug.Log("Battle Manager: Ending Enemy Turn");
-            //SwitchTurns();
+            
             yield return new WaitForSeconds(1);
         }
     }
 
+    // I think I can just search the list for the unit that died, and remove it from the list. Change this later
     private void UnitDied(Lifeforms unit) {
+        // Wrote quick switch statement to handle different unit types. If I want to move forward with this approach then this should work
+        /*switch (unit) {
+            case Friendly friendlyUnit:
+                Debug.Log($"Friendly unit died: {friendlyUnit.stats.UnitName}");
+                PlayerUnitDied();
+                break;
+            case Enemy enemyUnit:
+                Debug.Log($"Enemy unit died: {enemyUnit.stats.UnitName}");
+                EnemyUnitDied();
+                break;
+            default:
+                Debug.LogWarning("Unknown unit type died");
+                return;
+        }*/
+
         if (unit.GetComponent<Friendly>()) {
             for (int i = 0; i < playerUnits.Count; i++) {
                 if (playerUnits[i] == unit.gameObject) {
@@ -256,19 +282,47 @@ public class BattleManager : MonoBehaviour {
         UIManager.updateObjectiveText(unit);
 
         AllUnitsDied();
+        CheckObjectives();
     }
 
     // Change deadEnemyUnits.Count from 4 to what the objective value is. Or if there is a different objective, figure that out later
+    // Changed but need to have a seperate GameOver for if all enemies die but objectives are not complete
     private void AllUnitsDied() {
         if (deadFriendlyUnits.Count == SelectedLevel.RequiredNumberOfUnits) {
             GameOver();
-        } else if (deadEnemyUnits.Count == 4) {
-            Victory();
         }
     }
 
     public void DevModeVictory() {
         Victory();
+    }
+
+    private void CheckObjectives() {
+        foreach (ObjectiveBase objective in SelectedLevel.Objectives) {
+            if (!objective.isCompleted) {
+                objective.CheckObjective();
+
+                if (objective.isCompleted) {
+                    Debug.Log($"Objective completed: {objective.objectiveText}");
+                    UIManager.Instance.UpdateObjectiveUI(objective); // Update the UI
+                }
+
+                if (objective.isCompleted && AllObjectivesCompleted()) {
+                    Debug.Log("All objectives completed!");
+                    Victory(); // Call victory if all objectives are completed
+                }
+            }
+        }
+    }
+
+    // Returns true if all objectives are completed
+    private bool AllObjectivesCompleted() {
+        foreach (ObjectiveBase objective in SelectedLevel.Objectives) {
+            if (!objective.isCompleted) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void PlayerUnitDied() {

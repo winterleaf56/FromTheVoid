@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class BasicMove : ActionBase {
 
     public virtual float CalculateDamage() {
-        return damage;
+        return value;
     }
 
     public override void SetupButton(Button button, Lifeforms unit, GameObject confirmPage, GameObject confirmBtn, Button cancelBtn) {

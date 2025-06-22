@@ -18,6 +18,9 @@ public class LevelData {
 [System.Serializable]
 public class SaveData {
     public List<LevelData> levels = new List<LevelData>();
+
+    public string playerName;
+    public int currentVoidShards;
 }
 
 public class SaveManager : MonoBehaviour {
@@ -80,6 +83,7 @@ public class SaveManager : MonoBehaviour {
     private void SaveGameData() {
         SaveData saveData = new SaveData();
 
+        // Save level completion data
         foreach (Level level in levels) {
             LevelData levelData = new LevelData {
                 levelName = level.LevelName,
@@ -90,9 +94,42 @@ public class SaveManager : MonoBehaviour {
             saveData.levels.Add(levelData);
         }
 
+        // Save player details
+        if (PlayerDetailsManager.Instance != null) {
+            saveData.playerName = PlayerDetailsManager.Instance.PlayerName;
+            saveData.currentVoidShards = PlayerDetailsManager.Instance.GetCurrentVoidShards();
+        } else {
+            Debug.LogWarning("PlayerDetailsManager instance is not available. Player details will not be saved.");
+        }
+
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(saveFilePath, json);
         Debug.Log($"Game data saved to {saveFilePath}");
+    }
+
+    public void SaveLevelData(Level level) {
+        if (level == null) {
+            Debug.LogWarning("Level is null. Cannot save level data.");
+            return;
+        }
+
+        // Load existing save data
+        SaveData saveData = File.Exists(saveFilePath)
+            ? JsonUtility.FromJson<SaveData>(File.ReadAllText(saveFilePath))
+            : new SaveData();
+
+        // Find or update the level data
+        LevelData levelData = saveData.levels.Find(l => l.levelName == level.LevelName);
+        if (levelData == null) {
+            levelData = new LevelData { levelName = level.LevelName };
+            saveData.levels.Add(levelData);
+        }
+        levelData.levelCompleted = level.LevelCompleted;
+
+        // Save updated data back to the file
+        string json = JsonUtility.ToJson(saveData, true);
+        File.WriteAllText(saveFilePath, json);
+        Debug.Log($"Level {level.LevelName} data saved.");
     }
 
     public void LoadGameData() {
@@ -100,16 +137,27 @@ public class SaveManager : MonoBehaviour {
             string json = File.ReadAllText(saveFilePath);
             SaveData saveData = JsonUtility.FromJson<SaveData>(json);
 
+
+            // Load level completion data
             foreach (LevelData levelData in saveData.levels) {
                 Level level = levels.Find(l => l.LevelName == levelData.levelName);
                 if (level != null) {
                     if (levelData.levelCompleted) {
-                        level.ChangeCompletionStatus(true);
+                        //level.ChangeCompletionStatus(true);
                         Debug.Log($"Level {levelData.levelName} is completed.");
                         LevelManager.Instance.levels.Find(l => l.LevelName == levelData.levelName).ChangeCompletionStatus(true);
                     }
                 }
             }
+
+            // Load player details
+            if (PlayerDetailsManager.Instance != null) {
+                PlayerDetailsManager.Instance.SetPlayerName(saveData.playerName);
+                PlayerDetailsManager.Instance.AddVoidShards(saveData.currentVoidShards - PlayerDetailsManager.Instance.GetCurrentVoidShards());
+            } else {
+                Debug.LogWarning("PlayerDetailsManager instance is not available. Player details will not be loaded.");
+            }
+
             Debug.Log("Game data loaded successfully.");
         } else {
             Debug.LogWarning("Save file not found. No data loaded.");
@@ -124,7 +172,7 @@ public class SaveManager : MonoBehaviour {
                 level.ChangeCompletionStatus(false);
             }
 
-            SaveGameData();
+            //SaveGameData();
             SceneManager.LoadScene("MainMenu");
         } else {
             Debug.LogWarning("No save file found to delete.");
