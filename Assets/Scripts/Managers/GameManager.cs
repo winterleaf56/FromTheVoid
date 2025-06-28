@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
         //menuUIManager.UnitSelectPanel.SetActive(true);
 
         if (playerDetails != null) {
+            MenuUIManager.updateUserDetails?.Invoke();
             if (playerDetails.PlayerName == null || playerDetails.PlayerName == "") {
                 // Open the name input UI
                 menuUIManager.UsernamePanel.SetActive(true);
@@ -67,6 +68,7 @@ public class GameManager : MonoBehaviour
                         playerDetails.SetPlayerName(playerName);
                         menuUIManager.UsernamePanel.SetActive(false);
                         Debug.Log($"Player name set to: {playerName}");
+                        //SaveManager.Instance.SaveGame?.Invoke();
                     } else {
                         Debug.LogWarning("Player name cannot be empty.");
                     }
@@ -74,6 +76,8 @@ public class GameManager : MonoBehaviour
 
             }
         }
+
+        //SaveManager.Instance.LoadGame?.Invoke();
     }
 
     public void StartLevel() {

@@ -8,11 +8,13 @@ using UnityEngine.Events;
 using System;
 using System.Runtime.Serialization.Formatters.Binary;
 using Unity.VisualScripting;
+using JetBrains.Annotations;
 
 [System.Serializable]
 public class LevelData {
     public string levelName;
     public bool levelCompleted;
+    public bool firstCompleted;
 }
 
 [System.Serializable]
@@ -20,7 +22,10 @@ public class SaveData {
     public List<LevelData> levels = new List<LevelData>();
 
     public string playerName;
+    //public int playerId;
+    public int currentLevel;
     public int currentVoidShards;
+    public int currentCoins;
 }
 
 public class SaveManager : MonoBehaviour {
@@ -28,6 +33,7 @@ public class SaveManager : MonoBehaviour {
     private Button deleteDataBtn;
 
     public Action SaveGame;
+    public Action LoadGame;
 
     private string saveFilePath;
     private List<Level> levels;
@@ -35,6 +41,8 @@ public class SaveManager : MonoBehaviour {
     public static SaveManager Instance { get; private set; }
 
     private void Awake() {
+        LoadGameData();
+
         // This ensures that the SaveManager object persists across scene loads (Probably not needed)
         DontDestroyOnLoad(gameObject);
 
@@ -46,6 +54,7 @@ public class SaveManager : MonoBehaviour {
 
         // Sets the SaveGame action to the SaveGameData method and the sceneLoaded event to the OnSceneLoaded method (Runs when scene loads)
         SaveGame += SaveGameData;
+        LoadGame += LoadGameData;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         saveFilePath = Path.Combine(Application.dataPath, "SaveData.json");
@@ -54,12 +63,13 @@ public class SaveManager : MonoBehaviour {
     private void Start() {
         // Loads game data on start
         Debug.Log("SaveManager Start called. Loading game data.");
-        LoadGameData();
+        //LoadGameData();
     }
 
     private void OnDestroy() {
         // Unsubscribe from the SaveGame action and sceneLoaded event to prevent memory leaks
         SaveGame -= SaveGameData;
+        LoadGame -= LoadGameData;
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
@@ -87,7 +97,8 @@ public class SaveManager : MonoBehaviour {
         foreach (Level level in levels) {
             LevelData levelData = new LevelData {
                 levelName = level.LevelName,
-                levelCompleted = level.LevelCompleted
+                levelCompleted = level.LevelCompleted,
+                firstCompleted = level.FirstCompleted
             };
 
             Debug.Log($"Saving level: {levelData.levelName}, Completed: {levelData.levelCompleted}");
@@ -96,8 +107,10 @@ public class SaveManager : MonoBehaviour {
 
         // Save player details
         if (PlayerDetailsManager.Instance != null) {
+            Debug.Log($"Saving player details: Name: {PlayerDetailsManager.Instance.PlayerName}, Void Shards: {PlayerDetailsManager.Instance.GetCurrentVoidShards()}, Coins: {PlayerDetailsManager.Instance.GetCurrentCoins()}");
             saveData.playerName = PlayerDetailsManager.Instance.PlayerName;
             saveData.currentVoidShards = PlayerDetailsManager.Instance.GetCurrentVoidShards();
+            saveData.currentCoins = PlayerDetailsManager.Instance.GetCurrentCoins();
         } else {
             Debug.LogWarning("PlayerDetailsManager instance is not available. Player details will not be saved.");
         }
@@ -124,7 +137,9 @@ public class SaveManager : MonoBehaviour {
             levelData = new LevelData { levelName = level.LevelName };
             saveData.levels.Add(levelData);
         }
+
         levelData.levelCompleted = level.LevelCompleted;
+        levelData.firstCompleted = level.FirstCompleted;
 
         // Save updated data back to the file
         string json = JsonUtility.ToJson(saveData, true);
@@ -132,9 +147,27 @@ public class SaveManager : MonoBehaviour {
         Debug.Log($"Level {level.LevelName} data saved.");
     }
 
+    public void SavePlayerData() {
+        // Load existing data so you don’t overwrite the level info
+        SaveData saveData = File.Exists(saveFilePath)
+            ? JsonUtility.FromJson<SaveData>(File.ReadAllText(saveFilePath))
+            : new SaveData();
+
+        if (PlayerDetailsManager.Instance != null) {
+            saveData.playerName = PlayerDetailsManager.Instance.PlayerName;
+            saveData.currentVoidShards = PlayerDetailsManager.Instance.GetCurrentVoidShards();
+            saveData.currentCoins = PlayerDetailsManager.Instance.GetCurrentCoins();
+        }
+
+        string json = JsonUtility.ToJson(saveData, true);
+        File.WriteAllText(saveFilePath, json);
+        Debug.Log($"Player data saved to {saveFilePath}");
+    }
+
     public void LoadGameData() {
         if (File.Exists(saveFilePath)) {
             string json = File.ReadAllText(saveFilePath);
+            Debug.Log("Raw JSON data loaded: " + json);
             SaveData saveData = JsonUtility.FromJson<SaveData>(json);
 
 
@@ -142,18 +175,19 @@ public class SaveManager : MonoBehaviour {
             foreach (LevelData levelData in saveData.levels) {
                 Level level = levels.Find(l => l.LevelName == levelData.levelName);
                 if (level != null) {
-                    if (levelData.levelCompleted) {
-                        //level.ChangeCompletionStatus(true);
-                        Debug.Log($"Level {levelData.levelName} is completed.");
-                        LevelManager.Instance.levels.Find(l => l.LevelName == levelData.levelName).ChangeCompletionStatus(true);
-                    }
+                    LevelManager.Instance.levels.Find(l => l.LevelName == levelData.levelName).ChangeFirstCompletion(levelData.firstCompleted);
+                    LevelManager.Instance.levels.Find(l => l.LevelName == levelData.levelName).ChangeCompletionStatus(levelData.levelCompleted);
                 }
             }
 
             // Load player details
             if (PlayerDetailsManager.Instance != null) {
+                Debug.Log($"Loading player name: {saveData.playerName}, Void Shards: {saveData.currentVoidShards}, Coins: {saveData.currentCoins}");
                 PlayerDetailsManager.Instance.SetPlayerName(saveData.playerName);
-                PlayerDetailsManager.Instance.AddVoidShards(saveData.currentVoidShards - PlayerDetailsManager.Instance.GetCurrentVoidShards());
+                //PlayerDetailsManager.Instance.AddVoidShards(saveData.currentVoidShards - PlayerDetailsManager.Instance.GetCurrentVoidShards());
+                //PlayerDetailsManager.Instance.AddCoins(saveData.currentCoins - PlayerDetailsManager.Instance.GetCurrentCoins());
+                PlayerDetailsManager.Instance.SetVoidShards(saveData.currentVoidShards);
+                PlayerDetailsManager.Instance.SetCoins(saveData.currentCoins);
             } else {
                 Debug.LogWarning("PlayerDetailsManager instance is not available. Player details will not be loaded.");
             }
@@ -171,6 +205,10 @@ public class SaveManager : MonoBehaviour {
             foreach (Level level in levels) {
                 level.ChangeCompletionStatus(false);
             }
+
+            PlayerDetailsManager.Instance.SetPlayerName("");
+            PlayerDetailsManager.Instance.SetVoidShards(0);
+            PlayerDetailsManager.Instance.SetCoins(0);
 
             //SaveGameData();
             SceneManager.LoadScene("MainMenu");

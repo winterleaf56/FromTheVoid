@@ -10,6 +10,7 @@ public class ExitGame : MonoBehaviour {
     }
 
     public void Exit() {
+        SaveManager.Instance.SaveGame?.Invoke();
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
 #else

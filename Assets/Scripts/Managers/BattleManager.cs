@@ -354,7 +354,13 @@ public class BattleManager : MonoBehaviour {
     private void Victory() {
         Debug.Log("Victory");
         UIManager.Instance.ShowVictoryPanel();
-        SelectedLevel.ChangeCompletionStatus(true);
+        // This is here because currently we only give rewards for the first time a level is completed
+        if (!SelectedLevel.FirstCompleted) {
+            UIManager.updateRewardPanel(SelectedLevel.Rewards);
+        }
+
+        SelectedLevel.completedLevel?.Invoke(); // Invoke the completed level action
+        //SelectedLevel.ChangeCompletionStatus(true);
         currentTurn = GameState.BattleOver;
     }
 

@@ -1,5 +1,7 @@
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -18,21 +20,34 @@ public class Level : ScriptableObject {
     [SerializeField] private List<ObjectiveBase> objectives;
     public List<ObjectiveBase> Objectives => objectives;
 
-    [SerializeField] private int reward;
+    //[SerializeField] private List<RewardBase> rewards;
+    [SerializeField] private CustomReward rewards;
+    public CustomReward Rewards => rewards;
+
+    //[SerializeField] private int reward;
     [SerializeField] private int requiredNumberOfUnits;
 
     [SerializeField] private bool levelCompleted;
+    [SerializeField] private bool firstCompleted;
+    public bool FirstCompleted => firstCompleted;
 
     public string LevelName => levelName;
     public bool LevelCompleted => levelCompleted;
 
     public List<GameObject> PlayerUnits => playerUnits;
 
-    public int Reward => reward;
+    public Action completedLevel;
+
+    //public int Reward => reward;
     public int RequiredNumberOfUnits => requiredNumberOfUnits;
 
     private void OnEnable() {
+        completedLevel += CompleteLevel;
         ClearUnits();
+    }
+
+    private void OnDisable() {
+        completedLevel -= CompleteLevel;
     }
 
     public void AddPlayerUnit(GameObject unit) {
@@ -55,13 +70,25 @@ public class Level : ScriptableObject {
         }
     }
 
-    public void CompleteLevel() {
+    private void CompleteLevel() {
         levelCompleted = true;
 
+        RewardPlayer();
+
         Debug.Log($"Level {levelName} completed: {levelCompleted}. Invoke Saving...");
-        //SaveManager.Instance.SaveGame.Invoke();
+        SaveManager.Instance.SaveGame.Invoke();
         //SaveManager.Instance.SaveLevelCompleted(levelName, levelCompleted);
         //SaveLevelCompleted();
+    }
+
+    private void RewardPlayer() {
+        if (firstCompleted == false) {
+            rewards.DistributeRewards();
+            firstCompleted = true;
+        } else {
+            Debug.Log("Reward already given for this level completion.");
+        }
+        //rewards?.DistributeRewards();
     }
 
     /*public void LoadCompletionStatus() {
@@ -77,6 +104,10 @@ public class Level : ScriptableObject {
     public void ChangeCompletionStatus(bool status) {
         levelCompleted = status;
         SaveManager.Instance.SaveLevelData(this);
+    }
+
+    public void ChangeFirstCompletion(bool status) {
+        firstCompleted = status;
     }
 
     /*public void SaveLevelCompleted() {

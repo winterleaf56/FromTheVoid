@@ -51,13 +51,20 @@ public class UIManager : MonoBehaviour {
     [SerializeField] private GameObject victoryPanel;
     [SerializeField] private GameObject defeatPanel;
     [SerializeField] private GameObject pausePanel;
+    [SerializeField] private GameObject rewardPanel;
+    [SerializeField] private GameObject rewardObject;
+    [SerializeField] private GameObject rewardDisplay;
 
     [SerializeField] private float buttonSpacing = 100;
 
     private Dictionary<ObjectiveBase, TMP_Text> objectiveTexts = new Dictionary<ObjectiveBase, TMP_Text>();
 
+    [HideInInspector]
     public UnityEvent MoveComplete;
 
+    //public static Action startGame;
+
+    public static Action<CustomReward> updateRewardPanel;
     public static Action<string> updateConfirmTxt;
     public static Action<bool> ButtonsToggle;
     public static Action<Lifeforms> updateObjectiveText;
@@ -77,13 +84,19 @@ public class UIManager : MonoBehaviour {
         updateObjectiveText += CheckDeadEnemies;
         ButtonsToggle += ToggleButtons;
 
-        
+        updateRewardPanel += PopulateRewardPanel;
+        //startGame += StartGameUI;
     }
 
     private void OnDestroy() {
         updateConfirmTxt -= UpdateConfirmTxt;
         updateObjectiveText -= CheckDeadEnemies;
         ButtonsToggle -= ToggleButtons;
+        PlayerTurn.Instance.playerTurnStarted -= StartPlayerTurn;
+        PlayerTurn.Instance.playerTurnEnded -= EndPlayerTurn;
+        BattleManager.onGamePaused -= PauseGame;
+        updateRewardPanel -= PopulateRewardPanel;
+        //startGame -= StartGameUI;
         Debug.Log("UIManager destroyed");
     }
 
@@ -94,6 +107,10 @@ public class UIManager : MonoBehaviour {
 
         SetObjectives();
     }
+
+    /*private void StartGameUI() {
+        PopulateRewardPanel();
+    }*/
 
     public void UpdateStatBar(string name, float health, int actionPoints, int maxActionPoints, int actionPointRecovery) {
         selectedUnitName.SetText(name);
@@ -164,6 +181,22 @@ public class UIManager : MonoBehaviour {
             endTurnBtn.SetActive(false);
             actionsPanel.SetActive(false);
         }
+    }
+
+    private void PopulateRewardPanel(CustomReward rewards) {
+        //Level level = BattleManager.SelectedLevel;
+        //CustomReward rewards = BattleManager.SelectedLevel.Rewards;
+
+        foreach (Transform child in rewardDisplay.transform) {
+            Destroy(child.gameObject);
+        }
+
+        foreach (var reward in rewards.Rewards) {
+            GameObject rewardInstance = Instantiate(rewardObject, rewardDisplay.transform);
+            rewardInstance.GetComponent<RewardObject>().SetRewardData(reward);
+        }
+
+        rewardPanel.SetActive(true);
     }
 
     private void SetObjectives() {
