@@ -1,62 +1,65 @@
+using System;
 using UnityEngine;
-using UnityEditor;
 
-// Attribute class to add descriptions to fields
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
+// This part can be used in builds (just the attribute definition)
 public class InspectorDescriptionAttribute : PropertyAttribute {
-    public string Description;
+    public string Description { get; private set; }
 
     public InspectorDescriptionAttribute(string description) {
         Description = description;
     }
 }
 
+#if UNITY_EDITOR
 
+// The drawer implementation is editor-only
 [CustomPropertyDrawer(typeof(InspectorDescriptionAttribute))]
 public class InspectorDescriptionDrawer : PropertyDrawer {
-    private const float indentWidth = 15f; // Adjust indentation as needed
-    private const float verticalSpacing = 2f;
+    private const float INDENT_WIDTH = 15f;
+    private const float VERTICAL_SPACING = 2f;
 
     public override void OnGUI(Rect position, SerializedProperty property, GUIContent label) {
-        InspectorDescriptionAttribute descriptionAttribute = (InspectorDescriptionAttribute)attribute;
+        var descriptionAttribute = (InspectorDescriptionAttribute)attribute;
 
-        // First draw the property normally (variable name + field)
-        float propertyHeight = EditorGUI.GetPropertyHeight(property, label);
+        // Draw property first
         Rect propertyRect = new Rect(
             position.x,
             position.y,
             position.width,
-            propertyHeight
+            EditorGUI.GetPropertyHeight(property, label)
         );
         EditorGUI.PropertyField(propertyRect, property, label, true);
 
-        // Then draw the indented description below it
+        // Draw description below
         Rect descriptionRect = new Rect(
-            position.x + indentWidth, // Indent from left
-            position.y + propertyHeight + verticalSpacing,
-            position.width - indentWidth, // Reduce width to account for indent
-            EditorGUIUtility.singleLineHeight
+            position.x + INDENT_WIDTH,
+            position.y + propertyRect.height + VERTICAL_SPACING,
+            position.width - INDENT_WIDTH,
+            EditorStyles.helpBox.CalcHeight(
+                new GUIContent(descriptionAttribute.Description),
+                position.width - INDENT_WIDTH
+            )
         );
 
-        // Style the help box with padding and word wrap
-        var style = new GUIStyle(EditorStyles.helpBox) {
-            wordWrap = true,
-            padding = new RectOffset(6, 6, 4, 4)
-        };
-
-        EditorGUI.LabelField(descriptionRect, descriptionAttribute.Description, style);
+        EditorGUI.LabelField(descriptionRect, descriptionAttribute.Description, EditorStyles.helpBox);
     }
 
     public override float GetPropertyHeight(SerializedProperty property, GUIContent label) {
-        // Calculate total height: Property + Spacing + Description
-        float propertyHeight = base.GetPropertyHeight(property, label);
+        var descriptionAttribute = (InspectorDescriptionAttribute)attribute;
+        float propertyHeight = EditorGUI.GetPropertyHeight(property, label);
         float descriptionHeight = EditorStyles.helpBox.CalcHeight(
-            new GUIContent(((InspectorDescriptionAttribute)attribute).Description),
-            EditorGUIUtility.currentViewWidth - indentWidth // Account for indent
+            new GUIContent(descriptionAttribute.Description),
+            EditorGUIUtility.currentViewWidth - INDENT_WIDTH
         );
 
-        return propertyHeight + descriptionHeight + verticalSpacing;
+        return propertyHeight + descriptionHeight + VERTICAL_SPACING;
     }
 }
+#endif
 
 // Property drawer to render the description in the Inspector
 /*[CustomPropertyDrawer(typeof(InspectorDescriptionAttribute))]

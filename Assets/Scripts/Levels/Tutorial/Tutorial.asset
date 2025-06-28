@@ -14,11 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   levelName: Tutorial
   environmentPrefab: {fileID: 6941774664282879087, guid: 13475e3b34c8ec14b9df968b623c0254, type: 3}
-  playerUnits:
-  - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
-  - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
-  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
-  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
+  playerUnits: []
   storySteps:
   - {fileID: 11400000, guid: 7584c9ed3044cba48ae8a109cfd5aaf0, type: 2}
   - {fileID: 11400000, guid: 182c77f6ff04a4744b1d29d5baa78adc, type: 2}
@@ -31,5 +27,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: f5f0cb00a4d3dc0449a55949bc5f75f1, type: 2}
   rewards: {fileID: 11400000, guid: c94ac8626457ec2418b9d50fd88cc3f1, type: 2}
   requiredNumberOfUnits: 4
-  levelCompleted: 1
-  firstCompleted: 1
+  levelCompleted: 0
+  firstCompleted: 0

@@ -28,7 +28,7 @@ public class Level : ScriptableObject {
     [SerializeField] private int requiredNumberOfUnits;
 
     [SerializeField] private bool levelCompleted;
-    [SerializeField] private bool firstCompleted;
+    [SerializeField] private bool firstCompleted = false;
     public bool FirstCompleted => firstCompleted;
 
     public string LevelName => levelName;

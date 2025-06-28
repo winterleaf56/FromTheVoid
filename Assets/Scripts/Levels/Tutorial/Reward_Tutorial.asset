@@ -19,3 +19,6 @@ MonoBehaviour:
   - rewardType: 1
     amount: 1000
     itemReference: {fileID: 0}
+  - rewardType: 1
+    amount: 1000
+    itemReference: {fileID: 0}

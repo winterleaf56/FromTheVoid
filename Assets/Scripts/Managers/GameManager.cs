@@ -68,7 +68,8 @@ public class GameManager : MonoBehaviour
                         playerDetails.SetPlayerName(playerName);
                         menuUIManager.UsernamePanel.SetActive(false);
                         Debug.Log($"Player name set to: {playerName}");
-                        //SaveManager.Instance.SaveGame?.Invoke();
+                        MenuUIManager.updateUserDetails?.Invoke();
+                        SaveManager.Instance.SavePlayerData();
                     } else {
                         Debug.LogWarning("Player name cannot be empty.");
                     }

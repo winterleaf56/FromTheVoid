@@ -1,3 +1,4 @@
+#if UNITY_EDITOR
 using UnityEditor;
 using UnityEditorInternal;
 using UnityEngine;
@@ -42,6 +43,8 @@ public class CustomRewardEditor : Editor {
         serializedObject.ApplyModifiedProperties();
     }
 }
+
+#endif
 
 // This is a seemingly complex yet working way to make the images appear in the editor next to the reward types.
 
