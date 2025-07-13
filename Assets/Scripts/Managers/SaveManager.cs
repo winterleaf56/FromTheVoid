@@ -1,4 +1,3 @@
-using NUnit.Framework;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -6,15 +5,37 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using System;
-using System.Runtime.Serialization.Formatters.Binary;
-using Unity.VisualScripting;
-using JetBrains.Annotations;
 
 [System.Serializable]
 public class LevelData {
     public string levelName;
     public bool levelCompleted;
     public bool firstCompleted;
+}
+
+[System.Serializable]
+public class FriendlyUnitData {
+    public int friendlyID;
+    public string unitName;
+    public int actionPoints;
+    public int actionPointRecovery;
+    //public int ultimatePoints;
+    public int maxUltimatePoints;
+    public float maxHealth;
+    public float maxMoveDistance;
+    public float defence;
+    public List<MoveData> moves = new List<MoveData>();
+    public List<MoveData> actions = new List<MoveData>();
+    public int duplicates;
+}
+
+[System.Serializable]
+public class MoveData {
+    public string moveName;
+    public float value; // Damage, Heal, etc.
+    public int actionPointCost;
+    public float range;
+    public bool isAOE;
 }
 
 [System.Serializable]
@@ -26,6 +47,8 @@ public class SaveData {
     public int currentLevel;
     public int currentVoidShards;
     public int currentCoins;
+
+    public List<FriendlyUnitData> playerUnits = new List<FriendlyUnitData>();
 }
 
 public class SaveManager : MonoBehaviour {
@@ -34,6 +57,7 @@ public class SaveManager : MonoBehaviour {
 
     public Action SaveGame;
     public Action LoadGame;
+    public Action saveNewUnit;
 
     private string saveFilePath;
     private List<Level> levels;
@@ -55,6 +79,7 @@ public class SaveManager : MonoBehaviour {
         // Sets the SaveGame action to the SaveGameData method and the sceneLoaded event to the OnSceneLoaded method (Runs when scene loads)
         SaveGame += SaveGameData;
         LoadGame += LoadGameData;
+        //saveNewUnit += SaveNewUnit;
         SceneManager.sceneLoaded += OnSceneLoaded;
 
         saveFilePath = Path.Combine(Application.dataPath, "SaveData.json");
@@ -70,6 +95,7 @@ public class SaveManager : MonoBehaviour {
         // Unsubscribe from the SaveGame action and sceneLoaded event to prevent memory leaks
         SaveGame -= SaveGameData;
         LoadGame -= LoadGameData;
+        //saveNewUnit -= SaveNewUnit;
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
 
@@ -90,6 +116,7 @@ public class SaveManager : MonoBehaviour {
         }
     }
 
+    // Make seperate methods for all save actions, then run them all in SaveGameData.
     private void SaveGameData() {
         SaveData saveData = new SaveData();
 
@@ -114,6 +141,61 @@ public class SaveManager : MonoBehaviour {
         } else {
             Debug.LogWarning("PlayerDetailsManager instance is not available. Player details will not be saved.");
         }
+
+        // Save player's units
+        if (PlayerDetailsManager.Instance != null && PlayerDetailsManager.Instance.playerUnits != null) {
+            foreach (Friendly unit in PlayerDetailsManager.Instance.playerUnits) {
+                if (unit != null) {
+                    FriendlyUnitData data = new FriendlyUnitData() {
+                        friendlyID = unit.FriendlyUnitID,
+                        unitName = unit.stats.UnitName,
+                        actionPoints = unit.stats.ActionPoints,
+                        actionPointRecovery = unit.stats.ActionPointRecovery,
+                        maxUltimatePoints = unit.stats.MaxUltimatePoints,
+                        maxHealth = unit.stats.MaxHealth,
+                        maxMoveDistance = unit.stats.MaxMoveDistance,
+                        defence = unit.stats.Defence,
+                        duplicates = unit.stats.Duplicates
+                    };
+                    saveData.playerUnits.Add(data);
+                }
+            }
+        }
+
+        //saveData.playerUnits.Clear();
+        /*List<Friendly> playerUnits = PlayerDetailsManager.Instance.playerUnits;
+        
+        if (playerUnits.Count != 0 && playerUnits != null) {
+            foreach (Friendly unit in playerUnits) {
+                if (unit != null) {
+                    saveData.playerUnits.Add(unit);
+                    Debug.Log($"Saving unit: {unit.name}");
+                }
+            }
+        } else {
+            Debug.LogWarning("No player units found to save. Player units list is empty or null.");
+        }*/
+
+        /*var playerUnits = PlayerDetailsManager.Instance.playerUnits;
+        foreach (Friendly unit in playerUnits) {
+            if (unit != null) {
+                var data = new FriendlyUnitData() {
+                    friendlyID = unit.FriendlyUnitID,
+                    unitName = unit.UnitStats.UnitName,
+                    actionPoints = unit.UnitStats.ActionPoints,
+                    actionPointRecovery = unit.UnitStats.ActionPointRecovery,
+                    maxUltimatePoints = unit.UnitStats.MaxUltimatePoints,
+                    maxHealth = unit.UnitStats.MaxHealth,
+                    maxMoveDistance = unit.UnitStats.MaxMoveDistance,
+                    defence = unit.UnitStats.Defence,
+                    moves = new List<ActionBase>(),
+                    actions = new List<ActionBase>(),
+                    duplicates = unit.Duplicates
+                };
+                saveData.playerUnits.Add(data);
+            }
+        }*/
+
 
         string json = JsonUtility.ToJson(saveData, true);
         File.WriteAllText(saveFilePath, json);
@@ -164,6 +246,42 @@ public class SaveManager : MonoBehaviour {
         Debug.Log($"Player data saved to {saveFilePath}");
     }
 
+    /*private void SaveNewUnit() {
+        SaveData saveData = File.Exists(saveFilePath)
+            ? JsonUtility.FromJson<SaveData>(File.ReadAllText(saveFilePath))
+            : new SaveData();
+
+        var playerUnits = PlayerDetailsManager.Instance.playerUnits;
+        foreach (Friendly unit in playerUnits) {
+            if (unit != null) {
+                var data = new FriendlyUnitData() {
+                    friendlyID = unit.FriendlyUnitID,
+                    unitName = unit.UnitStats.UnitName,
+                    actionPoints = unit.UnitStats.ActionPoints,
+                    actionPointRecovery = unit.UnitStats.ActionPointRecovery,
+                    maxUltimatePoints = unit.UnitStats.MaxUltimatePoints,
+                    maxHealth = unit.UnitStats.MaxHealth,
+                    maxMoveDistance = unit.UnitStats.MaxMoveDistance,
+                    defence = unit.UnitStats.Defence,
+                    moves = new List<ActionBase>(),
+                    actions = new List<ActionBase>(),
+                    duplicates = unit.Duplicates
+                };
+                saveData.playerUnits.Add(data);
+            }
+        }
+
+        *//*string json = JsonUtility.ToJson(saveData, true);
+        File.WriteAllText(saveFilePath, json);*//*
+        Save(saveData);
+        Debug.Log($"New unit data saved to {saveFilePath}");
+    }*/
+
+    private void Save(SaveData data) {
+        string json = JsonUtility.ToJson(data, true);
+        File.WriteAllText(saveFilePath, json);
+    }
+
     public void LoadGameData() {
         if (File.Exists(saveFilePath)) {
             string json = File.ReadAllText(saveFilePath);
@@ -190,6 +308,34 @@ public class SaveManager : MonoBehaviour {
                 PlayerDetailsManager.Instance.SetCoins(saveData.currentCoins);
             } else {
                 Debug.LogWarning("PlayerDetailsManager instance is not available. Player details will not be loaded.");
+            }
+
+            // Load player's units
+            if (PlayerDetailsManager.Instance != null && PlayerDetailsManager.Instance.UnitDatabase != null) {
+                var loadedUnits = new List<Friendly>();
+                foreach (FriendlyUnitData unitData in saveData.playerUnits) {
+                    var prefab = PlayerDetailsManager.Instance.UnitDatabase.GetUnitPrefabByName(unitData.unitName);
+                    if (prefab == null) {
+                        Debug.LogWarning($"No prefab found for unit {unitData.unitName}");
+                        continue;
+                    }
+
+                    var unitObj = Instantiate(prefab);
+                    var friendly = unitObj.GetComponent<Friendly>();
+
+                    // Restore runtime stats using setters
+                    friendly.stats.SetActionPoints(unitData.actionPoints);
+                    friendly.stats.AddActionPointRecovery(unitData.actionPointRecovery - friendly.stats.ActionPointRecovery);
+                    friendly.stats.AddUltimatePoints(unitData.maxUltimatePoints - friendly.stats.MaxUltimatePoints);
+                    friendly.stats.SetMaxMoveDistance(unitData.maxMoveDistance);
+                    friendly.stats.SetDefence(unitData.defence);
+                    // If you have a health component, set current health here
+                    friendly.stats.SetMaxHealth(unitData.maxHealth);
+                    friendly.stats.SetDuplicates(unitData.duplicates);
+
+                    loadedUnits.Add(friendly);
+                }
+                PlayerDetailsManager.Instance.LoadUnits(loadedUnits);
             }
 
             Debug.Log("Game data loaded successfully.");

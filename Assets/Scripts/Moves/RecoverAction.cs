@@ -4,7 +4,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-[CreateAssetMenu(fileName = "RecoverAction", menuName = "Actions/Recover Action")]
+[CreateAssetMenu(fileName = "RecoverAction", menuName = "Actions/General/Recover Action")]
 public class RecoverAction : ActionBase {
     // This action will recover the player's Action Points by a set amount next turn
     // Can only be used if player has not made a move, they can reposition a short distance though.

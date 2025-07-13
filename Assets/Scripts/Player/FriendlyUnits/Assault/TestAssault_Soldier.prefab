@@ -130,7 +130,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 100060, guid: 0ace44732904e1647886688a7e55d759, type: 3}
       propertyPath: m_Name
-      value: Assault_Soldier
+      value: TestAssault_Soldier
       objectReference: {fileID: 0}
     - target: {fileID: 100060, guid: 0ace44732904e1647886688a7e55d759, type: 3}
       propertyPath: m_Layer
@@ -241,8 +241,10 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}
   statusEffects: []
   health: {fileID: 0}
+  unitType: 0
   friendlyUnitID: 1
   unitStats: {fileID: 11400000, guid: ce042649277693c48af06ae7178d258f, type: 2}
+  movesDatabase: {fileID: 0}
   staminaStimAction: {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}
 --- !u!108 &4010014526480094603
 Light:

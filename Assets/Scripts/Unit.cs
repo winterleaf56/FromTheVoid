@@ -11,6 +11,7 @@ public class Unit : ScriptableObject {
     [SerializeField] private float maxHealth;
     [SerializeField] private float maxMoveDistance;
     [SerializeField] private float defence;
+    [SerializeField] private int duplicates;
 
     public string UnitName => unitName;
     public int ActionPoints => actionPoints;
@@ -20,6 +21,7 @@ public class Unit : ScriptableObject {
     public float MaxHealth => maxHealth;
     public float MaxMoveDistance => maxMoveDistance;
     public float Defence => defence;
+    public int Duplicates => duplicates;
 
 
     private void Start() {

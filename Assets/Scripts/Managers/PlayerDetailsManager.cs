@@ -1,7 +1,11 @@
+using NUnit.Framework;
+using System.Collections.Generic;
 using UnityEngine;
 using static BattleManager;
 
 public class PlayerDetailsManager : MonoBehaviour {
+
+    [SerializeField] private List<Friendly> defaultUnits = new List<Friendly>();
 
     [SerializeField] private string playerName;
     [SerializeField] private int playerId; // Will be assigned by the server in ascending order.
@@ -9,10 +13,15 @@ public class PlayerDetailsManager : MonoBehaviour {
     [SerializeField] private int currentVoidShards;
     [SerializeField] private int currentCoins;
 
+    [SerializeField] private UnitDatabase unitDatabase;
+
+    public UnitDatabase UnitDatabase => unitDatabase;
     public string PlayerName => playerName;
     public int PlayerId => playerId;
     public int PlayerRank => playerRank;
     //public int CurrentVoidShards => currentVoidShards;
+
+    public List<Friendly> playerUnits { get; private set; } = new List<Friendly>();
 
     private int CurrentVoidShards {
         get => currentVoidShards;
@@ -103,5 +112,29 @@ public class PlayerDetailsManager : MonoBehaviour {
 
         Debug.LogAssertion($"Player name set to: {playerName}. Saving...");
         SaveManager.Instance.SaveGame?.Invoke();
+    }
+
+    public void LoadUnits(List<Friendly> units) {
+        if (units != null && units.Count != 0) {
+            playerUnits = units;
+        } else {
+            Debug.LogWarning("No units found to load. Adding basic units.");
+            foreach (Friendly unit in defaultUnits) {
+                AddUnit(unit);
+            }
+        }
+    }
+
+    public void AddUnit(Friendly unit) {
+        if (!HasUnit(unit)) {
+            playerUnits.Add(unit);
+            SaveManager.Instance.saveNewUnit?.Invoke();
+        } else {
+            Debug.LogWarning($"Unit {unit.UnitStats.UnitName} with ID {unit.FriendlyUnitID} already exists in player units.");
+        }
+    }
+
+    private bool HasUnit(Friendly unit) {
+        return playerUnits.Exists(u => u != null && u.FriendlyUnitID == unit.FriendlyUnitID);
     }
 }

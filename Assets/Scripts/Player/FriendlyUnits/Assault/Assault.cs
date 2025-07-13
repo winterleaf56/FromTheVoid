@@ -5,7 +5,7 @@ public class Assault : Friendly {
     [Header("Actions")]
     [SerializeField] protected StaminaStimAction staminaStimAction;
 
-    protected override void SetMoves() {
+    /*protected override void SetMoves() {
         //base.SetMoves();
 
         // Currently overrideing because there is only 1 move for Assault
@@ -14,7 +14,11 @@ public class Assault : Friendly {
         recoverAction = actions[0] as RecoverAction;
         repositionAction = actions[1] as RepositionAction;
         //staminaStimAction = actions[1] as StaminaStimAction;
-    }
+    }*/
+
+    /*protected override void SetMoves() {
+        basicMove = movesDatabase.UnitGroups.Find
+    }*/
 
     /*public override IEnumerator PerformActionType(string actionType, Lifeforms target) {
         base.PerformActionType(actionType, target);

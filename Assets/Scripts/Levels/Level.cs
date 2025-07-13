@@ -7,12 +7,15 @@ using UnityEngine;
 
 [CreateAssetMenu(fileName = "Level", menuName = "New Level")]
 public class Level : ScriptableObject {
+    // Should reorganize all these variables so the fields are grouped and the varaibles are grouped
+    
     [SerializeField] private string levelName;
 
     [SerializeField] private GameObject environmentPrefab;
     public GameObject EnvironmentPrefab => environmentPrefab;
 
-    [SerializeField] private List<GameObject> playerUnits;
+    //[SerializeField] private List<GameObject> playerUnits;
+    [SerializeField] private List<Friendly> playerUnits;
 
     [SerializeField] private List<StoryStep> storySteps;
     public List<StoryStep> StorySteps => storySteps;
@@ -34,7 +37,9 @@ public class Level : ScriptableObject {
     public string LevelName => levelName;
     public bool LevelCompleted => levelCompleted;
 
-    public List<GameObject> PlayerUnits => playerUnits;
+    //public List<GameObject> PlayerUnits => playerUnits;
+    public List<Friendly> PlayerUnits => playerUnits;
+
 
     public Action completedLevel;
 
@@ -50,7 +55,7 @@ public class Level : ScriptableObject {
         completedLevel -= CompleteLevel;
     }
 
-    public void AddPlayerUnit(GameObject unit) {
+    /*public void AddPlayerUnit(GameObject unit) {
         playerUnits.Add(unit);
         Debug.Log($"Added {unit.name}");
     }
@@ -58,18 +63,33 @@ public class Level : ScriptableObject {
     public void RemovePlayerUnit(GameObject unit) {
         playerUnits.Remove(unit);
         Debug.Log($"Removed {unit.name}");
+    }*/
+
+    // Receive Friendly unit from UnitButton, Adds it to the playerUnits list which are taken into the selected level
+    public void AddPlayerUnit(Friendly unit) {
+        playerUnits.Add(unit);
+        Debug.Log($"Added {unit.UnitStats.UnitName}");
     }
 
+    // Receive Friendly unit from UnitButton, Removes it from the playerUnits list which are taken into the selected level
+    public void RemovePlayerUnit(Friendly unit) {
+        playerUnits.Remove(unit);
+        Debug.Log($"Removed {unit.UnitStats.UnitName}");
+    }
+
+    // Clears the units selected for the level
     public void ClearUnits() {
         playerUnits.Clear();
     }
 
-    public void PrintUnitsSelected() {
+    // Not used
+    /*public void PrintUnitsSelected() {
         foreach (GameObject unit in playerUnits) {
             Debug.Log(unit.name);
         }
-    }
+    }*/
 
+    // When the level is completed, the CompleteLevel action is invoked and this method is called
     private void CompleteLevel() {
         levelCompleted = true;
 
@@ -81,6 +101,8 @@ public class Level : ScriptableObject {
         //SaveLevelCompleted();
     }
 
+    // Handles distributing reward when the level is completed.
+    // For now this only gives the reward once per level completion.
     private void RewardPlayer() {
         if (firstCompleted == false) {
             rewards.DistributeRewards();

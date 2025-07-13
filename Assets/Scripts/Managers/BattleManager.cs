@@ -53,8 +53,10 @@ public class BattleManager : MonoBehaviour {
     public static Level SelectedLevel { get; set; }
 
     //public GameObject[] playerUnits;
-    public List<GameObject> playerUnits;
-    public List<GameObject> enemyUnits;
+    /*public List<GameObject> playerUnits;
+    public List<GameObject> enemyUnits;*/
+    public List<Friendly> playerUnits = new List<Friendly>();
+    public List<GameObject> enemyUnits = new List<GameObject>();
 
     public int turnNumber { get; private set; }
     public int waveNumber { get; private set; } // Waves not implemented, add at later time
@@ -65,8 +67,9 @@ public class BattleManager : MonoBehaviour {
     public static Action onPlayerTurnStart;
     public static Action<BattleState> changeBattleState;
     public static Action onMoveFinished;
-    public static Action<List<Enemy>> manageLights;
-    
+    public static Action<List<Enemy>> manageEnemyLights;
+    public static Action<List<Friendly>> manageFriendlyLights;
+
     public static Action<bool> onGamePaused;
 
     public static Action<Lifeforms> unitDied;
@@ -91,6 +94,7 @@ public class BattleManager : MonoBehaviour {
         PlayerDefend,
         PlayerItem,
         PlayerAction,
+        PlayerFriendlyAction,
         PlayerMoving
     }
 
@@ -142,7 +146,8 @@ public class BattleManager : MonoBehaviour {
 
         changeBattleState += ChangeBattleState;
         onMoveFinished += OnMoveFinshed;
-        manageLights += ManageLights;
+        manageEnemyLights += ManageEnemyLights;
+        manageFriendlyLights += ManageFriendlyLights;
         unitDied += UnitDied;
 
         audioClip += (clip, position) => {
@@ -167,7 +172,8 @@ public class BattleManager : MonoBehaviour {
     private void OnDestroy() {
         changeBattleState -= ChangeBattleState;
         onMoveFinished -= OnMoveFinshed;
-        manageLights -= ManageLights;
+        manageEnemyLights -= ManageEnemyLights;
+        manageFriendlyLights -= ManageFriendlyLights;
         Debug.Log("Battle Manager destroyed");
     }
 
@@ -185,7 +191,7 @@ public class BattleManager : MonoBehaviour {
     void Start() {
 
         for (int i = 0; i < SelectedLevel.PlayerUnits.Count; i++) {
-            GameObject unit = Instantiate(SelectedLevel.PlayerUnits[i], friendlySpawns[i].transform.position, Quaternion.Euler(0, -90, 0));
+            Friendly unit = Instantiate(SelectedLevel.PlayerUnits[i], friendlySpawns[i].transform.position, Quaternion.Euler(0, -90, 0));
             playerUnits.Add(unit);
         }
 
@@ -211,11 +217,11 @@ public class BattleManager : MonoBehaviour {
             // Check objectives before player turn starts
             CheckObjectives();
 
-            foreach (GameObject unit in playerUnits) {
+            foreach (Friendly unit in playerUnits) {
                 if (unit != null) {
                     Debug.Log($"GETTING UNIT: {unit} IN PLAYERUNITS");
-                    Lifeforms friendlyUnit = unit.GetComponent<Friendly>();
-                    friendlyUnit.StartRound();
+                    //Lifeforms friendlyUnit = unit.GetComponent<Friendly>();
+                    unit.StartRound();
                 }
             }
 
@@ -409,7 +415,7 @@ public class BattleManager : MonoBehaviour {
         Debug.Log($"Changing state to: {currentBattleState}");
     }
 
-    public void ManageLights(List<Enemy> enemyList) {
+    public void ManageEnemyLights(List<Enemy> enemyList) {
         foreach (Enemy enemy in enemyList) {
             Light displayLight = enemy.GetComponent<Light>();
             displayLight.color = Color.green;
@@ -417,16 +423,17 @@ public class BattleManager : MonoBehaviour {
         }
     }
 
+    public void ManageFriendlyLights(List<Friendly> friendlyList) {
+        foreach (Friendly friendly in friendlyList) {
+            if (friendly != null) {
+                Light displayLight = friendly.GetComponent<Light>();
+                displayLight.color = Color.green;
+                displayLight.enabled = !displayLight.enabled;
+            }
+        }
+    }
 
     private void ToggleWorldLight(bool value) {
-        /*selectingEnemyLight.SetActive(!worldLight.activeSelf);
-        worldLight.SetActive(!worldLight.activeSelf);*/
-
-        /*selectingEnemyLight.SetActive(!value);
-        worldLight.SetActive(value);*/
-
-        Debug.Log($"WORLD LIGHT TOGGLE VALUE: {value}");
-
         if (value) {
             selectingEnemyLight.SetActive(false);
             worldLight.SetActive(true);
@@ -445,7 +452,7 @@ public class BattleManager : MonoBehaviour {
 
         UIManager.Instance.ToggleStats(false);
 
-        foreach (GameObject unit in playerUnits) {
+        foreach (Friendly unit in playerUnits) {
             if (unit != null) {
                 unit.GetComponent<Light>().enabled = false;
             }
@@ -455,7 +462,7 @@ public class BattleManager : MonoBehaviour {
 
     public void ClearPlayerTurn() {
         // Disable the lights on every player unit
-        foreach (GameObject playerUnit in playerUnits) {
+        foreach (Friendly playerUnit in playerUnits) {
             if (playerUnit != null) {
                 playerUnit.GetComponent<Light>().enabled = false;
             }
@@ -469,6 +476,8 @@ public class BattleManager : MonoBehaviour {
         }
 
     }
+
+    // Can probably delete methods below
 
     public void BackToMenu() {
         SceneManager.LoadScene("MainMenu");

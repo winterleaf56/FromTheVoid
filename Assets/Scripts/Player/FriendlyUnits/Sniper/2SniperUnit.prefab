@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: -2001479216266078931}
   - component: {fileID: 5251326357955696719}
   m_Layer: 0
-  m_Name: SniperUnit
+  m_Name: 2SniperUnit
   m_TagString: Friendly
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -215,7 +215,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3c31ee645a79904391cf33a1a4b29a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  unitName: Sniper
+  unitName: Sniper 2
   actionPoints: 100
   actionPointRecovery: 50
   ultimatePoints: 0
@@ -232,7 +232,7 @@ MonoBehaviour:
   statusEffects: []
   health: {fileID: 0}
   unitType: 1
-  friendlyUnitID: 3
+  friendlyUnitID: 4
   unitStats: {fileID: 11400000, guid: ef6950ebb7414e44b88a5ef5825d3b6c, type: 2}
   movesDatabase: {fileID: 11400000, guid: 34dde071f9d12a44d921d220b4d2e110, type: 2}
 --- !u!114 &-2001479216266078931

@@ -23,6 +23,7 @@ public class ClickManager : MonoBehaviour {
     private GameObject lastFriendlyClicked = null;
 
     private Lifeforms selectedFriendlyUnit;
+    private Lifeforms targetedFriendlyUnit;
 
     public bool allowClicks = true;
 
@@ -60,6 +61,8 @@ public class ClickManager : MonoBehaviour {
 
     // Add a way to turn off the unit lights by clicking anywhere other than another unit
 
+    // Try to work in line of sight. If line of sight is blocked, dont turn on the enemy lights.
+
     // Click on a unit to select it
     // Currently configured to work exclusively with PlayerTurn
     // Can add a bool parameter doubleClicked with if statements in each block so the other method is not needed.
@@ -90,6 +93,15 @@ public class ClickManager : MonoBehaviour {
                     unitToSend = clickedObject;
                     return unitToSend;
                 } else if (clickedObject.CompareTag("Friendly")) {
+                    // New in 0.1.4.1
+                    // This is for getting the friendly unit you will apply a buff on
+                    if (BattleManager.Instance.currentBattleState.Equals(BattleManager.BattleState.PlayerFriendlyAction)) {
+                        Debug.Log("Friendly Unit clicked during Friendly Action");
+                        unitToSend = clickedObject;
+                        BattleManager.Instance.UnitClicked(true);
+                        return unitToSend;
+                    }
+                
                     Debug.Log("Friendly Unit clicked");
                     unitToSend = clickedObject;
 
@@ -139,6 +151,7 @@ public class ClickManager : MonoBehaviour {
             return;
         }
 
+        // Should change this to only be the else statement, remove the if statement
         Ray ray;
         if (selectedFriendlyUnit != null) {
             ray = new Ray(selectedFriendlyUnit.transform.position, selectedFriendlyUnit.transform.forward);

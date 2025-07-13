@@ -3,7 +3,8 @@ using UnityEngine.UI;
 
 public class UnitButton : MonoBehaviour
 {
-    [SerializeField] private GameObject unit;
+    //[SerializeField] private GameObject unit;
+    [SerializeField] private Friendly unit;
 
     private bool clicked = false;
 
@@ -25,7 +26,11 @@ public class UnitButton : MonoBehaviour
         
     }
 
-    public void SetUnit(GameObject unit) {
+    /*public void SetUnit(GameObject unit) {
+        this.unit = unit;
+    }*/
+
+    public void SetUnit(Friendly unit) {
         this.unit = unit;
     }
 
@@ -43,6 +48,5 @@ public class UnitButton : MonoBehaviour
             GameManager.unitSelected(-1);
             clicked = false;
         }
-        
     }
 }

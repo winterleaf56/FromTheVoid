@@ -313,16 +313,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   unitName: Medic
   actionPoints: 150
-  actionPointRecovery: 0
+  actionPointRecovery: 50
   ultimatePoints: 0
   maxUltimatePoints: 0
-  maxHealth: 0
+  maxHealth: 75
   maxMoveDistance: 0
   defence: 0
   moves:
   - {fileID: 11400000, guid: 326dccf338d4a114aae8cb59c8890e46, type: 2}
-  actions: []
+  actions:
+  - {fileID: 11400000, guid: 7d404139d8541a346984395470abed43, type: 2}
   statusEffects: []
   health: {fileID: 0}
-  friendlyUnitID: 3
+  unitType: 2
+  friendlyUnitID: 5
   unitStats: {fileID: 11400000, guid: ef6950ebb7414e44b88a5ef5825d3b6c, type: 2}
+  movesDatabase: {fileID: 11400000, guid: 34dde071f9d12a44d921d220b4d2e110, type: 2}

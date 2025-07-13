@@ -91,7 +91,7 @@ public class LevelManager : MonoBehaviour {
 
         missionBtn.onClick.AddListener(() => {
             GameManager.Instance.SetSelectedLevel(level);
-            GameManager.Instance.LoadUnitButtons();
+            MenuUIManager.Instance.LoadUnitButtons();
             unitSelectPanel.SetActive(true);
             level.ClearUnits();
 

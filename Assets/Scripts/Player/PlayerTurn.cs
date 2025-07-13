@@ -23,9 +23,11 @@ public class PlayerTurn : MonoBehaviour {
     public Action playerTurnEnded;
 
     public List<Enemy> AttackableEnemies { get; private set; }
+    public List<Friendly> TargetableFriendlies { get; private set; }
 
     private Lifeforms selectedEnemy;
     public Lifeforms selectedFriendly { get; private set; }
+    public Lifeforms targetedFriendly { get; private set; }
     private Lifeforms lastSelectedEnemy;
     private Lifeforms lastSelectedFriendly;
 
@@ -161,6 +163,10 @@ public class PlayerTurn : MonoBehaviour {
         AttackableEnemies = enemyList;
     }
 
+    public void SetTargetableFriendlies(List<Friendly> friendlyList) {
+        TargetableFriendlies = friendlyList;
+    }
+
 
     // If player has enough AP, button clickable, Not enough AP, unclickable, greyed out
 
@@ -191,12 +197,20 @@ public class PlayerTurn : MonoBehaviour {
         selectedFriendly.PerformReposition(reposition);
     }
 
+    // New addition in 0.1.4.1
+    // This method is used to start a directed action on a friendly unit (Healing, Buffing, etc.)
+    // Now realizing I need a second selectedFriendly variable for this to work properly
+    // Best coursse of action is to have click manager detect BattleState.PlayerFriendlyAction
+    public void StartDirectedFriendlyAction(ActionBase action) {
+        selectedFriendly.PerformFriendlyDirectedAction(action, selectedFriendly);
+    }
+
+    // Everything below this point can probably be removed as it is replaced by the above code
+
     public void BasicMove() {
         if (!CheckAP("Basic")) {
             Debug.Log("Not enough AP to perform basic move");
             return;
-        } else {
-            Debug.Log("TEST THJINGSAD");
         }
         Debug.Log("Executing basic move");
         //BattleManager.Instance.AttackingToggle();

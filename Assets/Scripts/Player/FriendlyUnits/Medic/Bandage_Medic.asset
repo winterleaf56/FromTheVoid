@@ -9,12 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2128c532f32f8fb43bfdc7c7c27f2b88, type: 3}
-  m_Name: Basic_Medic
+  m_Script: {fileID: 11500000, guid: 149a4e8845c5aa247b9fd43a5c06e0b2, type: 3}
+  m_Name: Bandage_Medic
   m_EditorClassIdentifier: 
-  moveName: Fire SMG
-  actionPointCost: 75
-  range: 20
+  moveName: Bandage
+  actionPointCost: 50
+  range: 10
   value: 25
   attackButton: {fileID: 0}
   actionButton: {fileID: 0}
@@ -22,4 +22,4 @@ MonoBehaviour:
   obstacleLayer:
     serializedVersion: 2
     m_Bits: 256
-  buttonPrefab: {fileID: 5276875881035326380, guid: 4001925ea516e794386800f793cb0693, type: 3}
+  buttonPrefab: {fileID: 3947152011441101157, guid: 79148d939daecdf46a8079cf1d9ce4a9, type: 3}

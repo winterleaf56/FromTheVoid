@@ -17,6 +17,11 @@ public class MenuUIManager : MonoBehaviour {
     [SerializeField] private Button deleteDataBtn;
     [SerializeField] private GameObject mainMenuPanel;
 
+    [Header("Unit Select Panel")]
+    [SerializeField] private GameObject unitBtnPrefab;
+    [SerializeField] private Transform unitBtnContainer;
+
+    [Header("Username Panel")]
     [SerializeField] private GameObject usernamePanel;
     [SerializeField] private TMP_InputField usernameInput;
     [SerializeField] private Button submitUsernameBtn;
@@ -74,6 +79,19 @@ public class MenuUIManager : MonoBehaviour {
                 missionText.SetActive(false);
                 missionPanel.SetActive(false);
             });
+        }
+    }
+
+    public void LoadUnitButtons() {
+        foreach (Transform child in unitBtnContainer.transform) {
+            Destroy(child.gameObject);
+        }
+
+        foreach (Friendly unit in PlayerDetailsManager.Instance.playerUnits) {
+            GameObject button = Instantiate(unitBtnPrefab, unitBtnContainer.transform);
+            button.GetComponentInChildren<TMP_Text>().SetText(unit.UnitStats.UnitName);
+
+            button.GetComponent<UnitButton>().SetUnit(unit);
         }
     }
 }

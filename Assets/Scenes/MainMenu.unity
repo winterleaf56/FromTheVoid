@@ -9054,11 +9054,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b28f50377c5adcd4982c57bac3446d21, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  defaultUnits:
+  - {fileID: -2812296884578319538, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
+  - {fileID: -2812296884578319538, guid: 9d665922d793a6b4eb9a9a2cb2d4cdaf, type: 3}
+  - {fileID: 77085128579891223, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
+  - {fileID: 77085128579891223, guid: 1e0e1ec3ea741dc48b65bedf5a7ece8d, type: 3}
   playerName: 
   playerId: 0
   playerRank: 0
   currentVoidShards: 0
   currentCoins: 0
+  unitDatabase: {fileID: 11400000, guid: bfa14ef3a8b4317409b88a35f84ab87e, type: 2}
 --- !u!4 &1055403582
 Transform:
   m_ObjectHideFlags: 0
@@ -9792,6 +9798,8 @@ MonoBehaviour:
   backBtn: {fileID: 1355355432}
   deleteDataBtn: {fileID: 324614376}
   mainMenuPanel: {fileID: 0}
+  unitBtnPrefab: {fileID: 8958874857644350604, guid: 09b7de5b01d0f014c8bece5c11813851, type: 3}
+  unitBtnContainer: {fileID: 582264955}
   usernamePanel: {fileID: 580298715}
   usernameInput: {fileID: 1104800706}
   submitUsernameBtn: {fileID: 450464704}
@@ -10993,11 +11001,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f4fe753fb145ed468eb584c098de866, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerUnits:
-  - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
-  - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
-  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
-  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
+  playerUnits: []
   buttonPrefab: {fileID: 8958874857644350604, guid: 09b7de5b01d0f014c8bece5c11813851, type: 3}
   unitButtonContainer: {fileID: 582264952}
   selectedLevel: {fileID: 0}

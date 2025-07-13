@@ -72,9 +72,9 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     protected void FirstStart() {
         Debug.Log("Loading for the first time");
-        stats.InitializeStats(unitName, actionPoints, actionPointRecovery, ultimatePoints, maxUltimatePoints, maxHealth, maxMoveDistance, defence);
+        stats.InitializeEnemyStats(unitName, actionPoints, actionPointRecovery, ultimatePoints, maxUltimatePoints, maxHealth, maxMoveDistance, defence);
         Debug.Log($"Unit Name: {stats.UnitName}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
-        if (GetComponent<Friendly>()) SetMoves();
+        //if (GetComponent<Friendly>()) SetMoves();
 
         health = gameObject.AddComponent<Health>();
         health.InitializeHealth(stats.MaxHealth, stats.MaxHealth);
@@ -116,6 +116,10 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     }
 
     public void PerformDirectAttack(ActionBase move, Lifeforms target) {
+        StartCoroutine(move.Execute(this, target));
+    }
+
+    public void PerformFriendlyDirectedAction(ActionBase move, Lifeforms target) {
         StartCoroutine(move.Execute(this, target));
     }
 
@@ -251,8 +255,22 @@ public class Stats {
     public float DamageOverTime { get; private set; }
     public float MaxMoveDistance { get; private set; }
     public float Defence { get; private set; }
+    public int Duplicates { get; private set; }
 
-    public void InitializeStats(string unitName, int actionPoints, int actionPointRecovery, int ultimatePoints, int maxUltimatePoints, float maxHealth, float maxMoveDistance, float defence) {
+    public void InitializeStats(string unitName, int actionPoints, int actionPointRecovery, int ultimatePoints, int maxUltimatePoints, float maxHealth, float maxMoveDistance, float defence, int duplicates) {
+        UnitName = unitName;
+        ActionPoints = actionPoints;
+        MaxActionPoints = actionPoints;
+        ActionPointRecovery = actionPointRecovery;
+        UltimatePoints = ultimatePoints;
+        MaxUltimatePoints = maxUltimatePoints;
+        MaxHealth = maxHealth;
+        MaxMoveDistance = maxMoveDistance;
+        Defence = defence;
+        Duplicates = duplicates;
+    }
+
+    public void InitializeEnemyStats(string unitName, int actionPoints, int actionPointRecovery, int ultimatePoints, int maxUltimatePoints, float maxHealth, float maxMoveDistance, float defence) {
         UnitName = unitName;
         ActionPoints = actionPoints;
         MaxActionPoints = actionPoints;
@@ -337,6 +355,10 @@ public class Stats {
         ActionPoints -= value;
     }
 
+    public void SetMaxHealth(float value) {
+        MaxHealth = value;
+    }
+
     public void SetMaxMoveDistance(float value) {
         MaxMoveDistance = value;
     }
@@ -355,6 +377,14 @@ public class Stats {
 
     public void SetDamageOverTime(float value) {
         DamageOverTime = value;
+    }
+
+    public void SetDuplicates(int value) {
+        Duplicates = value;
+    }
+
+    public void ObtainedDuplicate() {
+        Duplicates++;
     }
 
 }

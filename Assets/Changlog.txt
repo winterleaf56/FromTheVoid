@@ -1,5 +1,13 @@
 Changelog
 
+Still need to save the units and load them so they will load the unit buttons
+Probably need to combine moves and prefabs databases
+
+28/06/2025 V0.1.4.1-DEV
+- Changed Action and Method ManageLights to ManageEnemyLights
+- Added Action and Method ManageFriendlyLights
+- Reworked how units are held so that they can be saved and loaded for progression
+
 20/06/2025 V0.1.4 (Release of Level 1)
 - Added PlayerDetailsUI to display Username, Rank, Settings, etc
 - CustomReward and CustomRewardEditor provide an easy way to give rewards to the player

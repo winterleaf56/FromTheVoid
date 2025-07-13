@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 21485909dcd0c9e40864572b4dc869e9, type: 3}
+  m_Name: UnitMovesActionsDatabase
+  m_EditorClassIdentifier: 
+  unitGroups:
+  - unitName: Assault
+    moves:
+    - moveType: 0
+      move: {fileID: 11400000, guid: 5ee47552f6859ca45a764647e039f4b9, type: 2}
+    - moveType: 1
+      move: {fileID: 11400000, guid: af92dec0700f7464a820ef1f2b5d32f0, type: 2}
+    actions:
+    - {fileID: 11400000, guid: dd240c48d55231b43946bc165b2bf269, type: 2}
+    - {fileID: 11400000, guid: f7fbd7faf6418d040a4c39e76996b6e3, type: 2}
+  - unitName: Sniper
+    moves:
+    - moveType: 0
+      move: {fileID: 11400000, guid: 40464e0edf2e5e64eaf3bb27eefbf8fd, type: 2}
+    - moveType: 1
+      move: {fileID: 11400000, guid: 5cb5e8fc9bf7b3847a6d6d36a01e5310, type: 2}
+    actions:
+    - {fileID: 11400000, guid: 9108616438fb73b4abd15521a6df821c, type: 2}
+    - {fileID: 11400000, guid: 56882e8c0e77d734881b474163b1afbe, type: 2}
+  - unitName: Medic
+    moves:
+    - moveType: 0
+      move: {fileID: 11400000, guid: 326dccf338d4a114aae8cb59c8890e46, type: 2}
+    actions: []

@@ -33,7 +33,7 @@ public class BasicMove : ActionBase {
             List<Enemy> enemyList = GetEnemiesInRange(unit);
             confirmPage.gameObject.SetActive(true);
             PlayerTurn.Instance.SetAttackableEnemies(enemyList);
-            BattleManager.manageLights?.Invoke(enemyList);
+            BattleManager.manageEnemyLights?.Invoke(enemyList);
 
             rangeRing.SetActive(true);
             rangeRing.transform.localScale = new Vector3(range * 2, 0.1f, range * 2);
@@ -57,7 +57,7 @@ public class BasicMove : ActionBase {
         cancelBtn.onClick.RemoveAllListeners();
         cancelBtn.onClick.AddListener(() => {
             //BattleManager.Instance.AttackingToggle();
-            BattleManager.manageLights?.Invoke(GetEnemiesInRange(unit));
+            BattleManager.manageEnemyLights?.Invoke(GetEnemiesInRange(unit));
             BattleManager.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
             //PlayerTurn.Instance.StartDirectAttack(this);
             PlayerTurn.Instance.CancelMove();
@@ -109,7 +109,7 @@ public class BasicMove : ActionBase {
 
         BattleManager.onMoveFinished?.Invoke();
         //BattleManager.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
-        BattleManager.manageLights?.Invoke(GetEnemiesInRange(unit));
+        BattleManager.manageEnemyLights?.Invoke(GetEnemiesInRange(unit));
     }
 
     /*private IEnumerator ExecuteMoveCoroutine(Lifeforms unit) {

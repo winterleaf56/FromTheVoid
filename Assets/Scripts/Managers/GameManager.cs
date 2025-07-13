@@ -90,13 +90,6 @@ public class GameManager : MonoBehaviour
     private void SelectedUnit(int value) {
         selectedUnits += value;
 
-        // Message here as well. Change this so instead of 4 units, it is the number of units required for the level
-        /*if (selectedUnits == 4) {
-            startButton.GetComponent<Button>().interactable = true;
-        } else {
-            startButton.GetComponent<Button>().interactable = false;
-        }*/
-
         if (selectedUnits == selectedLevel.RequiredNumberOfUnits) {
             startButton.GetComponent<Button>().interactable = true;
         } else {
@@ -108,11 +101,9 @@ public class GameManager : MonoBehaviour
         selectedLevel = level;
     }
 
-    public int RandomNumber() {
-        return 25;
-    }
 
-    public void LoadUnitButtons() {
+    // This should be in MenuUIManager
+    /*public void LoadUnitButtons() {
         foreach (Transform child in unitButtonContainer.transform) {
             Destroy(child.gameObject);
         }
@@ -123,7 +114,7 @@ public class GameManager : MonoBehaviour
 
             button.GetComponent<UnitButton>().SetUnit(unit);
         }
-    }
+    }*/
 
     // Add Start Mission which adds the units the player selects to the array in BattleManager
 }

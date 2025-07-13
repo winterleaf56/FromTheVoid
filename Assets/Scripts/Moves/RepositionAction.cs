@@ -5,7 +5,7 @@ using UnityEngine.AI;
 using UnityEngine.Timeline;
 using UnityEngine.UI;
 
-[CreateAssetMenu(fileName = "RepositionAction", menuName = "Actions/Reposition Action")]
+[CreateAssetMenu(fileName = "RepositionAction", menuName = "Actions/General/Reposition Action")]
 public class RepositionAction : ActionBase {
     private Vector3 positionToMoveTo;
 
