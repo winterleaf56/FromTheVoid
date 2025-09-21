@@ -16,15 +16,22 @@ public class CustomRewardEditor : Editor {
                 var element = rewardsProperty.GetArrayElementAtIndex(index);
                 rect.height = EditorGUIUtility.singleLineHeight;
 
-                // RewardType dropdown
-                var rewardTypeRect = new Rect(rect.x, rect.y, rect.width * 0.4f, rect.height);
+                // RewardType dropdown (fixed width)
+                float typeWidth = 100f;
+                var rewardTypeRect = new Rect(rect.x, rect.y, typeWidth, rect.height);
                 EditorGUI.PropertyField(rewardTypeRect, element.FindPropertyRelative("rewardType"), GUIContent.none);
 
-                // The rest of the row for fields
-                var fieldRect = new Rect(rect.x + rewardTypeRect.width + 10, rect.y, rect.width * 0.5f, rect.height);
+                // Space between fields
+                float spacing = 10f;
+
+                // Field for amount/itemReference (use remaining width minus some padding)
+                float fieldWidth = rect.width - typeWidth - spacing;
+                var fieldRect = new Rect(rect.x + typeWidth + spacing, rect.y, fieldWidth, rect.height);
+
                 var rewardType = (RewardType)element.FindPropertyRelative("rewardType").enumValueIndex;
 
-                switch (rewardType) {
+                switch (rewardType)
+                {
                     case RewardType.VoidShards:
                     case RewardType.Coins:
                         EditorGUI.PropertyField(fieldRect, element.FindPropertyRelative("amount"), new GUIContent("Amount"));

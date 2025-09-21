@@ -5,8 +5,7 @@ using UnityEngine.Events;
 using System;
 using UnityEngine.SceneManagement;
 
-public class GameManager : MonoBehaviour
-{
+public class GameManager : MonoBehaviour {
     [SerializeField] private GameObject[] playerUnits;
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private GameObject unitButtonContainer;
@@ -85,6 +84,11 @@ public class GameManager : MonoBehaviour
         BattleManager.SelectedLevel = selectedLevel;
         SceneManager.LoadScene("Tutorial");
         //SceneManager.LoadScene(selectedLevel.name);
+    }
+
+    public void StartTestingLevel() {
+        BattleManager.SelectedLevel = selectedLevel;
+        SceneManager.LoadScene("GameplayTestingScene");
     }
 
     private void SelectedUnit(int value) {

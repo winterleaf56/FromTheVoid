@@ -9755,6 +9755,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1277216395}
   - component: {fileID: 1277216396}
+  - component: {fileID: 1277216397}
   m_Layer: 0
   m_Name: MenuUIManager
   m_TagString: Untagged
@@ -9807,6 +9808,24 @@ MonoBehaviour:
   userRankDisplayTxt: {fileID: 1658007004}
   userVoidShardDisplayTxt: {fileID: 485268368}
   userCoinDisplayTxt: {fileID: 325984267}
+--- !u!114 &1277216397
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1277216394}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fec1b4869fb475d418f8ad024007b475, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  unitsToTest:
+  - {fileID: -2812296884578319538, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
+  - {fileID: -2812296884578319538, guid: 9d665922d793a6b4eb9a9a2cb2d4cdaf, type: 3}
+  - {fileID: 8361265227224619770, guid: e2997b8a09d2be24f986b2ebe973e439, type: 3}
+  - {fileID: 77085128579891223, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
+  testingLevel: {fileID: 11400000, guid: d3b2c3c6a32c34a47b327c172502ce77, type: 2}
 --- !u!1 &1293661499
 GameObject:
   m_ObjectHideFlags: 0

@@ -41,8 +41,7 @@ public class CustomReward : ScriptableObject {
 }
 
 [System.Serializable]
-public class RewardData
-{
+public class RewardData {
     public RewardType rewardType;
     public int amount;                // Used if rewardType is VoidShards or Coins
     public GameObject itemReference;  // Used if rewardType is Item

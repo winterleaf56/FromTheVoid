@@ -1,0 +1,31 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2de6afd6f39e0a442a7151e29ec798a1, type: 3}
+  m_Name: GameplayTesting
+  m_EditorClassIdentifier: 
+  levelName: Testing
+  environmentPrefab: {fileID: 6941774664282879087, guid: 13475e3b34c8ec14b9df968b623c0254, type: 3}
+  playerUnits: []
+  storySteps:
+  - {fileID: 11400000, guid: 7584c9ed3044cba48ae8a109cfd5aaf0, type: 2}
+  - {fileID: 11400000, guid: 182c77f6ff04a4744b1d29d5baa78adc, type: 2}
+  - {fileID: 11400000, guid: 424e82e03de3895479f25b37bb53ba55, type: 2}
+  - {fileID: 11400000, guid: ff5fa79b9df8e6449b9a986f4e2828fb, type: 2}
+  - {fileID: 11400000, guid: e1ce44b4bb6ec9e43b387086c56aad4a, type: 2}
+  - {fileID: 11400000, guid: 3d8610cdb86cccd4784291430fd4bd90, type: 2}
+  - {fileID: 11400000, guid: c328e5a1b00b69f4899fe0cb71b07bcb, type: 2}
+  objectives:
+  - {fileID: 11400000, guid: f5f0cb00a4d3dc0449a55949bc5f75f1, type: 2}
+  rewards: {fileID: 11400000, guid: c94ac8626457ec2418b9d50fd88cc3f1, type: 2}
+  requiredNumberOfUnits: 4
+  levelCompleted: 0
+  firstCompleted: 0
