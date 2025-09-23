@@ -22,6 +22,9 @@ MonoBehaviour:
     actions:
     - {fileID: 11400000, guid: dd240c48d55231b43946bc165b2bf269, type: 2}
     - {fileID: 11400000, guid: f7fbd7faf6418d040a4c39e76996b6e3, type: 2}
+    skills:
+    - skillType: 0
+      skill: {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}
   - unitName: Sniper
     moves:
     - moveType: 0
@@ -31,8 +34,14 @@ MonoBehaviour:
     actions:
     - {fileID: 11400000, guid: 9108616438fb73b4abd15521a6df821c, type: 2}
     - {fileID: 11400000, guid: 56882e8c0e77d734881b474163b1afbe, type: 2}
+    skills: []
   - unitName: Medic
     moves:
     - moveType: 0
       move: {fileID: 11400000, guid: 326dccf338d4a114aae8cb59c8890e46, type: 2}
-    actions: []
+    actions:
+    - {fileID: 11400000, guid: 565211f97765c2e4fb28f8cc2796849b, type: 2}
+    - {fileID: 11400000, guid: 7d404139d8541a346984395470abed43, type: 2}
+    skills:
+    - skillType: 0
+      skill: {fileID: 0}

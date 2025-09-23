@@ -42,7 +42,6 @@ public class Friendly : Lifeforms {
     }*/
 
     [SerializeField] private Unit unitStats;
-    [SerializeField] protected UnitMovesActionsDatabase movesDatabase;
 
     public Unit UnitStats => unitStats;
 
@@ -58,6 +57,10 @@ public class Friendly : Lifeforms {
         SetMoves();
     }
 
+    void Start() {
+        //SetMoves();
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -66,7 +69,51 @@ public class Friendly : Lifeforms {
 
     protected override void SetMoves() {
         if (movesDatabase == null || unitStats == null) {
-            Debug.LogError("Moves database or unit stats not set for Friendly unit.");
+            Debug.LogError($"Moves database or unit stats not set for Friendly unit {unitStats?.UnitName ?? "NULL"}.");
+            return;
+        }
+
+        Debug.Log($"Setting moves for unit: {unitStats.UnitName}");
+
+        var group = movesDatabase.UnitGroups.Find(g => g.unitName == unitStats.UnitName);
+
+        if (group == null) {
+            Debug.LogError($"No move group found for unit: {unitStats.UnitName}");
+            return;
+        }
+
+        // Assign moves
+        foreach (var moveEntry in group.moves) {
+            Debug.Log($"Found move: {moveEntry.move.moveName} of type {moveEntry.moveType}");
+            switch (moveEntry.moveType) {
+                case MoveType.Basic:
+                    basicMove = moveEntry.move as BasicMove;
+                    break;
+                case MoveType.Special:
+                    specialMove = moveEntry.move as SpecialMove;
+                    break;
+            }
+        }
+
+        // Assign actions
+        recoverAction = group.actions.Find(a => a is RecoverAction) as RecoverAction;
+        if (recoverAction == null)
+            Debug.LogError($"RecoverAction is NULL for unit: {unitStats.UnitName}");
+        else
+            Debug.Log($"RecoverAction assigned for unit: {unitStats.UnitName}");
+
+        repositionAction = group.actions.Find(a => a is RepositionAction) as RepositionAction;
+        if (repositionAction == null)
+            Debug.LogError($"RepositionAction is NULL for unit: {unitStats.UnitName}");
+        else
+            Debug.Log($"RepositionAction assigned for unit: {unitStats.UnitName}");
+
+        if (basicMove == null) {
+            Debug.LogError($"No BasicMove assigned for unit: {unitStats.UnitName}");
+        }
+
+        /*if (movesDatabase == null || unitStats == null) {
+            Debug.LogError($"Moves database or unit stats not set for Friendly unit {unitStats.UnitName}.");
             return;
         }
 
@@ -94,7 +141,7 @@ public class Friendly : Lifeforms {
 
         if (basicMove == null) {
             Debug.LogError($"No BasicMove assigned for unit: {unitStats.UnitName}");
-        }
+        }*/
     }
 
     /*public override void OnMouseDown() {

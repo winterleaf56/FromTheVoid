@@ -6,7 +6,7 @@ using System;
 using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
-    [SerializeField] private GameObject[] playerUnits;
+    //[SerializeField] private GameObject[] playerUnits;
     [SerializeField] private GameObject buttonPrefab;
     [SerializeField] private GameObject unitButtonContainer;
 
@@ -24,7 +24,7 @@ public class GameManager : MonoBehaviour {
     // Change this so that instead of 4 units, it is the number of units required for the level
     public static Action<int> unitSelected;
 
-    public GameObject[] PlayerUnits => playerUnits;
+    //public GameObject[] PlayerUnits => playerUnits;
 
     public Level SelectedLevel => selectedLevel;
 

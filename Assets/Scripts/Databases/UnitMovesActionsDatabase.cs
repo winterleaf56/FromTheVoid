@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -7,10 +8,22 @@ public enum MoveType {
     Ultimate
 }
 
+public enum SkillType {
+    Main,
+    Secondary,
+    Awakened
+}
+
 [System.Serializable]
 public class MoveEntry {
     public MoveType moveType;
     public ActionBase move;
+}
+
+[System.Serializable]
+public class SkillEntry {
+    public SkillType skillType;
+    public ActionBase skill;
 }
 
 [CreateAssetMenu(fileName = "UnitMovesActionsDatabase", menuName = "Database/Unit Moves + Actions")]
@@ -26,4 +39,5 @@ public class UnitMovesActionsGroup {
     public string unitName;
     public List<MoveEntry> moves = new();
     public List<ActionBase> actions = new();
+    public List<SkillEntry> skills = new();
 }

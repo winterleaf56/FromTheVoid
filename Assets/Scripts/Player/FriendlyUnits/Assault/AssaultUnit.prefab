@@ -223,17 +223,12 @@ MonoBehaviour:
   maxHealth: 150
   maxMoveDistance: 0
   defence: 0
-  moves: []
-  actions:
-  - {fileID: 11400000, guid: dd240c48d55231b43946bc165b2bf269, type: 2}
-  - {fileID: 11400000, guid: f7fbd7faf6418d040a4c39e76996b6e3, type: 2}
+  movesDatabase: {fileID: 11400000, guid: 34dde071f9d12a44d921d220b4d2e110, type: 2}
   statusEffects: []
   health: {fileID: 0}
   unitType: 0
   friendlyUnitID: 1
   unitStats: {fileID: 11400000, guid: ce042649277693c48af06ae7178d258f, type: 2}
-  movesDatabase: {fileID: 11400000, guid: 34dde071f9d12a44d921d220b4d2e110, type: 2}
-  staminaStimAction: {fileID: 11400000, guid: 4cc86ab9077e29a42a548475e94cb1ce, type: 2}
 --- !u!195 &-2368375347369097136
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -283,7 +278,7 @@ GameObject:
   - component: {fileID: 5737041410441061210}
   - component: {fileID: 7912492799108957448}
   - component: {fileID: 7862976725138905121}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: RangeRing
   m_TagString: Untagged
   m_Icon: {fileID: 0}

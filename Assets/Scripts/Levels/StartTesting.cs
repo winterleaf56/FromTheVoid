@@ -12,8 +12,7 @@ public class StartTesting : MonoBehaviour {
 
     private void Awake()
     {
-        if (Instance != null && Instance != this)
-        {
+        if (Instance != null && Instance != this) {
             Destroy(gameObject);
             return;
         }
@@ -27,14 +26,12 @@ public class StartTesting : MonoBehaviour {
         
     }
 
-    public void LoadTestUnits()
-    {
+    public void LoadTestUnits() {
         /*for (int i = 0; i < unitsToTest.Count; i++) {
             BattleManager.SelectedLevel.PlayerUnits.Add(unitsToTest[i]);
         }*/
 
-        foreach (Friendly unit in unitsToTest)
-        {
+        foreach (Friendly unit in unitsToTest) {
             Debug.Log($"Added {unit.UnitStats.UnitName} to BattleManager.SelectedLevel.PlayerUnits");
             //BattleManager.SelectedLevel.PlayerUnits.Add(unit);
             GameManager.Instance.SelectedLevel.AddPlayerUnit(unit);

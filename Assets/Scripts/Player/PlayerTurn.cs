@@ -41,6 +41,11 @@ public class PlayerTurn : MonoBehaviour {
             if (_selectedUnit.CompareTag("Friendly")) {
                 print("Friendly unit selected, activating actionsUI");
                 actionsUI.SetActive(true);
+                if (BattleManager.Instance.currentBattleState.Equals(BattleManager.BattleState.PlayerFriendlyAction) && _selectedUnit.CompareTag("Friendly") && TargetableFriendlies.Contains(_selectedUnit.GetComponent<Friendly>())) {
+                    targetedFriendly = _selectedUnit.GetComponent<Friendly>();
+                    confirmBtn.interactable = true;
+                    return;
+                }
                 selectedFriendly = _selectedUnit.GetComponent<Lifeforms>();
                 selectedFriendly.GetComponent<Light>().enabled = true;
                 //UIManager.LoadButtons(selectedFriendly);
@@ -63,6 +68,8 @@ public class PlayerTurn : MonoBehaviour {
                 selectedEnemy = _selectedUnit.GetComponent<Lifeforms>();
                 confirmBtn.interactable = true;
             }
+
+            
         }
     }
 
@@ -148,6 +155,7 @@ public class PlayerTurn : MonoBehaviour {
 
     public void CancelMove() {
         selectedEnemy = null;
+        selectedFriendly = null; // // // //
     }
 
     void LoadMoveButtons() {
@@ -202,7 +210,7 @@ public class PlayerTurn : MonoBehaviour {
     // Now realizing I need a second selectedFriendly variable for this to work properly
     // Best coursse of action is to have click manager detect BattleState.PlayerFriendlyAction
     public void StartDirectedFriendlyAction(ActionBase action) {
-        selectedFriendly.PerformFriendlyDirectedAction(action, selectedFriendly);
+        selectedFriendly.PerformFriendlyDirectedAction(selectedFriendly, action, targetedFriendly);
     }
 
     // Everything below this point can probably be removed as it is replaced by the above code

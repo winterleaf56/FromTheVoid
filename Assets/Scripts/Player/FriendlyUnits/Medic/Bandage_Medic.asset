@@ -23,3 +23,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 256
   buttonPrefab: {fileID: 3947152011441101157, guid: 79148d939daecdf46a8079cf1d9ce4a9, type: 3}
+  effectPrefab: {fileID: 7428695967608903537, guid: feaa447e5781f3d4d8b20ad561247270, type: 3}
+  button: {fileID: 0}
+  recoveryAmount: 50
+  duration: 2

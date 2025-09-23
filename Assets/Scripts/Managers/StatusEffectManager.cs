@@ -9,7 +9,8 @@ public class StatusEffectManager : MonoBehaviour {
 
     public enum StatusEffectType {
         ActionPointEffect,
-        BandageEffect,
+        HealingEffect,
+        StaminaEffect,
         DefenceEffect,
         DamageEffect
     }
@@ -28,7 +29,8 @@ public class StatusEffectManager : MonoBehaviour {
 
         effectFactories = new Dictionary<StatusEffectType, Func<GameObject, string, int, int, StatusEffectBase>> {
             { StatusEffectType.ActionPointEffect, StatusEffectFactory.CreateActionPointEffect },
-            { StatusEffectType.DamageEffect, StatusEffectFactory.CreateDamageEffect }
+            { StatusEffectType.DamageEffect, StatusEffectFactory.CreateDamageEffect },
+            { StatusEffectType.HealingEffect, StatusEffectFactory.CreateHealingEffect }
         };
     }
 

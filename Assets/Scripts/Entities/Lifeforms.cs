@@ -24,8 +24,10 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     [SerializeField] private float maxMoveDistance;
     [SerializeField] private float defence;
 
-    [SerializeField] protected ActionBase[] moves;
-    [SerializeField] protected ActionBase[] actions;
+    //[SerializeField] protected ActionBase[] moves;
+    //[SerializeField] protected ActionBase[] actions;
+
+    [SerializeField] protected UnitMovesActionsDatabase movesDatabase;
 
     [SerializeField] protected List<StatusEffect> statusEffects = new List<StatusEffect>();
 
@@ -67,6 +69,8 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
         CurrentActionPoints = stats.ActionPoints;
 
+        //SetMoves();
+
         //Debug.Log($"Unit Name: {stats.Name}, Max Health: {stats.MaxHealth}, Action Points: {stats.ActionPoints}");
     }
 
@@ -81,11 +85,14 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
     }
 
     public ActionBase[] GetMoves() {
-        return moves;
+        Debug.Log(movesDatabase.UnitGroups.Find(g => g.unitName == stats.UnitName).moves.ConvertAll(m => m.move).ToArray());
+        return movesDatabase.UnitGroups.Find(g => g.unitName == stats.UnitName).moves.ConvertAll(m => m.move).ToArray();
     }
 
     public ActionBase[] GetActions() {
-        return actions;
+        //return actions;
+        Debug.Log(movesDatabase.UnitGroups.Find(g => g.unitName == stats.UnitName).actions.ToArray());
+        return movesDatabase.UnitGroups.Find(g => g.unitName == stats.UnitName).actions.ToArray();
     }
 
     public List<StatusEffect> GetStatusEffects() {
@@ -102,13 +109,18 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
 
     protected virtual void SetMoves() {
         // Moves
-        basicMove = moves[0] as BasicMove;
-        specialMove = moves[1] as SpecialMove;
+        /*basicMove = moves[0] as BasicMove;
+        specialMove = moves[1] as SpecialMove;*/
+
+        basicMove = movesDatabase.UnitGroups.Find(g => g.unitName == stats.UnitName).moves.Find(m => m.moveType == MoveType.Basic).move as BasicMove;
+        specialMove = movesDatabase.UnitGroups.Find(g => g.unitName == stats.UnitName).moves.Find(m => m.moveType == MoveType.Special).move as SpecialMove;
         //ultimateMove = moves[2] as UltimateMove;
 
         // Actions
-        recoverAction = actions[0] as RecoverAction;
-        repositionAction = actions[1] as RepositionAction;
+        /*recoverAction = actions[0] as RecoverAction;
+        repositionAction = actions[1] as RepositionAction;*/
+        recoverAction = movesDatabase.UnitGroups.Find(g => g.unitName == stats.UnitName).actions.Find(a => a is RecoverAction) as RecoverAction;
+        repositionAction = movesDatabase.UnitGroups.Find(g => g.unitName == stats.UnitName).actions.Find(a => a is RepositionAction) as RepositionAction;
     }
 
     public void PerformMove(string moveType, Lifeforms target) {
@@ -119,8 +131,8 @@ public abstract class Lifeforms : MonoBehaviour, IDamageable {
         StartCoroutine(move.Execute(this, target));
     }
 
-    public void PerformFriendlyDirectedAction(ActionBase move, Lifeforms target) {
-        StartCoroutine(move.Execute(this, target));
+    public void PerformFriendlyDirectedAction(Lifeforms user, ActionBase move, Lifeforms target) {
+        StartCoroutine(move.Execute(user, target));
     }
 
     /*public IEnumerator PerformAreaAttack(ActionBase move, Vector3 target) {

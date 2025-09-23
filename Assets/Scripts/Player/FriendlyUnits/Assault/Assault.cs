@@ -2,8 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class Assault : Friendly {
-    [Header("Actions")]
-    [SerializeField] protected StaminaStimAction staminaStimAction;
+    // StaminaStimAction moved to Skills in UnitMovesActionsDatabase
+    /*[Header("Actions")]
+    [SerializeField] protected StaminaStimAction staminaStimAction;*/
 
     /*protected override void SetMoves() {
         //base.SetMoves();

@@ -336,9 +336,11 @@ public class SaveManager : MonoBehaviour {
                     loadedUnits.Add(friendly);
                 }
                 PlayerDetailsManager.Instance.LoadUnits(loadedUnits);
+            } else {
+                Debug.LogError("PlayerDetailsManager instance or UnitDatabase is not available. Player units will not be loaded.");
             }
 
-            Debug.Log("Game data loaded successfully.");
+                Debug.Log("Game data loaded successfully.");
         } else {
             Debug.LogWarning("Save file not found. No data loaded.");
         }

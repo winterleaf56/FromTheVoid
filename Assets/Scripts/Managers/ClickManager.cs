@@ -82,9 +82,12 @@ public class ClickManager : MonoBehaviour {
         }
 
         RaycastHit hit;
+        int layerMask = ~LayerMask.GetMask("IgnoreRaycast");
 
-        if (Physics.Raycast(ray, out hit)) {
+        if (Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask)) {
             GameObject clickedObject = hit.collider.gameObject;
+
+            Debug.LogWarning("Clicked Object: " + clickedObject.name);
 
             if (!BattleManager.Instance.currentBattleState.Equals(BattleManager.BattleState.PlayerAttack)) {
                 if (clickedObject.CompareTag("Enemy")) {
@@ -99,6 +102,15 @@ public class ClickManager : MonoBehaviour {
                         Debug.Log("Friendly Unit clicked during Friendly Action");
                         unitToSend = clickedObject;
                         BattleManager.Instance.UnitClicked(true);
+
+                        // Only change lights if a new unit is selected
+                        if (lastFriendlyClicked != null && lastFriendlyClicked != clickedObject) {
+                            lastFriendlyClicked.GetComponent<Light>().enabled = false;
+                        }
+
+                        clickedObject.GetComponent<Light>().enabled = true;
+                        lastFriendlyClicked = clickedObject;
+
                         return unitToSend;
                     }
                 

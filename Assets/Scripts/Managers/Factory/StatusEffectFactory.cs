@@ -12,4 +12,10 @@ public static class StatusEffectFactory {
         effect.Initialize(effectPrefab, effectName, duration, damageAmount);
         return effect;
     }
+
+    public static BandageEffect CreateHealingEffect(GameObject effectPrefab, string effectName, int duration, int healAmount) {
+        BandageEffect effect = ScriptableObject.CreateInstance<BandageEffect>();
+        effect.Initialize(effectPrefab, effectName, duration, healAmount);
+        return effect;
+    }
 }

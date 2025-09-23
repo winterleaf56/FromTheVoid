@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b53d3cbb109dd13449056d301e693769, type: 3}
+  m_Name: Reposition_MedicAction
+  m_EditorClassIdentifier: 
+  moveName: Reposition
+  actionPointCost: 4
+  range: 0
+  value: 0
+  attackButton: {fileID: 0}
+  actionButton: {fileID: 0}
+  actionSound: {fileID: 8300000, guid: 13a7128583321bb41b4356e09a58891d, type: 3}
+  obstacleLayer:
+    serializedVersion: 2
+    m_Bits: 256
+  buttonPrefab: {fileID: 0}
+  moveCostMultiplier: 4

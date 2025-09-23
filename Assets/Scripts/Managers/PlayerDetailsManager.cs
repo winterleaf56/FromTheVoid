@@ -114,6 +114,8 @@ public class PlayerDetailsManager : MonoBehaviour {
         SaveManager.Instance.SaveGame?.Invoke();
     }
 
+    // Loads the units from the saved data and sets them to the available units.
+    // If someone does not have any saved units, the default (assault 1 + 2, sniper 1 + 2) will be given to them.
     public void LoadUnits(List<Friendly> units) {
         if (units != null && units.Count != 0) {
             playerUnits = units;

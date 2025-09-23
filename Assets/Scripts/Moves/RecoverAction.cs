@@ -52,11 +52,14 @@ public class RecoverAction : ActionBase {
     }
 
     public override IEnumerator Execute(Lifeforms unit) {
+        Debug.Log($"{unit.stats.UnitName} is recovering action points.");
         unit.stats.SubtractActionPoints(actionPointCost);
         
         StatusEffectManager.Instance.AddEffect(StatusEffectManager.StatusEffectType.ActionPointEffect, effectPrefab, "Recovering", duration, recoveryAmount, unit);
 
+        Debug.Log("Before MoveFinished in RecoverAction");
         OnMoveFinished();
+        Debug.Log("After MoveFinished in RecoverAction");
         ClickManager.Instance.allowClicks = true;
         yield break;
     }
