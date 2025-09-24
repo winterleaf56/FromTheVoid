@@ -134,7 +134,7 @@ public class RepositionAction : ActionBase {
 
         if (placedMarker != null) Destroy(placedMarker.gameObject);
 
-        OnMoveFinished();
+        OnMoveFinished(unit);
         positionToMoveTo = Vector3.zero;
 
         yield break;

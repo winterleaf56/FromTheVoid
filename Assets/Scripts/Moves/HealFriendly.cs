@@ -63,7 +63,7 @@ public class HealFriendly : FriendlyTargetMove {
         cancelBtn.onClick.AddListener(() => {
             BattleManager.manageFriendlyLights?.Invoke(GetFriendliesInRange(unit));
             BattleManager.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
-            PlayerTurn.Instance.CancelMove();
+            PlayerTurn.Instance.CancelMove(unit);
             rangeRing.SetActive(false);
             confirmPage.gameObject.SetActive(false);
         });
@@ -81,7 +81,7 @@ public class HealFriendly : FriendlyTargetMove {
         //StatusEffectManager.Instance.AddEffect(StatusEffectManager.StatusEffectType.ActionPointEffect, effectPrefab, "Recovering", duration, recoveryAmount, unit);
         StatusEffectManager.Instance.AddEffect(StatusEffectManager.StatusEffectType.HealingEffect, effectPrefab, "Healing", duration, recoveryAmount, target);
 
-        OnMoveFinished();
+        OnMoveFinished(unit);
         ClickManager.Instance.allowClicks = true;
         yield break;
     }

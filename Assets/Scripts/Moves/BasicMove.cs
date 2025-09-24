@@ -60,7 +60,7 @@ public class BasicMove : ActionBase {
             BattleManager.manageEnemyLights?.Invoke(GetEnemiesInRange(unit));
             BattleManager.changeBattleState.Invoke(BattleManager.BattleState.PlayerIdle);
             //PlayerTurn.Instance.StartDirectAttack(this);
-            PlayerTurn.Instance.CancelMove();
+            PlayerTurn.Instance.CancelMove(unit);
             rangeRing.SetActive(false);
             confirmPage.gameObject.SetActive(false);
         });
@@ -105,6 +105,7 @@ public class BasicMove : ActionBase {
     protected override void OnMoveFinished(Lifeforms unit) {
         //MoveFinishedEvent?.Invoke();
         GameObject rangeRing = unit.transform.Find("RangeRing").gameObject;
+        //unit.GetComponent<Light>().color = new Color(250, 135, 30);
         rangeRing.SetActive(false);
 
         BattleManager.onMoveFinished?.Invoke();

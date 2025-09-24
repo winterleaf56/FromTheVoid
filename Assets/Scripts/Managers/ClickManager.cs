@@ -105,8 +105,10 @@ public class ClickManager : MonoBehaviour {
 
                         // Only change lights if a new unit is selected
                         if (lastFriendlyClicked != null && lastFriendlyClicked != clickedObject) {
-                            lastFriendlyClicked.GetComponent<Light>().enabled = false;
+                            lastFriendlyClicked.GetComponent<Light>().color = Color.green;
                         }
+
+                        lastFriendlyClicked.GetComponent<Light>().color = Color.blue;
 
                         clickedObject.GetComponent<Light>().enabled = true;
                         lastFriendlyClicked = clickedObject;

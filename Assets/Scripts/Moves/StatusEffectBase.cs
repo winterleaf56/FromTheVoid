@@ -54,6 +54,26 @@ public class ActionPointEffect : StatusEffectBase {
     }
 }
 
+[CreateAssetMenu(fileName = "HealUnitEffect", menuName = "Status Effect/Heal Unit Effect")]
+public class HealUnitEffect : StatusEffectBase { 
+    public override void Initialize(GameObject effectPrefab, string effectName, int duration, int value) {
+        base.Initialize(effectPrefab, effectName, duration, value);
+    }
+
+    public override void ApplyEffect(Lifeforms target) {
+        target.GetComponentInParent<Health>().AddHealth(EffectValue);
+    }
+
+    public override void RemoveEffect(Lifeforms target) {
+        foreach (var effect in target.GetStatusEffects()) {
+            if (effect.GetData().EffectName == EffectName) {
+                target.GetStatusEffects().Remove(effect);
+                break;
+            }
+        }
+    }
+}
+
 
 /*[CreateAssetMenu(fileName = "StaminaStimEffect", menuName = "Status Effect/Stamina Stim Effect")]
 public class StaminaStimEffect : StatusEffectBase {

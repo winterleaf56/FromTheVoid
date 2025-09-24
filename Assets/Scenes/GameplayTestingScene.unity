@@ -3650,7 +3650,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &717964786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10335,6 +10335,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   testingLevel: {fileID: 11400000, guid: d3b2c3c6a32c34a47b327c172502ce77, type: 2}
+  unitsToTest: []
 --- !u!4 &1845383830
 Transform:
   m_ObjectHideFlags: 0

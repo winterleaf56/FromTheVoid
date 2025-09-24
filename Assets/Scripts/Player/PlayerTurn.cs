@@ -153,9 +153,11 @@ public class PlayerTurn : MonoBehaviour {
         playerTurnEnded?.Invoke();
     }
 
-    public void CancelMove() {
+    public void CancelMove(Lifeforms unit) {
         selectedEnemy = null;
-        selectedFriendly = null; // // // //
+        //selectedFriendly = null; // // // //
+
+        unit.GetComponent<Light>().color = new Color(0.94f, 0.53f, 0.12f);
     }
 
     void LoadMoveButtons() {
@@ -253,13 +255,13 @@ public class PlayerTurn : MonoBehaviour {
         //BattleManager.Instance.AttackingToggle();
         selectedFriendly.PerformAction("Recover", selectedFriendly);
         //BattleManager.Instance.ClearPlayerTurn();
-        ResetSelectedUnits();
+        //ResetSelectedUnits();
     }
 
     public void StaminaStimAction() {
         Debug.Log("Executing Stamina Stim Action");
         selectedFriendly.GetComponentInParent<Assault>().PerformAction("Stamina", selectedFriendly);
-        ActionComplete();
+        //ActionComplete();
     }
 
     private void ActionComplete() {

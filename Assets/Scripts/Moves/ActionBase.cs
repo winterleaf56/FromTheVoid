@@ -120,12 +120,13 @@ public abstract class ActionBase : ScriptableObject {
     protected virtual void OnMoveFinished(Lifeforms unit) {
         PlayerTurn.Instance.changedAP?.Invoke();
         BattleManager.onMoveFinished?.Invoke();
+        unit.GetComponent<Light>().color = new Color(0.94f, 0.53f, 0.12f);
     }
 
-    protected virtual void OnMoveFinished() {
+    /*protected virtual void OnMoveFinished() {
         PlayerTurn.Instance.changedAP?.Invoke();
         BattleManager.changeBattleState?.Invoke(BattleManager.BattleState.PlayerIdle);
-    }
+    }*/
 
     public int GetAPRequirement() {
         return actionPointCost;

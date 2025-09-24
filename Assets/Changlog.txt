@@ -3,6 +3,11 @@ Changelog
 Still need to save the units and load them so they will load the unit buttons
 Probably need to combine moves and prefabs databases
 
+21/09/2025 V1.4.2-DEV
+- Fixed Medic's stats
+- Restructuring actions to break down into actions and skills. Wont be relavent for a while
+- Units are no longer deselected when they complete an action or move.
+
 28/06/2025 V0.1.4.1-DEV
 - Changed Action and Method ManageLights to ManageEnemyLights
 - Added Action and Method ManageFriendlyLights

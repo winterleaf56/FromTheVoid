@@ -54,6 +54,8 @@ public class Health : MonoBehaviour {
         }
 
         OnHealthChanged(health);
+
+        Debug.Log($"Healed {value} health");
     }
 
     void OnDeath() {

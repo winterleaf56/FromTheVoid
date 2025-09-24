@@ -8,6 +8,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using static UnityEngine.UI.CanvasScaler;
 
 public class BattleManager : MonoBehaviour {
     [Header("Display Selected Unit Stats")]
@@ -424,10 +425,18 @@ public class BattleManager : MonoBehaviour {
     }
 
     public void ManageFriendlyLights(List<Friendly> friendlyList) {
+        Debug.Log("Managing friendly lights");
         foreach (Friendly friendly in friendlyList) {
             if (friendly != null) {
                 Light displayLight = friendly.GetComponent<Light>();
-                displayLight.color = Color.green;
+
+                if (displayLight.color == Color.green) {
+                    displayLight.color = new Color(0.94f, 0.53f, 0.12f);
+                } else {
+                    displayLight.color = Color.green;
+                }
+
+                //displayLight.color = Color.green;
                 displayLight.enabled = !displayLight.enabled;
             }
         }
@@ -446,7 +455,7 @@ public class BattleManager : MonoBehaviour {
     public void OnMoveFinshed() {
         currentBattleState = BattleState.PlayerIdle;
 
-        unitActionUI.SetActive(false);
+        /*unitActionUI.SetActive(false);
         unitMovesUI.SetActive(false);
         battleActionsUI.SetActive(false);
 
@@ -456,7 +465,7 @@ public class BattleManager : MonoBehaviour {
             if (unit != null) {
                 unit.GetComponent<Light>().enabled = false;
             }
-        }
+        }*/
     }
 
 
