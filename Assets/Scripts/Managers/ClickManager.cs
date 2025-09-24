@@ -100,17 +100,26 @@ public class ClickManager : MonoBehaviour {
                     // This is for getting the friendly unit you will apply a buff on
                     if (BattleManager.Instance.currentBattleState.Equals(BattleManager.BattleState.PlayerFriendlyAction)) {
                         Debug.Log("Friendly Unit clicked during Friendly Action");
+
+                        Lifeforms friendlyActionUser = PlayerTurn.Instance.selectedFriendly;
+                        if (friendlyActionUser != null) {
+                            if (clickedObject.GetComponentInParent<Lifeforms>() == friendlyActionUser) {
+                                Debug.Log("Cannot target self with friendly action");
+                                return null;
+                            }
+                        }
+
                         unitToSend = clickedObject;
                         BattleManager.Instance.UnitClicked(true);
 
                         // Only change lights if a new unit is selected
-                        if (lastFriendlyClicked != null && lastFriendlyClicked != clickedObject) {
+                        if (lastFriendlyClicked != null && lastFriendlyClicked != clickedObject && lastFriendlyClicked != friendlyActionUser.gameObject) {
                             lastFriendlyClicked.GetComponent<Light>().color = Color.green;
                         }
 
-                        lastFriendlyClicked.GetComponent<Light>().color = Color.blue;
+                        clickedObject.GetComponent<Light>().color = Color.blue;
 
-                        clickedObject.GetComponent<Light>().enabled = true;
+                        //clickedObject.GetComponent<Light>().enabled = true;
                         lastFriendlyClicked = clickedObject;
 
                         return unitToSend;

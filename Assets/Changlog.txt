@@ -7,6 +7,7 @@ Probably need to combine moves and prefabs databases
 - Fixed Medic's stats
 - Restructuring actions to break down into actions and skills. Wont be relavent for a while
 - Units are no longer deselected when they complete an action or move.
+- Added Heal to Medic
 
 28/06/2025 V0.1.4.1-DEV
 - Changed Action and Method ManageLights to ManageEnemyLights

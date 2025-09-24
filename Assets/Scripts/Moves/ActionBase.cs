@@ -107,7 +107,7 @@ public abstract class ActionBase : ScriptableObject {
         Collider[] hitColliders = Physics.OverlapSphere(unit.transform.position, range);
         foreach (var hitCollider in hitColliders) {
             Friendly friendly = hitCollider.GetComponent<Friendly>();
-            if (friendly != null) {
+            if (friendly != null && friendly.gameObject != unit.gameObject) {
                 if (!Physics.Linecast(unit.transform.position, friendly.transform.position, out RaycastHit hit, obstacleLayer)) {
                     friendliesInRange.Add(friendly);
                 }

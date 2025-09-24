@@ -81,6 +81,7 @@ public class HealFriendly : FriendlyTargetMove {
         //StatusEffectManager.Instance.AddEffect(StatusEffectManager.StatusEffectType.ActionPointEffect, effectPrefab, "Recovering", duration, recoveryAmount, unit);
         StatusEffectManager.Instance.AddEffect(StatusEffectManager.StatusEffectType.HealingEffect, effectPrefab, "Healing", duration, recoveryAmount, target);
 
+        BattleManager.manageFriendlyLights?.Invoke(PlayerTurn.Instance.TargetableFriendlies);
         OnMoveFinished(unit);
         ClickManager.Instance.allowClicks = true;
         yield break;
