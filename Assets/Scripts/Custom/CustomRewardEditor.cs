@@ -39,6 +39,9 @@ public class CustomRewardEditor : Editor {
                     case RewardType.Item:
                         EditorGUI.PropertyField(fieldRect, element.FindPropertyRelative("itemReference"), new GUIContent("Item"));
                         break;
+                    case RewardType.Unit:
+                        EditorGUI.PropertyField(fieldRect, element.FindPropertyRelative("unitReference"), new GUIContent("Unit"));
+                        break;
                 }
             }
         };

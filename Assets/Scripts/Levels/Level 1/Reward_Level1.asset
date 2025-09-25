@@ -16,6 +16,12 @@ MonoBehaviour:
   - rewardType: 0
     amount: 250
     itemReference: {fileID: 0}
+    unitReference: {fileID: 0}
   - rewardType: 1
     amount: 1000
     itemReference: {fileID: 0}
+    unitReference: {fileID: 0}
+  - rewardType: 3
+    amount: 1000
+    itemReference: {fileID: 0}
+    unitReference: {fileID: 6713014945210838012, guid: 3385993034f0caa4e9a1853f077d6e00, type: 3}

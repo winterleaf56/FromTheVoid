@@ -22,6 +22,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 68b6519fc3104de418bafcd61029d8c1, type: 2}
   objectives:
   - {fileID: 11400000, guid: 98e181f3d1111bf4db3bf2f80ef3663f, type: 2}
-  reward: 0
+  rewards: {fileID: 11400000, guid: 98066e664491c4e4987ba3fc58bf5945, type: 2}
   requiredNumberOfUnits: 4
-  levelCompleted: 0
+  levelCompleted: 1
+  firstCompleted: 1

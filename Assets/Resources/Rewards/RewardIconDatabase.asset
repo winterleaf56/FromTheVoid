@@ -17,3 +17,5 @@ MonoBehaviour:
     icon: {fileID: -688462278, guid: 9e06cdac01f3ece4480c1d10fa739f09, type: 3}
   - rewardType: 1
     icon: {fileID: 1661233034, guid: daf566fc019d56a429b83e8b8d8b46ac, type: 3}
+  - rewardType: 3
+    icon: {fileID: -1704735222, guid: 160c39ff74f94fe45bf3c9c6538bc5b6, type: 3}

@@ -4,7 +4,8 @@ using UnityEngine;
 public enum RewardType {
     VoidShards,
     Coins,
-    Item
+    Item,
+    Unit
 }
 
 [CreateAssetMenu(fileName = "CustomReward", menuName = "Reward")]
@@ -35,6 +36,10 @@ public class CustomReward : ScriptableObject {
                         Debug.Log($"Item Rewarded");
                     }
                     break;
+                case RewardType.Unit:
+                    PlayerDetailsManager.Instance.playerUnits.Add(reward.unitReference.GetComponent<Friendly>());
+                    Debug.Log($"Unit {reward.unitReference.GetComponent<Friendly>().UnitStats.name} Rewarded");
+                    break;
             }
         }
     }
@@ -45,4 +50,5 @@ public class RewardData {
     public RewardType rewardType;
     public int amount;                // Used if rewardType is VoidShards or Coins
     public GameObject itemReference;  // Used if rewardType is Item
+    public Lifeforms unitReference;   // Used if rewardType is Unit
 }
