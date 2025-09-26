@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: UnitDatabase
   m_EditorClassIdentifier: 
   unitPrefabs:
-  - {fileID: -2812296884578319538, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
-  - {fileID: -2812296884578319538, guid: 9d665922d793a6b4eb9a9a2cb2d4cdaf, type: 3}
-  - {fileID: 77085128579891223, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
-  - {fileID: 77085128579891223, guid: 1e0e1ec3ea741dc48b65bedf5a7ece8d, type: 3}
-  - {fileID: 8361265227224619770, guid: e2997b8a09d2be24f986b2ebe973e439, type: 3}
+  - {fileID: 2988888026099170687, guid: fcc4107f5c23c3e4280073d09682e33d, type: 3}
+  - {fileID: 2988888026099170687, guid: 9d665922d793a6b4eb9a9a2cb2d4cdaf, type: 3}
+  - {fileID: 2988888026099170687, guid: 6704235c6baf90048be499100fc50aa3, type: 3}
+  - {fileID: 2988888026099170687, guid: 1e0e1ec3ea741dc48b65bedf5a7ece8d, type: 3}
+  - {fileID: 6958801804516526139, guid: 3385993034f0caa4e9a1853f077d6e00, type: 3}

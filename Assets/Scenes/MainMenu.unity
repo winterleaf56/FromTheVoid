@@ -9065,6 +9065,7 @@ MonoBehaviour:
   currentVoidShards: 0
   currentCoins: 0
   unitDatabase: {fileID: 11400000, guid: bfa14ef3a8b4317409b88a35f84ab87e, type: 2}
+  unitMovesDatabase: {fileID: 11400000, guid: 34dde071f9d12a44d921d220b4d2e110, type: 2}
 --- !u!4 &1055403582
 Transform:
   m_ObjectHideFlags: 0

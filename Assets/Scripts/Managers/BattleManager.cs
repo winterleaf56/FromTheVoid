@@ -190,11 +190,18 @@ public class BattleManager : MonoBehaviour {
     }*/
 
     void Start() {
+        Debug.Log($"Selected Level ID Count: {SelectedLevel.PlayerUnitIDs.Count} / 4");
+        Debug.Log($"Number of friendly spawns: {friendlySpawns.Length} / 4");
 
-        for (int i = 0; i < SelectedLevel.PlayerUnits.Count; i++) {
-            Friendly unit = Instantiate(SelectedLevel.PlayerUnits[i], friendlySpawns[i].transform.position, Quaternion.Euler(0, -90, 0));
+        for (int i = 0; i < SelectedLevel.PlayerUnitIDs.Count; i++) {
+            Friendly unit = Instantiate(PlayerDetailsManager.Instance.UnitDatabase.GetUnitPrefabByID(SelectedLevel.PlayerUnitIDs[i]).GetComponent<Friendly>(), friendlySpawns[i].transform.position, Quaternion.Euler(0, -90, 0));
             playerUnits.Add(unit);
         }
+
+        /*for (int i = 0; i < SelectedLevel.PlayerUnits.Count; i++) {
+            Friendly unit = Instantiate(SelectedLevel.PlayerUnits[i], friendlySpawns[i].transform.position, Quaternion.Euler(0, -90, 0));
+            playerUnits.Add(unit);
+        }*/
 
         for (int i = 0; i < enemySpawns.Length; i++) {
             GameObject enemy = Instantiate(enemyPrefab, enemySpawns[i].transform.position, Quaternion.Euler(0, 90, 0));

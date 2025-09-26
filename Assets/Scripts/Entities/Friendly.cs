@@ -159,6 +159,15 @@ public class Friendly : Lifeforms {
         repositionAction = actions[1] as RepositionAction;
     }*/
 
+    public void SetUnitStats(Unit unitStats) {
+        this.unitStats = unitStats;
+    }
+
+    public void SetMovesDatabase(UnitMovesActionsDatabase movesDatabase) {
+        this.movesDatabase = movesDatabase;
+    }
+
+
     public override void Attack() {
         throw new System.NotImplementedException();
     }

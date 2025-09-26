@@ -64,7 +64,7 @@ public class GameManager : MonoBehaviour {
                 menuUIManager.SubmitUsernameBtn.onClick.AddListener(() => {
                     string playerName = menuUIManager.UsernameInput.text;
                     if (!string.IsNullOrEmpty(playerName)) {
-                        playerDetails.SetPlayerName(playerName);
+                        playerDetails.SetPlayerName(playerName, false);
                         menuUIManager.UsernamePanel.SetActive(false);
                         Debug.Log($"Player name set to: {playerName}");
                         MenuUIManager.updateUserDetails?.Invoke();

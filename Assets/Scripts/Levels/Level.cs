@@ -40,6 +40,9 @@ public class Level : ScriptableObject {
     //public List<GameObject> PlayerUnits => playerUnits;
     public List<Friendly> PlayerUnits => playerUnits;
 
+    [SerializeField] private List<int> playerUnitIDs;
+    public List<int> PlayerUnitIDs => playerUnitIDs;
+
 
     public Action completedLevel;
 
@@ -71,15 +74,30 @@ public class Level : ScriptableObject {
         Debug.Log($"Added {unit.UnitStats.UnitName}");
     }
 
+    // V1.4.2 - Adds the unit ID to the list of player unit IDs
+    // This will be used to save/load the selected units for the level
+    // because I cannot instantiate these units here and have them persist into the battle scene
+    public void AddPlayerUnitByID(int id) {
+        playerUnitIDs.Add(id);
+        Debug.Log($"Added unit {PlayerDetailsManager.Instance.UnitDatabase.GetUnitPrefabByID(id)} with ID: {id}");
+    }
+
     // Receive Friendly unit from UnitButton, Removes it from the playerUnits list which are taken into the selected level
     public void RemovePlayerUnit(Friendly unit) {
         playerUnits.Remove(unit);
         Debug.Log($"Removed {unit.UnitStats.UnitName}");
     }
 
+    // V1.4.2 - Removes the unit ID from the list of player unit IDs
+    public void RemovePlayerUnitByID(int id) {
+        playerUnitIDs.Remove(id);
+        Debug.Log($"Removed unit {PlayerDetailsManager.Instance.UnitDatabase.GetUnitPrefabByID(id)} with ID: {id}");
+    }
+
     // Clears the units selected for the level
     public void ClearUnits() {
-        playerUnits.Clear();
+        //playerUnits.Clear();
+        playerUnitIDs.Clear();
     }
 
     // Not used

@@ -5,6 +5,7 @@ public class UnitButton : MonoBehaviour
 {
     //[SerializeField] private GameObject unit;
     [SerializeField] private Friendly unit;
+    //private int unitID;
 
     private bool clicked = false;
 
@@ -34,15 +35,19 @@ public class UnitButton : MonoBehaviour
         this.unit = unit;
     }
 
+    // V1.4.2 - Changed to use unit ID instead of the whole unit object
+    // Using the FriendlyUnitID is easier than changing the whole system I've already made.
     public void OnClick() {
         if (!clicked) {
-            GameManager.Instance.SelectedLevel.AddPlayerUnit(unit);
+            //GameManager.Instance.SelectedLevel.AddPlayerUnit(unit);
+            GameManager.Instance.SelectedLevel.AddPlayerUnitByID(unit.FriendlyUnitID);
             transform.Find("Selected").gameObject.SetActive(true);
             Debug.Log("Added unit");
             GameManager.unitSelected(1);
             clicked = true;
         } else {
-            GameManager.Instance.SelectedLevel.RemovePlayerUnit(unit);
+            //GameManager.Instance.SelectedLevel.RemovePlayerUnit(unit);
+            GameManager.Instance.SelectedLevel.RemovePlayerUnitByID(unit.FriendlyUnitID);
             transform.Find("Selected").gameObject.SetActive(false);
             Debug.Log("Removed unit");
             GameManager.unitSelected(-1);

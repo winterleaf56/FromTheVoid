@@ -14,12 +14,16 @@ public class PlayerDetailsManager : MonoBehaviour {
     [SerializeField] private int currentCoins;
 
     [SerializeField] private UnitDatabase unitDatabase;
+    [SerializeField] private UnitMovesActionsDatabase unitMovesDatabase;
 
     public UnitDatabase UnitDatabase => unitDatabase;
     public string PlayerName => playerName;
     public int PlayerId => playerId;
     public int PlayerRank => playerRank;
     //public int CurrentVoidShards => currentVoidShards;
+
+    bool firstLoadVS = true;
+    bool firstLoadC = true;
 
     public List<Friendly> playerUnits { get; private set; } = new List<Friendly>();
 
@@ -30,7 +34,11 @@ public class PlayerDetailsManager : MonoBehaviour {
             // Here you can add logic to update UI or notify other systems
             Debug.Log($"Current Void Shards updated to: {currentVoidShards}");
             MenuUIManager.updateUserDetails?.Invoke();
-            SaveManager.Instance.SavePlayerData();
+            if (firstLoadVS) {
+                firstLoadVS = false;
+            } else {
+                SaveManager.Instance.SavePlayerData();
+            }
         }
     }
 
@@ -41,7 +49,12 @@ public class PlayerDetailsManager : MonoBehaviour {
             // Here you can add logic to update UI or notify other systems
             Debug.Log($"Current Coins updated to: {currentCoins}");
             MenuUIManager.updateUserDetails?.Invoke();
-            SaveManager.Instance.SavePlayerData();
+
+            if (firstLoadC) {
+                firstLoadC = false;
+            } else {
+                SaveManager.Instance.SavePlayerData();
+            }
         }
     }
 
@@ -107,23 +120,34 @@ public class PlayerDetailsManager : MonoBehaviour {
     }
     // -- Coins -- //
 
-    public void SetPlayerName(string name) {
+    // This should be changed so it isnt saving every time the game starts and sets the player's name.
+    public void SetPlayerName(string name, bool first) {
         playerName = name;
 
-        Debug.LogAssertion($"Player name set to: {playerName}. Saving...");
-        SaveManager.Instance.SaveGame?.Invoke();
+        if (first) {
+            Debug.LogAssertion($"Player name set to: {playerName}. Saving...");
+            SaveManager.Instance.SaveGame?.Invoke();
+        }
     }
 
     // Loads the units from the saved data and sets them to the available units.
     // If someone does not have any saved units, the default (assault 1 + 2, sniper 1 + 2) will be given to them.
     public void LoadUnits(List<Friendly> units) {
         if (units != null && units.Count != 0) {
+            foreach (var unit in units) {
+                var prefab = UnitDatabase.GetUnitPrefabByID(unit.FriendlyUnitID);
+                var friendly = prefab.GetComponent<Friendly>();
+
+                friendly.SetMovesDatabase(unitMovesDatabase);
+                friendly.SetUnitStats(unit.UnitStats);
+            }
             playerUnits = units;
         } else {
             Debug.LogWarning("No units found to load. Adding basic units.");
             foreach (Friendly unit in defaultUnits) {
                 AddUnit(unit);
             }
+            SaveManager.Instance.SaveGame?.Invoke();
         }
     }
 

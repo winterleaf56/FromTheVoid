@@ -18,11 +18,11 @@ public class UnitDatabaseEditor : Editor {
                 var unit = db.unitPrefabs[i];
                 if (unit != null) {
                     EditorGUILayout.BeginHorizontal();
-                    db.unitPrefabs[i] = (Friendly)EditorGUILayout.ObjectField(unit, typeof(Friendly), false);
-                    EditorGUILayout.LabelField($"ID: {unit.FriendlyUnitID}", GUILayout.Width(80));
+                    db.unitPrefabs[i] = (GameObject)EditorGUILayout.ObjectField(unit, typeof(GameObject), false);
+                    EditorGUILayout.LabelField($"ID: {unit.GetComponent<Friendly>().FriendlyUnitID}", GUILayout.Width(80));
                     EditorGUILayout.EndHorizontal();
                 } else {
-                    db.unitPrefabs[i] = (Friendly)EditorGUILayout.ObjectField(null, typeof(Friendly), false);
+                    db.unitPrefabs[i] = (GameObject)EditorGUILayout.ObjectField(null, typeof(GameObject), false);
                 }
             }
         }
